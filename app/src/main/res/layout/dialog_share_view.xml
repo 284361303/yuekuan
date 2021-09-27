@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/diaLogShare_viewTop"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:background="@color/white"
+        android:paddingBottom="35dp">
+
+        <TextView
+            android:id="@+id/diaLogShare_tvWeiChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@mipmap/icon_wechat"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="微信"
+            android:textColor="@color/color_4A4A4A"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/diaLogShare_tvWeiChatFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:drawableTop="@mipmap/icon_wechat_friends"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="朋友圈"
+            android:textColor="@color/color_4A4A4A"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/diaLogShare_tvWeiBo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:drawableTop="@mipmap/icon_wei_bo"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="微博"
+            android:textColor="@color/color_4A4A4A"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/diaLogShare_tvDouYin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:drawableTop="@mipmap/icon_dou_yin"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="抖音"
+            android:textColor="@color/color_4A4A4A"
+            android:textSize="12sp" />
+
+
+    </LinearLayout>
+</LinearLayout>

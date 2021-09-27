@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <paths>
+        <files-path
+            name="downLoadFile"
+            path="files" />
+        <external-path
+            name="external_storage_root"
+            path="." />
+        <cache-path
+            name="cache-path"
+            path="." />
+        <!--微信分享必须-->
+        <external-files-path
+            name="umeng_cache"
+            path="umeng_cache" />
+        <!-- 新浪微博分享必须 官方分享SDK 10.10.0共享路径 -->
+        <external-files-path
+            name="share_files"
+            path="." />
+        <external-files-path
+            name="sharedata"
+            path="shareData/" />
+
+        <!--新加的-->
+        <!--scan file: /storage/emulated/0/DCIM/Camera/IMG_20210602_13375119.jpg, content://media/external/images/media/77883
+		   D/内存路径: mounted-->
+    </paths>
+</resources>
