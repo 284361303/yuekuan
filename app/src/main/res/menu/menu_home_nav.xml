@@ -4,17 +4,13 @@
     <item
         android:id="@+id/main_fragment"
         android:icon="@drawable/main_tab_select"
-        android:title="首页" />
-    <item
-        android:id="@+id/category_fragment"
-        android:icon="@drawable/main_tab_select"
-        android:title="分类" />
+        android:title="@string/main" />
     <item
         android:id="@+id/factor_fragment"
-        android:icon="@drawable/main_tab_select"
-        android:title="云工厂" />
+        android:icon="@drawable/two_tab_select"
+        android:title="@string/two" />
     <item
         android:id="@+id/mine_fragment"
-        android:icon="@drawable/main_tab_select"
-        android:title="我的" />
+        android:icon="@drawable/mine_tab_select"
+        android:title="@string/mine" />
 </menu>

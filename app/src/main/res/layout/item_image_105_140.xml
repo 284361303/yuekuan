@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="listModel"
+            type="m.fasion.ai.home.RecommendModel" />
+
+        <variable
+            name="position"
+            type="int" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{position>0 ? View.GONE : View.VISIBLE}" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="105dp"
+                android:layout_height="140dp"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{listModel.imageList}"
+                tools:src="@mipmap/icon_more" />
+        </androidx.cardview.widget.CardView>
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</layout>

@@ -1,8 +1,33 @@
 <resources>
     <string name="app_name">fasion</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-
+    <string name="main">款式</string>
+    <string name="two">现货</string>
+    <string name="mine">我的</string>
+    <string name="fasionAI">FASION.AI</string>
     <string name="loading">加载中…</string>
+    <string name="receiver_key">收货人</string>
+    <string name="receiver_hint">请填写收货人姓名</string>
+    <string name="number86">+86</string>
+    <string name="phone_key">联系电话</string>
+    <string name="phone_hint">请填写收货人手机号码</string>
+    <string name="select_address_key">选择地区</string>
+    <string name="select_address_hint">请选择收件地址（省、市、区）</string>
+    <string name="address_info_key">详细地址</string>
+    <string name="address_info_hint">例如街道、门牌号、小区、楼栋号、单元室等</string>
+    <string name="position">定位</string>
+    <string name="left">/</string>
+    <string name="recommend_en">Recommend</string>
+    <string name="recommend_zh">今日推荐</string>
+    <string name="design_en">Design</string>
+    <string name="design_zh">款式合集</string>
+    <string name="more">more</string>
+    <string name="filter">筛选</string>
+    <string name="pinlei">品类</string>
+    <string name="login_title">手机号登录</string>
+    <string name="login_title2">新用户验证后自动注册</string>
+    <string name="login_hint">请输入11位手机号码</string>
+    <string name="login_next">下一步</string>
+    <string name="login_agreement">登录即代表你已同意<a style="color:#ff0000;text-decoration: underline;" href="https://www.baidu.com">用户协议</a>和<a style="color:#ff0000;text-decoration: underline;" href="https://www.baidu.com">隐私政策</a></string>
 </resources>

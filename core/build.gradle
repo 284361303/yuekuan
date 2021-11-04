@@ -53,12 +53,10 @@ dependencies {
 
     //微博分享
     api 'io.github.sinaweibosdk:core:11.8.1@aar'
-
-    //抖音分享
-    api 'com.bytedance.ies.ugc.aweme:opensdk-china-external:0.1.7.1'
-    api 'com.bytedance.ies.ugc.aweme:opensdk-common:0.1.7.1'
     //腾讯bugly
     api 'com.tencent.bugly:crashreport:latest.release'
     api 'com.tencent.bugly:nativecrashreport:latest.release'
+    //LiveEventBus
+    api 'io.github.jeremyliao:live-event-bus-x:1.8.0'
 
 }

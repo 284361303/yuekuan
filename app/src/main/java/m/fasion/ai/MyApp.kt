@@ -1,7 +1,11 @@
 package m.fasion.ai
 
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.meiqia.core.callback.OnInitCallback
 import com.meiqia.meiqiasdk.util.MQConfig
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.header.ClassicsHeader
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.tencent.bugly.crashreport.CrashReport
 import m.fasion.ai.util.LogUtils
 import m.fasion.core.Config
@@ -14,6 +18,13 @@ class MyApp : BaseApplication() {
 
     init {
         SPUtil.init(this)
+        //下拉刷新
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ ->
+            ClassicsHeader(context) //经典刷新头样式
+        }
+        SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
+            ClassicsFooter(context) //刷新底部样式
+        }
     }
 
     override fun onCreate() {
@@ -36,6 +47,11 @@ class MyApp : BaseApplication() {
             }
         })
         //腾讯bugly   ,最后一个参数语义：建议在测试阶段建议设置成true，发布时设置为false
-        CrashReport.initCrashReport(getApplicationContext(), Config.BUGLY_APP_ID, BuildConfig.DEBUG);
+        CrashReport.initCrashReport(getApplicationContext(), Config.BUGLY_APP_ID, false)
+
+        //
+        LiveEventBus.config()
+            //配置在没有Observer关联的时候是否自动清除LiveEvent以释放内存（默认值false）
+            .autoClear(true)
     }
 }

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".login.LoginFragment">
+
+    <View
+        android:id="@+id/login_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/login_tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="54dp"
+        android:text="@string/login_title"
+        android:textColor="@color/color_111111"
+        android:textSize="26sp"
+        app:layout_constraintLeft_toLeftOf="@+id/login_view"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/login_tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/login_title2"
+        android:textColor="@color/color_999999"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@+id/login_view"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv1" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/login_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:background="@null"
+        android:hint="@string/login_hint"
+        android:inputType="phone"
+        android:textColor="@color/color_111111"
+        android:textColorHint="@color/color_D1D1D1"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toLeftOf="@+id/login_view"
+        app:layout_constraintRight_toRightOf="@+id/login_view"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv2" />
+
+    <View
+        android:id="@+id/login_view2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/color_D8D8D8"
+        app:layout_constraintLeft_toLeftOf="@+id/login_view"
+        app:layout_constraintRight_toRightOf="@+id/login_view"
+        app:layout_constraintTop_toBottomOf="@+id/login_et" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="44dp"
+        android:alpha="0.55"
+        android:background="@drawable/shape_333333_2"
+        android:gravity="center"
+        android:text="@string/login_next"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="@+id/login_view"
+        app:layout_constraintRight_toRightOf="@+id/login_view"
+        app:layout_constraintTop_toBottomOf="@+id/login_view2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="27dp"
+        android:gravity="bottom|center"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <CheckBox
+            android:id="@+id/login_checkBox"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:button="@drawable/login_checkbox" />
+
+        <TextView
+            android:id="@+id/login_tvAgreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_agreement"
+            android:textColor="@color/color_787878"
+            android:textSize="12sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

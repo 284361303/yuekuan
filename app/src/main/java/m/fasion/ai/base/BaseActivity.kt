@@ -4,19 +4,30 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.ActivityCompat
+import m.fasion.ai.R
 import m.fasion.ai.util.LogUtils
 
 open class BaseActivity : AppCompatActivity() {
-
     private val TAG = "BaseActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         checkPermission()
+
+        initTitle()
+    }
+
+    private fun initTitle() {
+        val includeTitleBack = findViewById<AppCompatImageView>(R.id.inCludeTitle_ivBack)
+        includeTitleBack?.let {
+            it.setOnClickListener {
+                finish()
+            }
+        }
     }
 
     /**
@@ -29,8 +40,12 @@ open class BaseActivity : AppCompatActivity() {
         }
         val newList: MutableList<String> = mutableListOf()  //里面装未允许的权限列表
 
-        val permList = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val permList = arrayOf(
+            Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
 
         for (perm in permList) {
             //未允许的权限

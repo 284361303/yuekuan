@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!--10%不透明度  上下显示，上面完全透明-->
+    <gradient
+        android:angle="90"
+        android:endColor="#00000000"
+        android:startColor="#1a000000"
+        android:useLevel="true" />
+
+</shape>

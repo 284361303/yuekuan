@@ -1,8 +1,10 @@
 package m.fasion.ai.home
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
+import android.view.WindowManager
 import android.widget.Toast
 import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
@@ -17,12 +19,12 @@ class MainActivity : BaseActivity() {
         val inflate = ActivityMainBinding.inflate(layoutInflater)
         setContentView(inflate.root)
 
+        setTitleBarLayout()
+
+        inflate.mainNavigationView.itemIconTintList = null
         inflate.mainNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.main_fragment -> {
-                    showFragment(HomeFragment.TAG)
-                }
-                R.id.category_fragment -> {
                     showFragment(HomeFragment.TAG)
                 }
                 R.id.factor_fragment -> {
@@ -63,6 +65,13 @@ class MainActivity : BaseActivity() {
 
         supportFragmentManager.beginTransaction().replace(R.id.main_frameLayout, fragment!!, tag)
             .commit()
+    }
+
+    /**
+     * 隐藏状态栏
+     */
+    private fun setTitleBarLayout() {
+        window?.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
     }
 
     private var mExitTime: Long = 0
