@@ -7,8 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-
-
     <color name="color_4A4A4A">#4A4A4A</color>
     <color name="color_33000">#33000000</color>  <!--半透明颜色-->
     <color name="color_00black">#00000000</color>
@@ -21,4 +19,5 @@
     <color name="color_999999">#999999</color>
     <color name="color_D8D8D8">#D8D8D8</color>
     <color name="color_333333">#333333</color>
+    <color name="color_ECECEC">#ECECEC</color>
 </resources>

@@ -36,9 +36,7 @@
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
-                            android:layout_height="375dp"
-                            tools:background="@drawable/gradient_black_10"
-                            tools:visibility="gone">
+                            android:layout_height="375dp">
 
                             <com.youth.banner.Banner
                                 android:id="@+id/homeFragment_banner"
@@ -48,6 +46,12 @@
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintRight_toRightOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="170dp"
+                                android:background="@drawable/gradient_black_10"
+                                app:layout_constraintBottom_toBottomOf="parent" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/homeFragment_tvAll"
@@ -97,6 +101,7 @@
                             android:layout_marginStart="20dp"
                             android:layout_marginEnd="20dp"
                             android:gravity="center_vertical"
+                            android:orientation="horizontal"
                             android:paddingTop="32dp"
                             android:paddingBottom="32dp">
 

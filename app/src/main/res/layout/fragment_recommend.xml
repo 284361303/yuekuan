@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="recommendViewModel"
+            type="m.fasion.ai.homeDetails.RecommendViewModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="22dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fragmentRecommend_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{recommendViewModel.modelLiveData.imageList}"
+            tools:src="@mipmap/aaa" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fragmentRecommend_ivCollect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:src="@mipmap/icon_uncollect"
+            tools:src="@mipmap/icon_collect" />
+    </androidx.cardview.widget.CardView>
+</layout>

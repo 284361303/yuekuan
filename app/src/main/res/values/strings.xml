@@ -30,4 +30,14 @@
     <string name="login_hint">请输入11位手机号码</string>
     <string name="login_next">下一步</string>
     <string name="login_agreement">登录即代表你已同意<a style="color:#ff0000;text-decoration: underline;" href="https://www.baidu.com">用户协议</a>和<a style="color:#ff0000;text-decoration: underline;" href="https://www.baidu.com">隐私政策</a></string>
+    <string name="weChart">微信</string>
+    <string name="weBo">微博</string>
+    <string name="friends">朋友圈</string>
+    <string name="cancel">取消</string>
+    <string name="demo_production">打样生产</string>
+    <string name="buy">购买</string>
+    <string name="details">详情</string>
+    <string name="pageviews">浏览量：%d</string>
+    <string name="like_num">喜欢&#160;&#160;%d</string>
+    <string name="recommended_to_you">为你推荐</string>
 </resources>

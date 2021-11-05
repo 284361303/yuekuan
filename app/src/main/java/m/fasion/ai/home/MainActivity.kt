@@ -1,8 +1,6 @@
 package m.fasion.ai.home
 
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.WindowManager
 import android.widget.Toast
@@ -13,10 +11,12 @@ import m.fasion.ai.databinding.ActivityMainBinding
 class MainActivity : BaseActivity() {
 
     private val TAG = "MainActivity"
+    private val inflate by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val inflate = ActivityMainBinding.inflate(layoutInflater)
         setContentView(inflate.root)
 
         setTitleBarLayout()

@@ -22,8 +22,8 @@
             android:id="@+id/itemStaggered_iv"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:src="@mipmap/aaa"
             android:scaleType="centerCrop"
+            android:src="@mipmap/aaa"
             tools:background="#1a111111" />
 
         <View
@@ -53,6 +53,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
+            android:id="@+id/itemStaggered_llLook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
@@ -74,7 +75,6 @@
                 android:textColor="@color/white"
                 android:textSize="11sp"
                 tools:text="100" />
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

@@ -16,7 +16,7 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        binding.title.inCludeTitleIvBack.setOnClickListener { finish() }
         if (loginFragmnet == null) {
             loginFragmnet = LoginFragment()
         }

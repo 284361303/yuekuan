@@ -32,7 +32,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".homeDetails.HomeDetailsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".homeDetails.RecommendActivity"
+            android:configChanges="orientation"
+            android:exported="true" />
+        <activity
             android:name=".login.LoginActivity"
+            android:configChanges="orientation"
             android:exported="true" />
         <activity
             android:name=".home.FilterActivity"

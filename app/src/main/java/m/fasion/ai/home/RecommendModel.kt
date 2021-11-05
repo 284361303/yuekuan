@@ -1,3 +1,5 @@
 package m.fasion.ai.home
 
-data class RecommendModel(val imageList: String)
+import java.io.Serializable
+
+data class RecommendModel(val imageList: String) : Serializable

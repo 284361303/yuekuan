@@ -15,6 +15,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import m.fasion.ai.BuildConfig
 import m.fasion.ai.base.BaseActivity
+import m.fasion.ai.databinding.ActivityHomeDetailsBinding
 import m.fasion.ai.databinding.ActivityShareBinding
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.Config
@@ -29,10 +30,14 @@ class ShareActivity : BaseActivity(), WbShareCallback {
     private var wxApi: IWXAPI? = null
     private val TAG = "ShareActivity"
 
+    private val inflate by lazy {
+        ActivityShareBinding.inflate(layoutInflater)
+    }
+
     companion object {
 
         fun startActivity(context: Context, text: String) {
-            var intent = Intent(context, ShareActivity::class.java)
+            val intent = Intent(context, ShareActivity::class.java)
             val bundle = Bundle()
             if (text.isNotEmpty()) {
                 bundle.putString("text", text)
@@ -44,13 +49,14 @@ class ShareActivity : BaseActivity(), WbShareCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e(TAG, "onCreate")
-        val inflate = ActivityShareBinding.inflate(layoutInflater)
         setContentView(inflate.root)
 
         initShareSdk()
 
         inflate.diaLogShareViewTop.setOnClickListener {
+            finish()
+        }
+        inflate.diaLogShareTvCancel.setOnClickListener {
             finish()
         }
 
@@ -121,7 +127,7 @@ class ShareActivity : BaseActivity(), WbShareCallback {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (wbApi != null) {
-            wbApi?.doResultIntent(data, this);
+            wbApi?.doResultIntent(data, this)
         }
     }
 }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_33000"
+    android:background="#3D000000"
     android:orientation="vertical">
 
-    <TextView
+    <View
         android:id="@+id/diaLogShare_viewTop"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -17,54 +18,71 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingTop="20dp"
-        android:paddingBottom="35dp">
+        android:paddingHorizontal="20dp"
+        android:paddingTop="22dp"
+        android:paddingBottom="24dp">
 
         <TextView
             android:id="@+id/diaLogShare_tvWeiChat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@mipmap/icon_wechat"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:text="微信"
+            android:paddingStart="0dp"
+            android:paddingEnd="28dp"
+            android:text="@string/weChart"
             android:textColor="@color/color_4A4A4A"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            app:drawableTopCompat="@mipmap/icon_wechat" />
 
         <TextView
             android:id="@+id/diaLogShare_tvWeiChatFriends"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:drawableTop="@mipmap/icon_wechat_friends"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:text="朋友圈"
+            android:paddingStart="28dp"
+            android:paddingEnd="28dp"
+            android:text="@string/friends"
             android:textColor="@color/color_4A4A4A"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            app:drawableTopCompat="@mipmap/icon_wechat_friends" />
 
         <TextView
             android:id="@+id/diaLogShare_tvWeiBo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:drawableTop="@mipmap/icon_wei_bo"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:text="微博"
+            android:paddingStart="28dp"
+            android:paddingEnd="0dp"
+            android:text="@string/weBo"
             android:textColor="@color/color_4A4A4A"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/diaLogShare_tvDouYin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:drawableTop="@mipmap/icon_dou_yin"
-            android:drawablePadding="5dp"
-            android:gravity="center"
-            android:text="抖音"
-            android:textColor="@color/color_4A4A4A"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            app:drawableTopCompat="@mipmap/icon_wei_bo" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@color/color_EEEEEE" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/diaLogShare_tvCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:paddingVertical="20dp"
+        android:text="@string/cancel"
+        android:textColor="@color/color_111111"
+        android:textSize="16sp" />
 </LinearLayout>

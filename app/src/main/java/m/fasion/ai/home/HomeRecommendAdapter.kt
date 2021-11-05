@@ -11,14 +11,14 @@ import m.fasion.ai.databinding.ItemImage105140Binding
  * 今日推荐的adapter
  */
 class HomeRecommendAdapter(private val mList: List<RecommendModel>) :
-    RecyclerView.Adapter<HomeRecommendAdapter.RecommendHolder>() {
+    RecyclerView.Adapter<HomeRecommendAdapter.HomeRecommendHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeRecommendHolder {
         val binding = DataBindingUtil.inflate<ItemImage105140Binding>(LayoutInflater.from(parent.context), R.layout.item_image_105_140, parent, false)
-        return RecommendHolder(binding)
+        return HomeRecommendHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: RecommendHolder, position: Int) {
+    override fun onBindViewHolder(holder: HomeRecommendHolder, position: Int) {
         val recommendModel = mList[position]
         holder.bind(recommendModel, position)
 
@@ -33,7 +33,7 @@ class HomeRecommendAdapter(private val mList: List<RecommendModel>) :
         return if (mList.isNotEmpty()) mList.size else 0
     }
 
-    class RecommendHolder(private val binding: ItemImage105140Binding) :
+    class HomeRecommendHolder(private val binding: ItemImage105140Binding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: RecommendModel, position: Int) {

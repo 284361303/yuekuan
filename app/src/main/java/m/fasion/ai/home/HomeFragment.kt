@@ -14,15 +14,18 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.youth.banner.adapter.BannerImageAdapter
+import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.listener.OnPageChangeListener
 import kotlinx.coroutines.Job
 import m.fasion.ai.R
 import m.fasion.ai.databinding.FragmentHomeBinding
-import m.fasion.ai.login.LoginActivity
-import m.fasion.ai.util.LogUtils
+import m.fasion.ai.homeDetails.HomeDetailsActivity
+import m.fasion.ai.homeDetails.RecommendActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.LoginModel
@@ -69,11 +72,16 @@ class HomeFragment : Fragment() {
         val model3 = HomeBannerModel("3", "https://img.zcool.cn/community/01270156fb62fd6ac72579485aa893.jpg")
         val model4 = HomeBannerModel("4", "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg")
         val model5 = HomeBannerModel("5", "https://img.zcool.cn/community/016a2256fb63006ac7257948f83349.jpg")
-        val bannerAdapter = HomeBannerAdapter(requireContext(), listOf(model1, model2, model3, model4, model5))
-        _binding.homeFragmentBanner
-            .setAdapter(bannerAdapter)
-            .addBannerLifecycleObserver(this)
-            .addOnPageChangeListener(object : OnPageChangeListener {
+
+        _binding.homeFragmentBanner.apply {
+            setAdapter(object :
+                BannerImageAdapter<HomeBannerModel>(listOf(model1, model2, model3, model4, model5)) {
+                override fun onBindView(holder: BannerImageHolder?, data: HomeBannerModel?, position: Int, size: Int) {
+                    Glide.with(requireContext()).load(data?.url).into(holder?.imageView!!)
+                }
+            })
+            addBannerLifecycleObserver(this@HomeFragment)
+            addOnPageChangeListener(object : OnPageChangeListener {
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 }
 
@@ -84,12 +92,12 @@ class HomeFragment : Fragment() {
                 override fun onPageScrollStateChanged(state: Int) {
                 }
             })
-            //点击事件
-            .setOnBannerListener { data, position ->
+            setOnBannerListener { data, position -> //点击事件
                 ToastUtils.show(requireContext(), position.toString())
             }
-        _binding.homeFragmentBanner.removeIndicator()
-        _binding.homeFragmentTvAll.text = _binding.homeFragmentBanner.realCount.toString()
+            removeIndicator()
+            _binding.homeFragmentTvAll.text = realCount.toString()  //设置banner总数
+        }
         //轮播End
 
         _binding.homeFragmentAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -137,8 +145,7 @@ class HomeFragment : Fragment() {
         _binding.homeFragmentRecommendRV.recyclerView.adapter = HomeRecommendAdapter(listOf).also {
             it.onItemClickListener = object : HomeRecommendAdapter.OnItemClickListener {
                 override fun onItemClick(model: RecommendModel, position: Int) {    //点击事件
-                    ToastUtils.show(requireContext(), position.toString())
-                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                    HomeDetailsActivity.startActivity(requireContext(), "")
                 }
             }
         }
@@ -149,6 +156,11 @@ class HomeFragment : Fragment() {
         //筛选跳转
         _binding.homeFragmentTvFilter.setOnClickListener {
             startActivity(Intent(requireContext(), FilterActivity::class.java))
+        }
+
+        //今日推荐更多
+        _binding.homeFragmentTvMore.setOnClickListener {
+            startActivity(Intent(requireContext(), RecommendActivity::class.java))
         }
 
         viewModel.errorLiveData.observe(requireActivity(), {
@@ -242,3 +254,5 @@ class HomeViewModel : BaseViewModel() {
         launch?.cancel()
     }
 }
+
+data class HomeBannerModel(val id: String, val url: String)

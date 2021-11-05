@@ -45,7 +45,7 @@ class MineFragment : Fragment() {
         _inflate?.let {
             it.mineTvName.text = param1
             val mUrl = "https://lh3.googleusercontent.com/NSVbWbdKFGRzju5r5XsXKMJ9A41PVdWNhGSxDwxk9aO6o_7SeVMU8z27-GhdNw3uS0PZtLPts5tvaxdsHr--NRXZWfyi=s300"
-            Glide.with(requireContext()).load(mUrl).error(R.mipmap.icon_dou_yin).into(it.mineIvBg)
+            Glide.with(requireContext()).load(mUrl).into(it.mineIvBg)
             Unit
         }
         _inflate?.mineBtnAddress?.setOnClickListener {
