@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import m.fasion.ai.R
 import m.fasion.ai.databinding.FragmentHomeBinding
 import m.fasion.ai.databinding.FragmentHomeChildBinding
+import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 
@@ -53,11 +54,11 @@ class HomeChildFragment : Fragment() {
             _binding.homeChildRV.adapter = this
             onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
-                    ToastUtils.show(requireContext(), "点击了${position}")
+                    HomeDetailsActivity.startActivity(requireContext(), "")
                 }
 
                 override fun onCollectClick(position: Int) {
-                    ToastUtils.show(requireContext(), "收藏了 ${position}")
+                    ToastUtils.show("收藏了 ${position}")
                 }
             }
         }

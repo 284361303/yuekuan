@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_0"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/color_111111"
+                android:textSize="17sp"
+                tools:ignore="NestedWeights"
+                tools:text="1" />
+
+            <View
+                android:id="@+id/view_0"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_EEEEEE" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/color_111111"
+                android:textSize="17sp"
+                tools:ignore="NestedWeights"
+                tools:text="1" />
+
+            <View
+                android:id="@+id/view_1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_EEEEEE" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/color_111111"
+                android:textSize="17sp"
+                tools:ignore="NestedWeights"
+                tools:text="1" />
+
+            <View
+                android:id="@+id/view_2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_EEEEEE" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/color_111111"
+                android:textSize="17sp"
+                tools:ignore="NestedWeights"
+                tools:text="1" />
+
+            <View
+                android:id="@+id/view_3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_EEEEEE" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <m.fasion.ai.util.verifyCode.MyEditText
+        android:id="@+id/edit_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@null"
+        android:digits="1234567890"
+        android:inputType="number"
+        android:longClickable="false"
+        android:maxLength="4"
+        android:textColor="@color/transparent" />
+</RelativeLayout>

@@ -171,6 +171,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/addAddress_constraint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -220,6 +221,23 @@
                         app:layout_constraintBottom_toBottomOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <m.fasion.ai.util.customize.RadiusCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addAddress_constraint"
+                    app:rcv_bottomRightRadiu="50dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/mine_ivBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/aaa" />
+                </m.fasion.ai.util.customize.RadiusCardView>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

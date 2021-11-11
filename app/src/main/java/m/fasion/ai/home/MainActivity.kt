@@ -4,16 +4,23 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivityMainBinding
 
+
 class MainActivity : BaseActivity() {
 
-    private val TAG = "MainActivity"
     private val inflate by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    private val fragmentList = mutableListOf<Fragment>()
+    private var homeFragment: HomeFragment? = null
+    private var mineFragment: MineFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,46 +32,32 @@ class MainActivity : BaseActivity() {
         inflate.mainNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.main_fragment -> {
-                    showFragment(HomeFragment.TAG)
-                }
-                R.id.factor_fragment -> {
-                    showFragment(HomeFragment.TAG)
+                    inflate.mainViewPager.currentItem = 0
                 }
                 R.id.mine_fragment -> {
-                    showFragment(MineFragment.TAG)
+                    inflate.mainViewPager.currentItem = 1
                 }
             }
             true
         }
         //设置默认显示第一个页面的Fragment
-        showFragment(HomeFragment.TAG)
+        showFragment()
     }
 
-    private fun showFragment(tag: String) {
-        var fragment = supportFragmentManager.findFragmentByTag(tag)
-        if (fragment == null) {
-            when (tag) {
-                HomeFragment.TAG -> {
-                    fragment = HomeFragment()
-                    fragment.arguments = Bundle().also { it.putString("name", "1个fragment") }
-                }
-                HomeFragment.TAG -> {
-                    fragment = HomeFragment()
-                    fragment.arguments = Bundle().also { it.putString("name", "2个fragment") }
-                }
-                HomeFragment.TAG -> {
-                    fragment = HomeFragment()
-                    fragment.arguments = Bundle().also { it.putString("name", "3个fragment") }
-                }
-                MineFragment.TAG -> {
-                    fragment = MineFragment()
-                    fragment.arguments = Bundle().also { it.putString("name", "4个fragment") }
-                }
-            }
+    private fun showFragment() {
+        if (homeFragment == null) {
+            homeFragment = HomeFragment()
         }
-
-        supportFragmentManager.beginTransaction().replace(R.id.main_frameLayout, fragment!!, tag)
-            .commit()
+        if (mineFragment == null) {
+            mineFragment = MineFragment()
+        }
+        fragmentList.clear()
+        fragmentList.add(homeFragment!!)
+        fragmentList.add(mineFragment!!)
+        inflate.mainViewPager.offscreenPageLimit = fragmentList.size
+        inflate.mainViewPager.adapter = ScreenSlidePagerAdapter(fragmentList, this)
+        inflate.mainViewPager.isUserInputEnabled = false
+        inflate.mainViewPager.currentItem = 0
     }
 
     /**
@@ -72,6 +65,17 @@ class MainActivity : BaseActivity() {
      */
     private fun setTitleBarLayout() {
         window?.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+    }
+
+    private class ScreenSlidePagerAdapter(private val lists: List<Fragment>, fa: FragmentActivity?) :
+        FragmentStateAdapter(fa!!) {
+        override fun createFragment(position: Int): Fragment {
+            return lists[position]
+        }
+
+        override fun getItemCount(): Int {
+            return lists.size
+        }
     }
 
     private var mExitTime: Long = 0

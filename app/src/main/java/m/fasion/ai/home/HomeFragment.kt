@@ -1,14 +1,21 @@
 package m.fasion.ai.home
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import android.widget.LinearLayout
+import android.widget.Space
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewStubProxy
+import androidx.databinding.adapters.ViewStubBindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
@@ -18,17 +25,20 @@ import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.listener.OnPageChangeListener
 import kotlinx.coroutines.Job
 import m.fasion.ai.R
+import m.fasion.ai.base.ConstantsKey
+import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.FragmentHomeBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.homeDetails.RecommendActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
-import m.fasion.core.model.LoginModel
+import m.fasion.core.model.UserModel
 import m.fasion.core.util.CoreUtil
 import kotlin.math.abs
 
@@ -36,7 +46,7 @@ import kotlin.math.abs
  * 首页Fragment
  * 2021年9月23日
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), StateView.OnRetryListener {
 
     private var barHeight: Int = 0
     private var searchHeight: Int = 0
@@ -59,8 +69,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding.homeFragmentRefresh.setEnableLoadMore(false)   //禁止上拉加载
         barHeight = CoreUtil.getStatusBarHeight(requireContext())
+        initView()
+    }
+
+    private fun initView() {
+        //判断是否有网Start
+        if (initNetWork()) return
+        //判断是否有网End
+        _binding.homeFragmentRefresh.setEnableLoadMore(false)   //禁止上拉加载
 
         _binding.homeFragmentToolBar.post {
             searchHeight = _binding.homeFragmentToolBar.height
@@ -86,14 +103,14 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onPageSelected(position: Int) {
-                    _binding.homeFragmentTvCurrent.text = position.toString()
+                    _binding.homeFragmentTvCurrent.text = (position + 1).toString()
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
                 }
             })
             setOnBannerListener { data, position -> //点击事件
-                ToastUtils.show(requireContext(), position.toString())
+                ToastUtils.show(position.toString())
             }
             removeIndicator()
             _binding.homeFragmentTvAll.text = realCount.toString()  //设置banner总数
@@ -122,7 +139,7 @@ class HomeFragment : Fragment() {
         })
 
         //计算顶部的距离
-        initSearchTop()
+        initSearchTop(_binding.homeFragmentToolBarSpace)
 
         CoreUtil.setTypeFaceMedium(arrayOf(_binding.homeFragmentTvRecommend1, _binding.homeFragmentTvRecommend2,
             _binding.homeFragmentTvMore, _binding.homeFragmentTvDesign1, _binding.homeFragmentTvDesign2, _binding.homeFragmentTvTopTitle).toList())
@@ -166,17 +183,52 @@ class HomeFragment : Fragment() {
         viewModel.errorLiveData.observe(requireActivity(), {
             System.currentTimeMillis()
         })
+
+        //下拉刷新
+        _binding.homeFragmentRefresh.setOnRefreshListener {
+            if (initNetWork()) return@setOnRefreshListener
+            //TODO::请求接口
+        }
+
+        //接收筛选条件页面回传的数据
+        LiveEventBus.get(ConstantsKey.FILTER_KEY, List::class.java).observe(requireActivity(), {
+            if (it != null && it.isNotEmpty()) {
+                ToastUtils.show(it[0].toString())
+            } else {
+                ToastUtils.show("重置成功")
+            }
+        })
+    }
+
+    /**
+     * 判断是否有网Start
+     */
+    private fun initNetWork(): Boolean {
+        val isNetwork = CoreUtil.isNetworkAvailable(requireContext())
+        if (!isNetwork) {   //让空布局和网络异常布局显示出来
+            _binding.homeFragmentIncludeState.homeEmptyLlAll.visibility = View.VISIBLE
+            initSearchTop(_binding.homeFragmentIncludeState.homeEmptyToolBarSpace)
+            _binding.homeFragmentIncludeState.homeEmptyStateView.setStateView(StateView.State.error)
+            _binding.homeFragmentIncludeState.homeEmptyStateView.listener = this
+            _binding.homeFragmentRefresh.finishRefresh()
+            _binding.homeFragmentRefresh.visibility = View.GONE
+            return true
+        } else {    //隐藏空页面和网络错误的布局
+            _binding.homeFragmentRefresh.visibility = View.VISIBLE
+            _binding.homeFragmentIncludeState.homeEmptyLlAll.visibility = View.GONE
+        }
+        return false
     }
 
     /**
      * 计算顶部的距离
      */
-    private fun initSearchTop() {
+    private fun initSearchTop(space: Space) {
         val height = CoreUtil.px2dp(requireContext(), barHeight.toFloat())
         if (height > 0) {
-            val layoutParams = _binding.homeFragmentToolBarSpace.layoutParams as LinearLayout.LayoutParams
+            val layoutParams = space.layoutParams as LinearLayout.LayoutParams
             layoutParams.height = barHeight + CoreUtil.dp2px(requireContext(), 10.toFloat())
-            _binding.homeFragmentToolBarSpace.layoutParams = layoutParams
+            space.layoutParams = layoutParams
         }
     }
 
@@ -240,13 +292,20 @@ class HomeFragment : Fragment() {
             }
         })
     }
+
+    /**
+     * 重新加载请求数据
+     */
+    override fun onRetry() {
+        initView()
+    }
 }
 
 class HomeViewModel : BaseViewModel() {
 
     private var launch: Job? = null
     val tabList = arrayOf("综合", "上新", "热度")
-    val loginLiveData = MutableLiveData<LoginModel>()
+    val loginLiveData = MutableLiveData<UserModel>()
     val errorLiveData = MutableLiveData<String>()
 
     override fun onCleared() {

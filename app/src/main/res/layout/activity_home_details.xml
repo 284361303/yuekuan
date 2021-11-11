@@ -22,10 +22,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <m.fasion.ai.util.customize.RadiusCardView
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:background="@drawable/shape_bottom_right_50">
+                app:rcv_bottomRightRadiu="50dp">
 
                 <com.youth.banner.Banner
                     android:id="@+id/homeDetails_banner"
@@ -39,6 +39,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
+                    android:layout_gravity="bottom"
                     android:background="@drawable/gradient_black_16"
                     app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -46,14 +47,13 @@
                     android:id="@+id/homeDetails_tvPageViews"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
                     android:layout_marginStart="20dp"
                     android:layout_marginBottom="13dp"
                     android:text="@string/pageviews"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:textSize="12sp" />
+            </m.fasion.ai.util.customize.RadiusCardView>
 
             <TextView
                 android:id="@+id/homeDetails_tvTitle"

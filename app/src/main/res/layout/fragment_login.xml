@@ -44,8 +44,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:background="@null"
+        android:digits="1234567890"
         android:hint="@string/login_hint"
         android:inputType="phone"
+        android:maxLength="13"
+        android:paddingBottom="8dp"
         android:textColor="@color/color_111111"
         android:textColorHint="@color/color_D1D1D1"
         android:textSize="17sp"
@@ -57,13 +60,13 @@
         android:id="@+id/login_view2"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="8dp"
         android:background="@color/color_D8D8D8"
         app:layout_constraintLeft_toLeftOf="@+id/login_view"
         app:layout_constraintRight_toRightOf="@+id/login_view"
         app:layout_constraintTop_toBottomOf="@+id/login_et" />
 
     <TextView
+        android:id="@+id/login_tvLogin"
         android:layout_width="0dp"
         android:layout_height="44dp"
         android:layout_marginTop="44dp"
@@ -78,24 +81,47 @@
         app:layout_constraintTop_toBottomOf="@+id/login_view2" />
 
     <LinearLayout
+        android:id="@+id/login_llAgreement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="27dp"
         android:gravity="bottom|center"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/login_checkBox"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:button="@drawable/login_checkbox" />
 
         <TextView
-            android:id="@+id/login_tvAgreement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_agreement"
             android:textColor="@color/color_787878"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/login_tvAgreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_agreement1"
+            android:textColor="@color/color_111111"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/and"
+            android:textColor="@color/color_787878"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/login_tvAgreement1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_agreement2"
+            android:textColor="@color/color_111111"
             android:textSize="12sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

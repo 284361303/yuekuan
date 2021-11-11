@@ -1,4 +1,4 @@
-package m.fasion.ai.util
+package m.fasion.ai.util.customize
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -7,7 +7,6 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import m.fasion.ai.databinding.LoadingViewBinding
 

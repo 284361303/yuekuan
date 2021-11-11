@@ -1,25 +1,9 @@
 package m.fasion.ai.mine
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.annotation.NonNull
-import com.amap.api.location.AMapLocation
-import com.amap.api.location.AMapLocationClient
-import com.amap.api.location.AMapLocationClientOption
-import com.amap.api.location.AMapLocationListener
-import com.amap.api.services.core.AMapException
-import com.amap.api.services.core.LatLonPoint
-import com.amap.api.services.core.PoiItem
-import com.amap.api.services.poisearch.PoiResult
-import com.amap.api.services.poisearch.PoiSearch
-import com.google.gson.Gson
 import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivityAddAddressBinding
-import m.fasion.ai.databinding.ActivityMainBinding
-import m.fasion.ai.util.LogUtils
-import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.util.CoreUtil
 
@@ -48,18 +32,18 @@ class AddAddressActivity : BaseActivity() {
             finish()
         }
 
-        viewModel.initLocation(this)
+//        viewModel.initLocation(this)
     }
 }
 
 class AddressViewModel : BaseViewModel() {
-    private var locationClient: AMapLocationClient? = null
-    private var mOption: AMapLocationClientOption? = null
+//    private var locationClient: AMapLocationClient? = null
+//    private var mOption: AMapLocationClientOption? = null
 
     /**
      * 初始化定位
      */
-    fun initLocation(@NonNull context: Context) {
+    /*fun initLocation(@NonNull context: Context) {
         locationClient = AMapLocationClient(context)
         mOption = AMapLocationClientOption()
         //设置定位模式，高精度模式
@@ -107,22 +91,22 @@ class AddressViewModel : BaseViewModel() {
                 }
             }
         }
-    }
+    }*/
 
     /**
      * 启动定位
      */
     fun startLocation() {
-        locationClient?.setLocationOption(mOption)
-        locationClient?.startLocation()
+//        locationClient?.setLocationOption(mOption)
+//        locationClient?.startLocation()
     }
 
     override fun onCleared() {
         super.onCleared()
-        if (locationClient != null) {
+        /*if (locationClient != null) {
             locationClient?.onDestroy()
             locationClient = null
             mOption = null
-        }
+        }*/
     }
 }

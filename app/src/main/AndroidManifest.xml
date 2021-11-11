@@ -65,7 +65,7 @@
             android:name=".share.ShareActivity"
             android:configChanges="orientation"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/transparent_activity" />
         <activity
             android:name=".home.MainActivity"

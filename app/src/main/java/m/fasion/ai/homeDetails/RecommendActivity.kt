@@ -24,12 +24,14 @@ import m.fasion.core.util.CoreUtil
  */
 class RecommendActivity : FragmentActivity() {
     private var currentPosition: Int = 1
-    private lateinit var binding: ActivityRecommendBinding
     private val viewModel: RecommendViewModel by viewModels()
+
+    private val binding by lazy {
+        ActivityRecommendBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRecommendBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.title.inCludeTitleIvBack.setOnClickListener { finish() }

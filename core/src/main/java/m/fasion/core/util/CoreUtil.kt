@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.NonNull
+import java.util.regex.Pattern
 
 object CoreUtil {
 
@@ -116,5 +117,38 @@ object CoreUtil {
     fun getScreenWidth(context: Context): Int {
         val appContext = context.applicationContext
         return appContext.resources.displayMetrics.widthPixels
+    }
+
+    /**
+     * 验证是否是手机号
+     */
+    fun String.isMobile(): Boolean {
+        val pattern =
+            Pattern.compile("^((13[0-9])|(14[5,7,9])|(15[0-3,5-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[1,8,9]))\\d{8}$")
+        return pattern.matcher(this).matches()
+    }
+
+    /**
+     * 手机号密文处理  如：150***78901
+     */
+    fun String?.toSecret(): String {
+        return if (this.isNullOrEmpty()) {
+            ""
+        } else {
+            if (this.maybePhone()) {
+                this.replaceRange(3..6, "****")
+            } else {
+                this
+            }
+        }
+    }
+
+    fun String.maybePhone(): Boolean {
+        return if (this.isNumeric()) this.length in 7..11 && this.startsWith("1") else false
+    }
+
+    fun String.isNumeric(): Boolean {
+        val pattern = Pattern.compile("^-?[0-9]+")
+        return pattern.matcher(this).matches()
     }
 }

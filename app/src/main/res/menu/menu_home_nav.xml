@@ -5,10 +5,10 @@
         android:id="@+id/main_fragment"
         android:icon="@drawable/main_tab_select"
         android:title="@string/main" />
-    <item
+    <!--<item
         android:id="@+id/factor_fragment"
         android:icon="@drawable/two_tab_select"
-        android:title="@string/two" />
+        android:title="@string/two" />-->
     <item
         android:id="@+id/mine_fragment"
         android:icon="@drawable/mine_tab_select"

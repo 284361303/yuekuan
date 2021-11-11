@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">fasion</string>
+    <string name="app_name">FASION·AI</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="main">款式</string>
@@ -29,7 +29,9 @@
     <string name="login_title2">新用户验证后自动注册</string>
     <string name="login_hint">请输入11位手机号码</string>
     <string name="login_next">下一步</string>
-    <string name="login_agreement">登录即代表你已同意<a style="color:#ff0000;text-decoration: underline;" href="https://www.baidu.com">用户协议</a>和<a style="color:#ff0000;text-decoration: underline;" href="https://www.baidu.com">隐私政策</a></string>
+    <string name="login_agreement">登录即代表你已同意</string>
+    <string name="login_agreement1"><u>用户协议</u></string>
+    <string name="login_agreement2"><u>隐私政策</u></string>
     <string name="weChart">微信</string>
     <string name="weBo">微博</string>
     <string name="friends">朋友圈</string>
@@ -37,7 +39,31 @@
     <string name="demo_production">打样生产</string>
     <string name="buy">购买</string>
     <string name="details">详情</string>
-    <string name="pageviews">浏览量：%d</string>
-    <string name="like_num">喜欢&#160;&#160;%d</string>
     <string name="recommended_to_you">为你推荐</string>
+    <string name="and">和</string>
+    <string name="input_code">输入验证码</string>
+    <string name="resend">重新发送</string>
+    <string name="no_internet">网络不给力…</string>
+    <string name="btn_retry">点击重试</string>
+    <string name="empty">暂无内容</string>
+    <string name="reset">重置</string>
+    <string name="sure">确定</string>
+    <string name="edit_information">编辑资料</string>
+    <string name="my_like">我的喜欢</string>
+    <string name="zero">0</string>
+    <string name="toolbar">工具栏</string>
+    <string name="mine_agreement1">用户协议</string>
+    <string name="mine_agreement2">隐私政策</string>
+    <string name="about_us">关于我们</string>
+    <string name="feedback">意见反馈</string>
+    <string name="logout">退出登录</string>
+    <string name="quit">确定要退出吗？</string>
+    <string name="quit1">退出</string>
+
+
+    <string name="pageviews">浏览量：%d</string>
+    <string name="input_code_num">短信验证码已发送至%s</string>
+    <string name="like_num">喜欢&#160;&#160;%d</string>
+    <string name="second">%ds</string>
+
 </resources>

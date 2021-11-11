@@ -15,7 +15,6 @@ import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import m.fasion.ai.BuildConfig
 import m.fasion.ai.base.BaseActivity
-import m.fasion.ai.databinding.ActivityHomeDetailsBinding
 import m.fasion.ai.databinding.ActivityShareBinding
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.Config
@@ -95,7 +94,7 @@ class ShareActivity : BaseActivity(), WbShareCallback {
     private fun getExtra() {
         if (intent.extras?.containsKey("text") == true) {
             intent.extras?.getString("text")?.let {
-                ToastUtils.show(this, it)
+                ToastUtils.show(it)
             }
         }
     }

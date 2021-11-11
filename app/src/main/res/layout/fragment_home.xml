@@ -8,116 +8,207 @@
             type="m.fasion.ai.home.HomeViewModel" />
     </data>
 
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/homeFragment_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/homeFragment_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/homeFragment_appbar"
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.appbar.CollapsingToolbarLayout
-                    android:id="@+id/homeFragment_ToolbarLayout"
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/homeFragment_appbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                    android:layout_height="wrap_content">
 
-                    <LinearLayout
+                    <com.google.android.material.appbar.CollapsingToolbarLayout
+                        android:id="@+id/homeFragment_ToolbarLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="375dp">
-
-                            <com.youth.banner.Banner
-                                android:id="@+id/homeFragment_banner"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="170dp"
-                                android:background="@drawable/gradient_black_10"
-                                app:layout_constraintBottom_toBottomOf="parent" />
-
-                            <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/homeFragment_tvAll"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="20dp"
-                                android:textColor="@color/white"
-                                android:textSize="8sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/homeFragment_tvCurrent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/homeFragment_tvCurrent"
-                                tools:ignore="SmallSp"
-                                tools:text="9" />
-
-                            <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/homeFragment_tvCenter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/left"
-                                android:textColor="@color/white"
-                                android:textSize="8sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/homeFragment_tvCurrent"
-                                app:layout_constraintRight_toLeftOf="@+id/homeFragment_tvAll"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/homeFragment_tvCurrent"
-                                tools:ignore="SmallSp" />
-
-                            <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/homeFragment_tvCurrent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="24dp"
-                                android:textColor="@color/white"
-                                android:textSize="14sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintRight_toLeftOf="@+id/homeFragment_tvCenter"
-                                app:layout_constraintRight_toRightOf="parent"
-                                tools:text="2" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <include layout="@layout/include_line_f8f8f8" />
-
-                        <!--今日推荐Start-->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="20dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingTop="32dp"
-                            android:paddingBottom="32dp">
+                            android:orientation="vertical">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="375dp">
+
+                                <com.youth.banner.Banner
+                                    android:id="@+id/homeFragment_banner"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="170dp"
+                                    android:background="@drawable/gradient_black_10"
+                                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/homeFragment_tvAll"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="20dp"
+                                    android:textColor="@color/white"
+                                    android:textSize="8sp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/homeFragment_tvCurrent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/homeFragment_tvCurrent"
+                                    tools:ignore="SmallSp"
+                                    tools:text="9" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/homeFragment_tvCenter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/left"
+                                    android:textColor="@color/white"
+                                    android:textSize="8sp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/homeFragment_tvCurrent"
+                                    app:layout_constraintRight_toLeftOf="@+id/homeFragment_tvAll"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/homeFragment_tvCurrent"
+                                    tools:ignore="SmallSp" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/homeFragment_tvCurrent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="24dp"
+                                    android:text="1"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintRight_toLeftOf="@+id/homeFragment_tvCenter"
+                                    app:layout_constraintRight_toRightOf="parent" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <include layout="@layout/include_line_f8f8f8" />
+
+                            <!--今日推荐Start-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginEnd="20dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingTop="32dp"
+                                android:paddingBottom="32dp">
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                    <TextView
+                                        android:id="@+id/homeFragment_tvRecommend1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:paddingBottom="2dp"
+                                        android:text="@string/recommend_en"
+                                        android:textColor="@color/color_111111"
+                                        android:textSize="20sp"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                    <TextView
+                                        android:id="@+id/homeFragment_tvRecommend2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:text="@string/recommend_zh"
+                                        android:textColor="@color/color_111111"
+                                        android:textSize="14sp"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvRecommend1"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                    <Space
+                                        android:layout_width="14dp"
+                                        android:layout_height="0dp"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvRecommend2"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                    <View
+                                        android:layout_width="0dp"
+                                        android:layout_height="0dp"
+                                        android:layout_marginStart="14dp"
+                                        android:background="#14CC5A3A"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintRight_toRightOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <Space
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+
+                                <TextView
+                                    android:id="@+id/homeFragment_tvMore"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="1.4dp"
+                                    android:gravity="center"
+                                    android:text="@string/more"
+                                    android:textColor="@color/color_111111"
+                                    android:textSize="14sp" />
+
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:id="@+id/homeFragment_tvMore2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@mipmap/icon_more"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintRight_toLeftOf="@+id/homeFragment_tvMore"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </LinearLayout>
+
+                            <include
+                                android:id="@+id/homeFragment_recommendRV"
+                                layout="@layout/include_recycler_view" />
+
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="32dp" />
+
+                            <include layout="@layout/include_line_f8f8f8" />
+                            <!--今日推荐End-->
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintTop_toTopOf="parent">
+                                android:layout_marginStart="20dp"
+                                android:layout_marginEnd="20dp"
+                                android:paddingTop="32dp"
+                                android:paddingBottom="24dp">
 
                                 <TextView
-                                    android:id="@+id/homeFragment_tvRecommend1"
+                                    android:id="@+id/homeFragment_tvDesign1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:paddingBottom="2dp"
-                                    android:text="@string/recommend_en"
+                                    android:text="@string/design_en"
                                     android:textColor="@color/color_111111"
                                     android:textSize="20sp"
                                     app:layout_constraintBottom_toBottomOf="parent"
@@ -125,22 +216,22 @@
                                     app:layout_constraintTop_toTopOf="parent" />
 
                                 <TextView
-                                    android:id="@+id/homeFragment_tvRecommend2"
+                                    android:id="@+id/homeFragment_tvDesign2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
-                                    android:text="@string/recommend_zh"
+                                    android:text="@string/design_zh"
                                     android:textColor="@color/color_111111"
                                     android:textSize="14sp"
                                     app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvRecommend1"
+                                    app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvDesign1"
                                     app:layout_constraintTop_toTopOf="parent" />
 
                                 <Space
                                     android:layout_width="14dp"
                                     android:layout_height="0dp"
                                     app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvRecommend2"
+                                    app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvDesign2"
                                     app:layout_constraintTop_toTopOf="parent" />
 
                                 <View
@@ -152,195 +243,118 @@
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintRight_toRightOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
+
                             </androidx.constraintlayout.widget.ConstraintLayout>
-
-                            <Space
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
-                            <TextView
-                                android:id="@+id/homeFragment_tvMore"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="1.4dp"
-                                android:gravity="center"
-                                android:text="@string/more"
-                                android:textColor="@color/color_111111"
-                                android:textSize="14sp" />
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/homeFragment_tvMore2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@mipmap/icon_more"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintRight_toLeftOf="@+id/homeFragment_tvMore"
-                                app:layout_constraintTop_toTopOf="parent" />
                         </LinearLayout>
 
-                        <include
-                            android:id="@+id/homeFragment_recommendRV"
-                            layout="@layout/include_recycler_view" />
-
-                        <Space
+                        <androidx.appcompat.widget.Toolbar
+                            android:id="@+id/homeFragment_toolBar"
                             android:layout_width="match_parent"
-                            android:layout_height="32dp" />
-
-                        <include layout="@layout/include_line_f8f8f8" />
-                        <!--今日推荐End-->
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="20dp"
-                            android:paddingTop="32dp"
-                            android:paddingBottom="24dp">
+                            app:contentInsetEnd="0dp"
+                            app:contentInsetStart="0dp"
+                            app:layout_collapseMode="pin">
 
-                            <TextView
-                                android:id="@+id/homeFragment_tvDesign1"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:paddingBottom="2dp"
-                                android:text="@string/design_en"
-                                android:textColor="@color/color_111111"
-                                android:textSize="20sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/homeFragment_tvDesign2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="@string/design_zh"
-                                android:textColor="@color/color_111111"
-                                android:textSize="14sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvDesign1"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                <Space
+                                    android:id="@+id/homeFragment_toolBarSpace"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
 
-                            <Space
-                                android:layout_width="14dp"
-                                android:layout_height="0dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvDesign2"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
 
-                            <View
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:layout_marginStart="14dp"
-                                android:background="#14CC5A3A"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                    <androidx.appcompat.widget.AppCompatTextView
+                                        android:id="@+id/homeFragment_tvTopTitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:paddingStart="20dp"
+                                        android:paddingEnd="0dp"
+                                        android:text="@string/fasionAI"
+                                        android:textColor="@color/white"
+                                        android:textSize="22sp"
+                                        tools:ignore="RelativeOverlap" />
 
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </LinearLayout>
+                                    <androidx.appcompat.widget.AppCompatImageView
+                                        android:id="@+id/homeFragment_ivTopSearch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_centerVertical="true"
+                                        android:paddingStart="0dp"
+                                        android:paddingEnd="18dp"
+                                        android:src="@mipmap/icon_search_white" />
+                                </RelativeLayout>
 
-                    <androidx.appcompat.widget.Toolbar
-                        android:id="@+id/homeFragment_toolBar"
+                                <Space
+                                    android:layout_width="match_parent"
+                                    android:layout_height="15dp" />
+
+                            </LinearLayout>
+                        </androidx.appcompat.widget.Toolbar>
+                    </com.google.android.material.appbar.CollapsingToolbarLayout>
+                    <!--横向的筛选条件-->
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:contentInsetEnd="0dp"
-                        app:contentInsetStart="0dp"
-                        app:layout_collapseMode="pin">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="0dp">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <m.fasion.ai.util.customize.CustomTabLayout
+                            android:id="@+id/homeFragment_tab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            app:tabGravity="start"
+                            app:tabIndicatorHeight="0dp"
+                            app:tabMode="scrollable"
+                            app:tabPaddingStart="1dp"
+                            app:tabSelectedTextColor="@color/color_111111"
+                            app:tabTextColor="@color/color_787878" />
+
+                        <Space
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:layout_weight="1" />
 
-                            <Space
-                                android:id="@+id/homeFragment_toolBarSpace"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <androidx.appcompat.widget.AppCompatTextView
-                                    android:id="@+id/homeFragment_tvTopTitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:paddingStart="20dp"
-                                    android:paddingEnd="0dp"
-                                    android:text="@string/fasionAI"
-                                    android:textColor="@color/white"
-                                    android:textSize="22sp"
-                                    tools:ignore="RelativeOverlap" />
-
-                                <androidx.appcompat.widget.AppCompatImageView
-                                    android:id="@+id/homeFragment_ivTopSearch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:paddingStart="0dp"
-                                    android:paddingEnd="18dp"
-                                    android:src="@mipmap/icon_search_white" />
-                            </RelativeLayout>
-
-                            <Space
-                                android:layout_width="match_parent"
-                                android:layout_height="15dp" />
-
-                        </LinearLayout>
-                    </androidx.appcompat.widget.Toolbar>
-                </com.google.android.material.appbar.CollapsingToolbarLayout>
-                <!--横向的筛选条件-->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="0dp">
-
-                    <m.fasion.ai.util.CustomTabLayout
-                        android:id="@+id/homeFragment_tab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        app:tabGravity="start"
-                        app:tabIndicatorHeight="0dp"
-                        app:tabMode="scrollable"
-                        app:tabPaddingStart="1dp"
-                        app:tabSelectedTextColor="@color/color_111111"
-                        app:tabTextColor="@color/color_787878" />
+                        <TextView
+                            android:id="@+id/homeFragment_tvFilter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="0dp"
+                            android:paddingEnd="20dp"
+                            android:text="@string/filter"
+                            android:textColor="@color/color_787878"
+                            android:textSize="16sp" />
+                    </LinearLayout>
 
                     <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_width="match_parent"
+                        android:layout_height="9dp" />
+                </com.google.android.material.appbar.AppBarLayout>
 
-                    <TextView
-                        android:id="@+id/homeFragment_tvFilter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="20dp"
-                        android:text="@string/filter"
-                        android:textColor="@color/color_787878"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <Space
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/homeFragment_VP"
                     android:layout_width="match_parent"
-                    android:layout_height="9dp" />
-            </com.google.android.material.appbar.AppBarLayout>
+                    android:layout_height="wrap_content"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/homeFragment_VP"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+        <!--没有网络和没有数据显示的页面提示效果-->
+        <include
+            android:id="@+id/homeFragment_includeState"
+            layout="@layout/include_home_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </LinearLayout>
 </layout>

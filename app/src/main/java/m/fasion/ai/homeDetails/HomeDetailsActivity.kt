@@ -8,12 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
-import com.meiqia.core.MQManager
-import com.meiqia.core.bean.MQAgent
-import com.meiqia.core.bean.MQMessage
-import com.meiqia.core.callback.OnClientOnlineCallback
-import com.meiqia.meiqiasdk.util.MQConfig
-import com.meiqia.meiqiasdk.util.MQIntentBuilder
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.config.IndicatorConfig
 import com.youth.banner.holder.BannerImageHolder
@@ -23,7 +17,6 @@ import m.fasion.ai.R
 import m.fasion.ai.databinding.ActivityHomeDetailsBinding
 import m.fasion.ai.home.HomeBannerModel
 import m.fasion.ai.share.ShareActivity
-import m.fasion.ai.util.LogUtils
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.util.CoreUtil
@@ -82,7 +75,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             })
             addBannerLifecycleObserver(this@HomeDetailsActivity)
             setOnBannerListener { data, position -> //点击事件
-                ToastUtils.show(this@HomeDetailsActivity, position.toString())
+                ToastUtils.show(position.toString())
             }
             indicator = RoundLinesIndicator(this@HomeDetailsActivity)
             //设置指示器选中显示宽度
@@ -116,12 +109,12 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         }
         //聊天
         binding.homeDetailsIvChat.setOnClickListener {
-            val intent = MQIntentBuilder(this).build()
-            startActivity(intent)
+//            val intent = MQIntentBuilder(this).build()
+//            startActivity(intent)
         }
         binding.homeDetailsTvProduction.setOnClickListener {
-            val intent = MQIntentBuilder(this).build()
-            startActivity(intent)
+//            val intent = MQIntentBuilder(this).build()
+//            startActivity(intent)
         }
         //购买
         binding.homeDetailsTvBuy.setOnClickListener {
@@ -136,7 +129,7 @@ class HomeDetailsViewModel : BaseViewModel() {
      * 美洽聊天初始化
      */
     fun initMeiQia(context: Context) {
-        val instance = MQManager.getInstance(context)
-        MQConfig.isShowClientAvatar = true
+//        val instance = MQManager.getInstance(context)
+//        MQConfig.isShowClientAvatar = true
     }
 }

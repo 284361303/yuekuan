@@ -1,8 +1,8 @@
 package m.fasion.core
 
 object Config {
-    const val BASE_DEBUG_URL = "http://192.168.50.151:56200"
-    const val BASE_URL = ""
+    const val BASE_DEBUG_URL = "http://192.168.50.151:56100"
+    const val BASE_URL = "https://play.fasionai.com"
 
     //微信appId
     const val APP_ID = "wx485a5432191e5d37"
@@ -20,6 +20,8 @@ object Config {
 
     //美洽app_key
     const val MQ_KEY = "328a2d473b86df2c8aec689776156765"
+
     //腾讯bugly
-    const val BUGLY_APP_ID=""
+    const val BUGLY_APP_ID = "asdcafcd3454fvd"
+
 }

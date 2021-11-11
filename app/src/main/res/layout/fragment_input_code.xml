@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".login.InputCodeFragment">
+
+    <TextView
+        android:id="@+id/inputCodeFragment_tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="54dp"
+        android:text="@string/input_code"
+        android:textColor="@color/color_111111"
+        android:textSize="26sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/inputCodeFragment_tvPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/input_code_num"
+            android:textColor="@color/color_999999"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/inputCodeFragment_tvResend"
+            android:layout_width="78dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_979797_1"
+            android:gravity="center"
+            android:paddingVertical="4dp"
+            android:text="@string/resend"
+            android:textColor="@color/color_787878"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <m.fasion.ai.util.verifyCode.VerifyCodeView
+        android:id="@+id/inputCodeFragment_verifyCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="40dp" />
+
+    <TextView
+        android:id="@+id/inputCodeFragment_tvError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/color_CC5A3A"
+        android:textSize="13sp"
+        android:visibility="gone"
+        tools:text="验证码错误或已过期，请重新获取验证码"
+        tools:visibility="visible" />
+</LinearLayout>
