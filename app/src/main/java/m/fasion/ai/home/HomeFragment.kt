@@ -1,21 +1,15 @@
 package m.fasion.ai.home
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewStub
 import android.widget.LinearLayout
 import android.widget.Space
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewStubProxy
-import androidx.databinding.adapters.ViewStubBindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
@@ -36,6 +30,7 @@ import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.FragmentHomeBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.homeDetails.RecommendActivity
+import m.fasion.ai.search.SearchActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.UserModel
@@ -52,10 +47,6 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
     private var searchHeight: Int = 0
     private lateinit var _binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by activityViewModels()
-
-    companion object {
-        const val TAG = "HomeFragment"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -188,6 +179,14 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         _binding.homeFragmentRefresh.setOnRefreshListener {
             if (initNetWork()) return@setOnRefreshListener
             //TODO::请求接口
+        }
+
+        //搜索
+        _binding.homeFragmentIvTopSearch.setOnClickListener {
+            startActivity(Intent(requireContext(), SearchActivity::class.java))
+        }
+        _binding.homeFragmentIncludeState.homeEmptyIvTopSearch.setOnClickListener {
+            startActivity(Intent(requireContext(), SearchActivity::class.java))
         }
 
         //接收筛选条件页面回传的数据

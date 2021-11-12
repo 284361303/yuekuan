@@ -59,11 +59,31 @@
     <string name="logout">退出登录</string>
     <string name="quit">确定要退出吗？</string>
     <string name="quit1">退出</string>
+    <string name="search_hint">输入你要搜索的款式</string>
+    <string name="search_history">搜索历史</string>
+    <string name="clear">清除</string>
 
 
     <string name="pageviews">浏览量：%d</string>
     <string name="input_code_num">短信验证码已发送至%s</string>
     <string name="like_num">喜欢&#160;&#160;%d</string>
     <string name="second">%ds</string>
+
+    <string-array name="categoryList">
+        <item>衬衫</item>
+        <item>卫衣</item>
+        <item>T恤</item>
+        <item>毛衣</item>
+        <item>连衣裙</item>
+        <item>半身裙</item>
+        <item>西装</item>
+        <item>风衣</item>
+        <item>大衣</item>
+        <item>棉服</item>
+        <item>羽绒服</item>
+        <item>裤子</item>
+        <item>套装</item>
+        <item>家居服</item>
+    </string-array>
 
 </resources>

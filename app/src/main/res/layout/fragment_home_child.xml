@@ -23,7 +23,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             app:spanCount="2"
             tools:listitem="@layout/item_staggered" />
+
+        <include
+            android:id="@+id/homeChild_stateView"
+            layout="@layout/include_state_view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,14 +1,12 @@
 package m.fasion.ai.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import m.fasion.ai.R
-import m.fasion.ai.databinding.FragmentHomeBinding
+import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.FragmentHomeChildBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.util.ToastUtils
@@ -40,17 +38,22 @@ class HomeChildFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).let {
-            _binding.homeChildRV.layoutManager = it
-        }
-        val lists = listOf("https://i.stack.imgur.com/GvWB9.png",
+        val lists = mutableListOf("https://i.stack.imgur.com/GvWB9.png",
             "https://lh3.googleusercontent.com/NSVbWbdKFGRzju5r5XsXKMJ9A41PVdWNhGSxDwxk9aO6o_7SeVMU8z27-GhdNw3uS0PZtLPts5tvaxdsHr--NRXZWfyi=s300",
             "https://t7.baidu.com/it/u=3785402047,1898752523&fm=193&f=GIF", "https://img.zcool.cn/community/01639a56fb62ff6ac725794891960d.jpg",
             "https://img.zcool.cn/community/01270156fb62fd6ac72579485aa893.jpg",
             "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg", "https://img.zcool.cn/community/016a2256fb63006ac7257948f83349.jpg",
-            "https://i.stack.imgur.com/GvWB9.png", "https://t7.baidu.com/it/u=3785402047,1898752523&fm=193&f=GIF", "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg", "", "", "", "", "")
-        HomeChildAdapter(requireContext(), lists).apply {
+            "https://i.stack.imgur.com/GvWB9.png", "https://t7.baidu.com/it/u=3785402047,1898752523&fm=193&f=GIF", "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg")
+
+        if (lists.isEmpty()) {
+            _binding.homeChildStateView.includeStateView.setStateView(StateView.State.empty)
+            _binding.homeChildRV.visibility = View.GONE
+            return
+        } else {
+            _binding.homeChildStateView.includeStateView.setStateView(StateView.State.done)
+            _binding.homeChildRV.visibility = View.VISIBLE
+        }
+        HomeChildAdapter(requireContext(), 0, lists).apply {
             _binding.homeChildRV.adapter = this
             onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
@@ -58,11 +61,11 @@ class HomeChildFragment : Fragment() {
                 }
 
                 override fun onCollectClick(position: Int) {
-                    ToastUtils.show("收藏了 ${position}")
+                    ToastUtils.show("收藏了 $position")
                 }
             }
         }
     }
 }
 
-class HomeChildViewModel : BaseViewModel() {}
+class HomeChildViewModel : BaseViewModel()

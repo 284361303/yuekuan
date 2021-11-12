@@ -8,7 +8,8 @@
     android:orientation="horizontal"
     tools:context=".home.FilterActivity">
 
-    <Space
+    <View
+        android:id="@+id/filter_viewLeft"
         android:layout_width="71dp"
         android:layout_height="match_parent" />
 

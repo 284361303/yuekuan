@@ -1,8 +1,6 @@
 package m.fasion.ai.home
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +8,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jeremyliao.liveeventbus.LiveEventBus
+import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.base.ConstantsKey
 import m.fasion.ai.databinding.ActivityFilterBinding
 import m.fasion.ai.databinding.ItemFilterBinding
-import m.fasion.ai.util.ToastUtils
 import m.fasion.ai.util.customize.RecyclerItemClickListener
 import m.fasion.core.util.CoreUtil
 
@@ -26,7 +24,11 @@ class FilterActivity : BaseActivity() {
     private val binding by lazy {
         ActivityFilterBinding.inflate(layoutInflater)
     }
-    private val lists = listOf("衬衫", "卫衣", "T恤", "毛衣", "连衣裙", "半身裙", "西装", "风衣", "大衣", "棉服", "羽绒服", "裤子", "套装", "家居服")
+
+    private val categoryList by lazy {
+        resources.getStringArray(R.array.categoryList).toList()
+    }
+
     private var addList: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +39,12 @@ class FilterActivity : BaseActivity() {
         CoreUtil.setTypeFaceMedium(listOf(binding.filterTvCategory))
 
         //adapter点击事件
-        val adapter = FilterAdapter(lists)
+        val adapter = FilterAdapter(categoryList)
         binding.filterRV.adapter = adapter
         binding.filterRV.addOnItemTouchListener(RecyclerItemClickListener(this, binding.filterRV, object :
             RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val itemValue = lists[position]
+                val itemValue = categoryList[position]
                 if (addList.contains(itemValue)) {
                     addList.remove(itemValue)
                 } else {
@@ -62,6 +64,10 @@ class FilterActivity : BaseActivity() {
         //确定按钮
         binding.filterTvSure.setOnClickListener {
             LiveEventBus.get(ConstantsKey.FILTER_KEY, List::class.java).post(addList)
+            finish()
+        }
+        //左侧点击关闭
+        binding.filterViewLeft.setOnClickListener {
             finish()
         }
     }

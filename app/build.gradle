@@ -100,4 +100,7 @@ dependencies {
 
     //圆角头像
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //Google开源排版库  https://github.com/google/flexbox-layout商城中的选择规格  自动换行
+    implementation 'com.google.android:flexbox:2.0.1'
 }
