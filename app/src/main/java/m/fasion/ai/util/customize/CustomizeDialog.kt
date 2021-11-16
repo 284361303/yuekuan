@@ -12,22 +12,37 @@ import m.fasion.ai.databinding.DialogLogoutBinding
 import m.fasion.core.util.CoreUtil
 
 /**
- * @author shao_g
- * 退出登录弹窗
+ * 自定义内容弹窗，左边是取消，右边是确定或者其他的，中间是内容
  * 2021年11月11日19:26:07
+ * @author shao_g
+ * @param content 中间的内容 如：确定要退出吗
+ * @param leftStr   左边的取消按钮，默认取消，可不传
+ * @param rightStr  右边的确定按钮，内容自定义
  */
-class LogoutDialog(private val callback: Callback) : DialogFragment() {
+class CustomizeDialog(private val content: String,
+                      private val leftStr: String? = null, private val rightStr: String,
+                      private val callback: Callback) : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = DialogLogoutBinding.inflate(inflater, container, false)
         CoreUtil.setTypeFaceMedium(listOf(binding.dialogLogoutTvCancel, binding.dialogLogoutTvQuit))
+        if (content.isNotEmpty()) {
+            binding.dialogLogoutTv1.text = content
+        }
+        if (!leftStr.isNullOrEmpty()) {
+            binding.dialogLogoutTvCancel.text = leftStr
+        }
+        if (rightStr.isNotEmpty()) {
+            binding.dialogLogoutTvQuit.text = rightStr
+        }
+
         binding.dialogLogoutTvCancel.setOnClickListener {
             dismiss()
         }
 
         //退出登录
         binding.dialogLogoutTvQuit.setOnClickListener {
-            callback.logoutCallBack()
+            callback.rightClickCallBack()
             dismiss()
         }
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -43,6 +58,9 @@ class LogoutDialog(private val callback: Callback) : DialogFragment() {
     }
 
     interface Callback {
-        fun logoutCallBack()
+        /**
+         * 右侧的确定或者退出按钮回调事件
+         */
+        fun rightClickCallBack()
     }
 }

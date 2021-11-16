@@ -11,8 +11,6 @@ import m.fasion.core.base.SPUtil
 
 class MyApp : BaseApplication() {
 
-    private val TAG = "MyApp"
-
     init {
         SPUtil.init(this)
         //下拉刷新
