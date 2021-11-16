@@ -27,6 +27,18 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="标题" />
 
+    <TextView
+        android:id="@+id/inCludeTitle_tvCenterTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_111111"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="中间标题" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/inCludeTitle_ivRight"
         android:layout_width="wrap_content"
@@ -35,6 +47,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@mipmap/icon_collect"/>
+        tools:src="@mipmap/icon_collect" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

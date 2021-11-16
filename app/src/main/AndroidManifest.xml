@@ -33,6 +33,19 @@
         android:theme="@style/AppTheme"
         tools:targetApi="n">
         <activity
+            android:name=".webView.WebViewActivity"
+            android:configChanges="orientation"
+            android:exported="true"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".toolbar.AboutUsActivity"
+            android:configChanges="orientation"
+            android:exported="true" />
+        <activity
+            android:name=".toolbar.FeedBacksActivity"
+            android:configChanges="orientation"
+            android:exported="true" />
+        <activity
             android:name=".search.SearchActivity"
             android:configChanges="orientation"
             android:exported="true" />

@@ -159,7 +159,7 @@
             app:drawableTopCompat="@mipmap/icon_seting3" />
 
         <TextView
-            android:id="@+id/mine_tvFeedback"
+            android:id="@+id/mine_tvFeedbacks"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

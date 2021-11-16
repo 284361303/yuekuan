@@ -63,12 +63,26 @@
     <string name="search_history">搜索历史</string>
     <string name="clear">清除</string>
     <string name="clearHistoryAll">确定要清除所有历史吗？</string>
+    <string name="problem_desc">问题描述？</string>
+    <string name="problem_desc_hint">具体清晰地描述问题，有助于我们快速解决</string>
+    <string name="problem_phone_hint">建议填写手机号，方便我们更快速联系您</string>
+    <string name="contact_key">联系方式(微信、手机号）</string>
+    <string name="the_public">关注官方公众号“FASION.AI”，后台发送需要解决的问题，我们将及时为您解决！</string>
+    <string name="sure_edit">确定修改</string>
+    <string name="company_url_key">官网地址</string>
+    <string name="company_email_key">服务邮箱</string>
+    <string name="company_name_key">公司名称</string>
 
 
     <string name="pageviews">浏览量：%d</string>
     <string name="input_code_num">短信验证码已发送至%s</string>
     <string name="like_num">喜欢&#160;&#160;%d</string>
     <string name="second">%ds</string>
+
+
+    <string name="company_url">Fasion.ai</string>
+    <string name="company_email">beta.fasionai.com</string>
+    <string name="company_name">北京智美源素科技有限公司</string>
 
     <string-array name="categoryList">
         <item>衬衫</item>
