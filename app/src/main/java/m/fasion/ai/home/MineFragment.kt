@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import m.fasion.ai.R
 import m.fasion.ai.databinding.FragmentMineBinding
 import m.fasion.ai.toolbar.AboutUsActivity
+import m.fasion.ai.toolbar.EditingDataActivity
 import m.fasion.ai.toolbar.FeedBacksActivity
+import m.fasion.ai.toolbar.MyFavoriteActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.ai.util.customize.CustomizeDialog
 import m.fasion.ai.webView.WebViewActivity
@@ -68,6 +70,14 @@ class MineFragment : Fragment() {
             //隐私政策
             it.mineTvPrivacy.setOnClickListener {
                 WebViewActivity.startActivity(requireContext(), "https://www.fasionai.com", "")
+            }
+            //编辑资料按钮事件
+            it.mineEditData.setOnClickListener {
+                startActivity(Intent(requireContext(), EditingDataActivity::class.java))
+            }
+            //我的喜欢
+            it.mineMyFavorite.setOnClickListener {
+                startActivity(Intent(requireContext(), MyFavoriteActivity::class.java))
             }
         }
     }

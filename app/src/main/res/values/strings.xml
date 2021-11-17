@@ -20,6 +20,7 @@
     <string name="left">/</string>
     <string name="recommend_en">Recommend</string>
     <string name="recommend_zh">今日推荐</string>
+    <string name="every_period_zh">每期精选</string>
     <string name="design_en">Design</string>
     <string name="design_zh">款式合集</string>
     <string name="more">more</string>
@@ -72,6 +73,13 @@
     <string name="company_url_key">官网地址</string>
     <string name="company_email_key">服务邮箱</string>
     <string name="company_name_key">公司名称</string>
+    <string name="editing_name_key">输入要修改的昵称</string>
+    <string name="editing_name_hint">请输入1-10个字符的昵称</string>
+    <string name="editing_img_key">选择要修改的头像</string>
+    <string name="new_in">New In</string>
+    <string name="chunk"> HOT 最热门款式合集</string>
+    <string name="top_list">TOP LIST</string>
+    <string name="suit_style">高级西装搭配</string>
 
 
     <string name="pageviews">浏览量：%d</string>

@@ -33,6 +33,21 @@
         android:theme="@style/AppTheme"
         tools:targetApi="n">
         <activity
+            android:name=".homeDetails.TopicSuitActivity"
+            android:exported="true" />
+        <activity
+            android:name=".homeDetails.TopicEveryPeriodActivity"
+            android:exported="true" />
+        <activity
+            android:name=".toolbar.MyFavoriteActivity"
+            android:configChanges="orientation"
+            android:exported="true" />
+        <activity
+            android:name=".toolbar.EditingDataActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".webView.WebViewActivity"
             android:configChanges="orientation"
             android:exported="true"

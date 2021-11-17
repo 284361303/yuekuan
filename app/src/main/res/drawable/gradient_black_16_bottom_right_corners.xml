@@ -9,4 +9,5 @@
         android:startColor="#29000000"
         android:useLevel="true" />
 
+    <corners android:bottomRightRadius="50dp" />
 </shape>

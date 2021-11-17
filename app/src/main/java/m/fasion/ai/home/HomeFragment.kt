@@ -30,6 +30,8 @@ import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.FragmentHomeBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.homeDetails.RecommendActivity
+import m.fasion.ai.homeDetails.TopicEveryPeriodActivity
+import m.fasion.ai.homeDetails.TopicSuitActivity
 import m.fasion.ai.search.SearchActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
@@ -168,7 +170,9 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
         //今日推荐更多
         _binding.homeFragmentTvMore.setOnClickListener {
-            startActivity(Intent(requireContext(), RecommendActivity::class.java))
+//            startActivity(Intent(requireContext(), RecommendActivity::class.java))
+//            startActivity(Intent(requireContext(), TopicEveryPeriodActivity::class.java))
+            startActivity(Intent(requireContext(), TopicSuitActivity::class.java))
         }
 
         viewModel.errorLiveData.observe(requireActivity(), {

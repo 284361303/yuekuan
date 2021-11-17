@@ -23,7 +23,7 @@ interface HistoryDao {
     suspend fun delete()
 }
 
-@Database(entities = [History::class], version = 1)
+@Database(entities = [History::class], version = 1, exportSchema = false)
 abstract class HistoryDatabase : RoomDatabase() {
 
     abstract fun historyDao(): HistoryDao

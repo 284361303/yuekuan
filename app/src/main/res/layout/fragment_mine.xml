@@ -38,6 +38,7 @@
             android:src="@mipmap/aaa" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mine_editData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp">
@@ -70,6 +71,7 @@
             android:layout_weight="1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mine_myFavorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 

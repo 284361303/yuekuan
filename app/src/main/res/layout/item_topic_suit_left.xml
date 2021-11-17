@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/itemTopicSuitLeft_card"
+        android:layout_width="0dp"
+        android:layout_height="293dp"
+        android:layout_marginEnd="135dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="293dp"
+            android:layout_gravity="end"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/aaa" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:padding="10dp"
+            android:src="@mipmap/icon_uncollect" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/itemTopicSuitLeft_tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/color_111111"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/itemTopicSuitLeft_view"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="复古格子衬衣复古格子衬衣" />
+
+    <View
+        android:id="@+id/itemTopicSuitLeft_view"
+        android:layout_width="22dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="83.5dp"
+        android:background="@color/color_111111"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/itemTopicSuitLeft_card" />
+</androidx.constraintlayout.widget.ConstraintLayout>
