@@ -5,6 +5,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.jeremyliao.liveeventbus.LiveEventBus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.R
@@ -51,7 +52,11 @@ class LoginActivity : BaseActivity() {
          */
         viewModel.loginLiveData.observe(this, {
             it.apply {
-                if (token.isNotEmpty()) finish()
+                if (token.isNotEmpty()) {
+                    LiveEventBus.get<UserModel>("loginSuccess").post(this)
+                    ToastUtils.show("登录成功")
+                    finish()
+                }
             }
         })
     }
@@ -81,8 +86,12 @@ class LoginViewModel : BaseViewModel() {
                 replaceFragment.value = phone
             } else {
                 sendCode.errorBody()?.stringSuspending()?.let {
-                    Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
-                        ToastUtils.showLong(message)
+                    if (it.isEmpty()) {
+                        ToastUtils.showLong(sendCode.message())
+                    } else {
+                        Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
+                            ToastUtils.showLong(message)
+                        }
                     }
                 }
             }
@@ -96,20 +105,15 @@ class LoginViewModel : BaseViewModel() {
      */
     fun getLogin(phone: String, code: String) {
         launch = viewModelScope.launch {
-            try {
-                val login = repository.getLogin(mutableMapOf("phone" to phone, "code" to code))
-                if (login.isSuccessful) {
-                    loginLiveData.value = login.body()
-                } else {
-                    login.errorBody()?.stringSuspending()?.let {
-                        Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
-                            errorLiveData.value = message
-                        }
+            val login = repository.getLogin(mutableMapOf("phone" to phone, "code" to code))
+            if (login.isSuccessful) {
+                loginLiveData.value = login.body()
+            } else {
+                login.errorBody()?.stringSuspending()?.let {
+                    Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
+                        errorLiveData.value = message
                     }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                errorLiveData.value = "网络异常"
             }
         }
     }

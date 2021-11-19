@@ -1,13 +1,12 @@
 package m.fasion.ai.util
 
-import android.content.Context
-import android.os.Looper
 import android.widget.Toast
 import m.fasion.ai.MyApp
 
 object ToastUtils {
 
     fun show(message: String) {
+        if (message.isEmpty()) return
         try {
             val toast = Toast.makeText(MyApp.instance, message, Toast.LENGTH_SHORT)
             toast.setText(message)
@@ -18,6 +17,7 @@ object ToastUtils {
     }
 
     fun showLong(message: String) {
+        if (message.isEmpty()) return
         try {
             val toast = Toast.makeText(MyApp.instance, message, Toast.LENGTH_LONG)
             toast.setText(message)

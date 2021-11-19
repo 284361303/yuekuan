@@ -25,12 +25,10 @@ import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.listener.OnPageChangeListener
 import kotlinx.coroutines.Job
 import m.fasion.ai.R
-import m.fasion.ai.base.ConstantsKey
+import m.fasion.core.base.ConstantsKey
 import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.FragmentHomeBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
-import m.fasion.ai.homeDetails.RecommendActivity
-import m.fasion.ai.homeDetails.TopicEveryPeriodActivity
 import m.fasion.ai.homeDetails.TopicSuitActivity
 import m.fasion.ai.search.SearchActivity
 import m.fasion.ai.util.ToastUtils

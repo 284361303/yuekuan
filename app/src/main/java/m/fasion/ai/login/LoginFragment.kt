@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import m.fasion.ai.databinding.FragmentLoginBinding
 import m.fasion.ai.util.ToastUtils
+import m.fasion.core.util.CoreUtil
 import m.fasion.core.util.CoreUtil.isMobile
 
 class LoginFragment : Fragment() {
@@ -83,6 +84,7 @@ class LoginFragment : Fragment() {
         //下一步
         binding.loginTvLogin.setOnClickListener {
             if (!binding.loginCheckBox.isChecked) {
+                CoreUtil.hideKeyBoard(binding.loginEt)
                 ToastUtils.show("请先勾选同意用户协议与隐私政策")
             } else {
                 val phone = binding.loginEt.text.toString()

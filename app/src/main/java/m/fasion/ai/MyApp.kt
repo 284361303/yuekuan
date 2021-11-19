@@ -5,14 +5,13 @@ import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.tencent.bugly.crashreport.CrashReport
+import com.tencent.mmkv.MMKV
 import m.fasion.core.Config
 import m.fasion.core.base.BaseApplication
-import m.fasion.core.base.SPUtil
 
 class MyApp : BaseApplication() {
 
     init {
-        SPUtil.init(this)
         //下拉刷新
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ ->
             ClassicsHeader(context) //经典刷新头样式
@@ -49,6 +48,8 @@ class MyApp : BaseApplication() {
         LiveEventBus.config()
             //配置在没有Observer关联的时候是否自动清除LiveEvent以释放内存（默认值false）
             .autoClear(true)
+        //mmkv初始化
+        MMKV.initialize(this)
     }
 
     companion object {

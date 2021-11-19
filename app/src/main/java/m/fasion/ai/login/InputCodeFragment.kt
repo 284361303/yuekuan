@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.aisway.faceswap.utils.TimeCountdown
-import com.google.gson.Gson
 import m.fasion.ai.R
-import m.fasion.ai.base.ConstantsKey
+import m.fasion.core.base.ConstantsKey
 import m.fasion.ai.databinding.FragmentInputCodeBinding
 import m.fasion.ai.util.verifyCode.VerifyCodeView
-import m.fasion.core.base.SPUtil
 import m.fasion.core.util.CoreUtil
 import m.fasion.core.util.CoreUtil.toSecret
+import m.fasion.core.util.SPUtil
 
 /**
  *  输入验证码页面
@@ -69,7 +68,7 @@ class InputCodeFragment : Fragment() {
             it?.apply {
                 binding.inputCodeFragmentTvError.visibility = View.GONE
                 binding.inputCodeFragmentTvError.text = ""
-                SPUtil.put(ConstantsKey.USER_KEY, Gson().toJson(it))
+                SPUtil.put(ConstantsKey.USER_KEY, this)
             }
         })
         //登录异常

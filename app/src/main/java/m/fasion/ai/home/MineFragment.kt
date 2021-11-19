@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.jeremyliao.liveeventbus.LiveEventBus
 import m.fasion.ai.R
 import m.fasion.ai.databinding.FragmentMineBinding
+import m.fasion.ai.login.LoginActivity
 import m.fasion.ai.toolbar.AboutUsActivity
 import m.fasion.ai.toolbar.EditingDataActivity
 import m.fasion.ai.toolbar.FeedBacksActivity
@@ -15,7 +18,10 @@ import m.fasion.ai.toolbar.MyFavoriteActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.ai.util.customize.CustomizeDialog
 import m.fasion.ai.webView.WebViewActivity
+import m.fasion.core.base.ConstantsKey
+import m.fasion.core.model.UserModel
 import m.fasion.core.util.CoreUtil
+import m.fasion.core.util.SPUtil
 
 /**
  * 我的页面
@@ -38,6 +44,10 @@ class MineFragment : Fragment() {
         _inflate?.let {
             CoreUtil.setTypeFaceMedium(listOf(it.mineTvName, it.mineTvAbout, it.mineTvProtocol, it.mineTvPrivacy, it.mineTvFeedbacks, it.mineTvLogout, it.mineTvToolBar))
 
+            SPUtil.getParcelable<UserModel>(ConstantsKey.USER_KEY)?.apply {
+                loginSuccess(this)
+            }
+
             //退出登录
             it.mineTvLogout.setOnClickListener {
                 val beginTransaction = childFragmentManager.beginTransaction()
@@ -49,6 +59,8 @@ class MineFragment : Fragment() {
                 CustomizeDialog(content = getString(R.string.quit), rightStr = getString(R.string.quit1), callback = object :
                     CustomizeDialog.Callback {
                     override fun rightClickCallBack() { //回调事件处
+                        SPUtil.removeKey(ConstantsKey.USER_KEY)
+                        loginError()
                         ToastUtils.show("退出登录成功")
                     }
                 }).show(childFragmentManager, "logout")
@@ -73,12 +85,48 @@ class MineFragment : Fragment() {
             }
             //编辑资料按钮事件
             it.mineEditData.setOnClickListener {
-                startActivity(Intent(requireContext(), EditingDataActivity::class.java))
+                if (SPUtil.getToken().isNullOrEmpty()) {
+                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                } else {
+                    startActivity(Intent(requireContext(), EditingDataActivity::class.java))
+                }
             }
             //我的喜欢
             it.mineMyFavorite.setOnClickListener {
                 startActivity(Intent(requireContext(), MyFavoriteActivity::class.java))
             }
+
+            //登录成功
+            LiveEventBus.get<UserModel>("loginSuccess").observe(requireActivity(), { models ->
+                models.apply {
+                    loginSuccess(this)
+                }
+            })
+        }
+    }
+
+    /**
+     * 登录成功
+     */
+    private fun loginSuccess(userModel: UserModel) {
+        _inflate?.let {
+            it.mineTvEdit.visibility = View.VISIBLE
+            it.mineMyFavorite.visibility = View.VISIBLE
+            it.mineTvLogout.visibility = View.VISIBLE
+            it.mineTvName.text = userModel.nickname
+            Glide.with(requireContext()).load(userModel.avatar).into(it.profileImage)
+        }
+    }
+
+    /**
+     * 没有登录
+     */
+    private fun loginError() {
+        _inflate?.let {
+            it.mineTvEdit.visibility = View.GONE
+            it.mineTvName.text = getString(R.string.please_login)
+            it.mineMyFavorite.visibility = View.INVISIBLE
+            it.mineTvLogout.visibility = View.INVISIBLE
         }
     }
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivityTopicSuitBinding
+import m.fasion.ai.util.ToastUtils
 import m.fasion.core.util.CoreUtil
 
 /**
@@ -22,5 +23,14 @@ class TopicSuitActivity : BaseActivity() {
 
         val adapter = TopicSuitAdapter(listOf("", "", "", "", "", "", "", "", "", "", ""))
         binding.topSuitRV.adapter = adapter
+
+        adapter.onClickListener = object : TopicSuitAdapter.OnClickListener {
+            override fun onItemClickListener(position: Int) {
+                ToastUtils.show(position.toString())
+            }
+
+            override fun onCollectClickListener(position: Int) {
+            }
+        }
     }
 }

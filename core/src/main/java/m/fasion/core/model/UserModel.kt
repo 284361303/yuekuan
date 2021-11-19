@@ -1,5 +1,9 @@
 package m.fasion.core.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class UserModel(
     val avatar: String,
     val nickname: String,
@@ -7,4 +11,4 @@ data class UserModel(
     val token: String,
     val uid: String,
     val phone: String
-)
+) : Parcelable

@@ -26,8 +26,20 @@ class TopicSuitAdapter(private val mList: List<String>) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is TopicSuitLeftHolder) {
             CoreUtil.setTypeFaceMedium(listOf(holder.leftBinding.itemTopicSuitLeftTvName))
+
+            if (onClickListener != null) {
+                holder.itemView.setOnClickListener {
+                    onClickListener?.onItemClickListener(position)
+                }
+            }
         } else if (holder is TopicSuitRightHolder) {
             CoreUtil.setTypeFaceMedium(listOf(holder.rightBinding.itemTopicSuitRightTvName))
+
+            if (onClickListener != null) {
+                holder.itemView.setOnClickListener {
+                    onClickListener?.onItemClickListener(position)
+                }
+            }
         }
     }
 
@@ -40,4 +52,12 @@ class TopicSuitAdapter(private val mList: List<String>) :
 
     class TopicSuitRightHolder(val rightBinding: ItemTopicSuitRightBinding) :
         RecyclerView.ViewHolder(rightBinding.root)
+
+    var onClickListener: OnClickListener? = null
+
+    interface OnClickListener {
+        fun onItemClickListener(position: Int)
+
+        fun onCollectClickListener(position: Int)
+    }
 }

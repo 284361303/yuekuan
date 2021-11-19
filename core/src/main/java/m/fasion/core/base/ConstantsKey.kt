@@ -1,4 +1,4 @@
-package m.fasion.ai.base
+package m.fasion.core.base
 
 object ConstantsKey {
 

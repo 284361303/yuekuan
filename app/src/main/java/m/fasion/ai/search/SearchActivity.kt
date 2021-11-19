@@ -12,12 +12,13 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.flexbox.FlexboxLayoutManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
-import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.ActivitySearchBinding
 import m.fasion.ai.home.HomeChildAdapter
 import m.fasion.ai.homeDetails.HomeDetailsActivity
@@ -67,6 +68,7 @@ class SearchActivity : BaseActivity() {
         initSearchHistoryAdapter()
 
         //搜索结果和热度推荐列表Adapter
+        initLayoutManager()
         initListAdapter()
 
         //输入框事件监听
@@ -134,6 +136,14 @@ class SearchActivity : BaseActivity() {
         })
     }
 
+    private fun initLayoutManager() {
+        if (lists.isEmpty()) {
+            binding.searchRVAll.layoutManager = LinearLayoutManager(this)
+        } else {
+            binding.searchRVAll.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        }
+    }
+
     /**
      * 搜索结果和热度推荐列表Adapter
      */
@@ -149,19 +159,6 @@ class SearchActivity : BaseActivity() {
                     ToastUtils.show("收藏了 $position")
                 }
             }
-        }
-    }
-
-    /**
-     * 有数据和没有数据的展示样式
-     */
-    private fun initStateView() {
-        if (lists.isEmpty()) {
-            binding.searchStateView.includeStateView.setStateView(StateView.State.empty)
-            binding.searchRVAll.visibility = View.GONE
-        } else {
-            binding.searchStateView.includeStateView.setStateView(StateView.State.done)
-            binding.searchRVAll.visibility = View.VISIBLE
         }
     }
 
@@ -192,7 +189,7 @@ class SearchActivity : BaseActivity() {
         binding.searchHistoryAll.visibility = View.VISIBLE
         binding.searchLayout1.visibility = if (categoryList.size > 0) View.VISIBLE else View.GONE
         binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_111111))
-        binding.searchListAll.visibility = View.GONE
+        binding.searchRVAll.visibility = View.GONE
     }
 
     /**
@@ -202,7 +199,7 @@ class SearchActivity : BaseActivity() {
         binding.searchHistoryAll.visibility = View.GONE
         binding.searchIvDelete.visibility = View.INVISIBLE
         binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_ECECEC))
-        binding.searchListAll.visibility = View.VISIBLE
+        binding.searchRVAll.visibility = View.VISIBLE
         CoreUtil.hideKeyBoard(binding.searchEditText)   //隐藏软键盘
         binding.searchEditText.clearFocus() //失去焦点
     }

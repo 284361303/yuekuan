@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -58,5 +59,7 @@ dependencies {
     api 'com.tencent.bugly:nativecrashreport:latest.release'
     //LiveEventBus
     api 'io.github.jeremyliao:live-event-bus-x:1.8.0'
+    //腾讯的MMKV代替SharedPreferences
+    api 'com.tencent:mmkv:1.2.11'
 
 }

@@ -47,9 +47,9 @@
                 android:id="@+id/mine_tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="@string/please_login"
                 android:textColor="@color/color_111111"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,8 +61,10 @@
                 android:text="@string/edit_information"
                 android:textColor="@color/color_787878"
                 android:textSize="12sp"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mine_tvName" />
+                app:layout_constraintTop_toBottomOf="@+id/mine_tvName"
+                tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Space
@@ -73,7 +75,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mine_myFavorite"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            tools:visibility="visible">
 
             <TextView
                 android:id="@+id/mine_tvLikeNum"
@@ -81,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/zero"
                 android:textColor="@color/color_CC5A3A"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -185,7 +189,9 @@
         android:text="@string/logout"
         android:textColor="@color/color_111111"
         android:textSize="12sp"
+        android:visibility="invisible"
         app:drawableTopCompat="@mipmap/icon_seting5"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_ll1" />
+        app:layout_constraintTop_toBottomOf="@+id/mine_ll1"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

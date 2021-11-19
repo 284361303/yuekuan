@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jeremyliao.liveeventbus.LiveEventBus
 import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
-import m.fasion.ai.base.ConstantsKey
+import m.fasion.core.base.ConstantsKey
 import m.fasion.ai.databinding.ActivityFilterBinding
 import m.fasion.ai.databinding.ItemFilterBinding
 import m.fasion.ai.util.customize.RecyclerItemClickListener
