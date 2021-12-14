@@ -6,8 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.jeremyliao.liveeventbus.LiveEventBus
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import m.fasion.ai.R
 import m.fasion.ai.databinding.FragmentMineBinding
 import m.fasion.ai.login.LoginActivity
@@ -18,6 +23,7 @@ import m.fasion.ai.toolbar.MyFavoriteActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.ai.util.customize.CustomizeDialog
 import m.fasion.ai.webView.WebViewActivity
+import m.fasion.core.base.BaseViewModel
 import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.UserModel
 import m.fasion.core.util.CoreUtil
@@ -30,6 +36,7 @@ import m.fasion.core.util.SPUtil
 class MineFragment : Fragment() {
 
     private var _inflate: FragmentMineBinding? = null
+    private val viewModel: MineViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,9 +66,7 @@ class MineFragment : Fragment() {
                 CustomizeDialog(content = getString(R.string.quit), rightStr = getString(R.string.quit1), callback = object :
                     CustomizeDialog.Callback {
                     override fun rightClickCallBack() { //回调事件处
-                        SPUtil.removeKey(ConstantsKey.USER_KEY)
-                        loginError()
-                        ToastUtils.show("退出登录成功")
+                        viewModel.logout()
                     }
                 }).show(childFragmentManager, "logout")
             }
@@ -102,6 +107,14 @@ class MineFragment : Fragment() {
                     loginSuccess(this)
                 }
             })
+
+            viewModel.logoutLiveData.observe(requireActivity(), {
+                if (it == 200) {
+                    SPUtil.removeKey(ConstantsKey.USER_KEY)
+                    loginError()
+                    ToastUtils.show("退出登录成功")
+                }
+            })
         }
     }
 
@@ -134,4 +147,26 @@ class MineFragment : Fragment() {
         super.onDestroyView()
         _inflate = null
     }
+}
+
+class MineViewModel : BaseViewModel() {
+
+
+    private var launch: Job? = null
+    val logoutLiveData = MutableLiveData<Int>()
+
+    fun logout() {
+        launch = viewModelScope.launch {
+            val logout = repository.logout()
+            if (logout.isSuccessful) {
+                logoutLiveData.value = logout.code()
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        launch?.cancel()
+    }
+
 }

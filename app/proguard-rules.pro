@@ -19,3 +19,23 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#阿里百川混淆---Start
+-keepattributes Signature
+-ignorewarnings
+-keep class javax.ws.rs.** { *; }
+-keep class com.alibaba.fastjson.** { *; }
+-dontwarn com.alibaba.fastjson.**
+#-keep class sun.misc.Unsafe { *; }
+-dontwarn sun.misc.**
+-keep class com.taobao.** {*;}
+-keep class com.alibaba.** {*;}
+-dontwarn com.taobao.**
+-dontwarn com.alibaba.**
+-keep class com.ta.** {*;}
+-dontwarn com.ta.**
+-keep class org.json.** {*;}
+
+#-keep class tv.danmaku.ijk.media.player.TaobaoMediaPlayer{*;}
+-keep class tv.danmaku.ijk.media.player.TaobaoMediaPlayer$*{*;}
+#阿里百川混淆---End

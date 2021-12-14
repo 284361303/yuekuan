@@ -39,7 +39,7 @@
             android:id="@+id/uiState_tvRetry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_cc5a3a_2"
+            android:background="@drawable/shape_111111_2"
             android:paddingHorizontal="22dp"
             android:paddingVertical="6dp"
             android:text="@string/btn_retry"

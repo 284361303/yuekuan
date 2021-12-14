@@ -7,7 +7,7 @@
 
         <variable
             name="listModel"
-            type="m.fasion.ai.home.RecommendModel" />
+            type="m.fasion.core.model.Body" />
 
         <variable
             name="position"
@@ -37,7 +37,7 @@
                 android:layout_width="105dp"
                 android:layout_height="140dp"
                 android:scaleType="centerCrop"
-                app:imageUrl="@{listModel.imageList}"
+                app:imageUrl="@{listModel.head_img}"
                 tools:src="@mipmap/icon_more" />
         </androidx.cardview.widget.CardView>
 

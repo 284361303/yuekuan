@@ -1,25 +1,32 @@
 package m.fasion.ai.homeDetails
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.config.IndicatorConfig
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.RoundLinesIndicator
 import com.youth.banner.util.BannerUtils
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import m.fasion.ai.R
 import m.fasion.ai.databinding.ActivityHomeDetailsBinding
-import m.fasion.ai.home.HomeBannerModel
 import m.fasion.ai.share.ShareActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
+import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
+
 
 /**
  * 选款详情
@@ -27,11 +34,11 @@ import m.fasion.core.util.CoreUtil
 class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
 
     companion object {
-        fun startActivity(context: Context, text: String) {
+        fun startActivity(context: Context, id: String) {
             val intent = Intent(context, HomeDetailsActivity::class.java)
             val bundle = Bundle()
-            if (text.isNotEmpty()) {
-                bundle.putString("text", text)
+            if (id.isNotEmpty()) {
+                bundle.putString("id", id)
             }
             intent.putExtras(bundle)
             context.startActivity(intent)
@@ -50,55 +57,24 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         binding.title.inCludeTitleIvRight.setImageResource(R.mipmap.icon_btn_share)
         initClickListener()
 
-        binding.homeDetailsTvPageViews.text = String.format(resources.getString(R.string.pageviews, 121))
-        binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, 121))
-        initBanner()
-        CoreUtil.setTypeFaceMedium(listOf(binding.homeDetailsTvDetails, binding.homeDetailsTvRecommended, binding.homeDetailsTvTitle))
-        //美洽聊天初始化
-        viewModel.initMeiQia(this)
-    }
-
-    private fun initBanner() {
-        //轮播Start
-        val model1 = HomeBannerModel("1", "https://t7.baidu.com/it/u=3785402047,1898752523&fm=193&f=GIF")
-        val model2 = HomeBannerModel("2", "https://img.zcool.cn/community/01639a56fb62ff6ac725794891960d.jpg")
-        val model3 = HomeBannerModel("3", "https://img.zcool.cn/community/01270156fb62fd6ac72579485aa893.jpg")
-        val model4 = HomeBannerModel("4", "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg")
-        val model5 = HomeBannerModel("5", "https://img.zcool.cn/community/016a2256fb63006ac7257948f83349.jpg")
-
-        binding.homeDetailsBanner.apply {
-            setAdapter(object :
-                BannerImageAdapter<HomeBannerModel>(listOf(model1, model2, model3, model4, model5)) {
-                override fun onBindView(holder: BannerImageHolder?, data: HomeBannerModel?, position: Int, size: Int) {
-                    Glide.with(this@HomeDetailsActivity).load(data?.url).into(holder?.imageView!!)
+        intent.extras?.containsKey("id")?.let {
+            if (it) {
+                intent.extras?.getString("id")?.let { mId ->
+                    viewModel.getClothesInfo(mId)
+                    viewModel.getClothesList("heat")
                 }
-            })
-            addBannerLifecycleObserver(this@HomeDetailsActivity)
-            setOnBannerListener { data, position -> //点击事件
-                ToastUtils.show(position.toString())
             }
-            indicator = RoundLinesIndicator(this@HomeDetailsActivity)
-            //设置指示器选中显示宽度
-            setIndicatorSelectedWidth(BannerUtils.dp2px(20f))
-            //设置默认指示器颜色
-            setIndicatorNormalColor(ContextCompat.getColor(this@HomeDetailsActivity, R.color.color_ECECEC))
-            //设置选中指示器颜色
-            setIndicatorSelectedColor(ContextCompat.getColor(this@HomeDetailsActivity, R.color.color_CC5A3A))
-            //设置距底部的距离
-            setIndicatorMargins(IndicatorConfig.Margins(0, 0, 0, BannerUtils.dp2px(19f)))
         }
 
-        //商品介绍的图片列表
-        val listImae = listOf("https://img.zcool.cn/community/016a2256fb63006ac7257948f83349.jpg",
-            "https://img.zcool.cn/community/01639a56fb62ff6ac725794891960d.jpg",
-            "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg")
+        CoreUtil.setTypeFaceMedium(listOf(binding.homeDetailsTvDetails, binding.homeDetailsTvRecommended, binding.homeDetailsTvTitle))
+        //美洽聊天初始化
+//        viewModel.initMeiQia(this)
+        initObserver()
+    }
 
+    private fun initDetailsList(listImae: List<BodyImg>) {
         binding.homeDetailsRV1.layoutManager = LinearLayoutManager(this)
         binding.homeDetailsRV1.adapter = HomeDetailsAdapter(this, listImae)
-
-        //推荐列表
-        binding.homeDetailsRV2.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        binding.homeDetailsRV2.adapter = RecommendAdapter(this, listImae)
     }
 
     private fun initClickListener() {
@@ -118,12 +94,112 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         }
         //购买
         binding.homeDetailsTvBuy.setOnClickListener {
-
+            viewModel.initAliBaiChuan(this)
         }
+    }
+
+    private fun initBanner(listHead: List<HeadImg>) {
+        //轮播Start
+        binding.homeDetailsBanner.apply {
+            setAdapter(object :
+                BannerImageAdapter<HeadImg>(listHead) {
+                override fun onBindView(holder: BannerImageHolder?, data: HeadImg?, position: Int, size: Int) {
+                    Glide.with(this@HomeDetailsActivity).load(data?.link).into(holder?.imageView!!)
+                }
+            })
+            addBannerLifecycleObserver(this@HomeDetailsActivity)
+            setOnBannerListener { data, position -> //点击事件
+                ToastUtils.show(position.toString())
+            }
+            indicator = RoundLinesIndicator(this@HomeDetailsActivity)
+            //设置指示器选中显示宽度
+            setIndicatorSelectedWidth(BannerUtils.dp2px(20f))
+            //设置默认指示器颜色
+            setIndicatorNormalColor(ContextCompat.getColor(this@HomeDetailsActivity, R.color.color_ECECEC))
+            //设置选中指示器颜色
+            setIndicatorSelectedColor(ContextCompat.getColor(this@HomeDetailsActivity, R.color.color_CC5A3A))
+            //设置距底部的距离
+            setIndicatorMargins(IndicatorConfig.Margins(0, 0, 0, BannerUtils.dp2px(19f)))
+        }
+    }
+
+    private fun initObserver() {
+        viewModel.clothesData.observe(this, {
+            val num = it.num    //被收藏的数量
+            val createdAt = it.created_at
+            val headImgList = it.head_img_list  //轮播图
+            val favourite = it.favourite
+            val bodyImgList = it.body_img_list
+            binding.homeDetailsTvDate.text = CoreUtil.millisecond2Date(createdAt)
+            binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, num))
+//            binding.homeDetailsTvPageViews.text = String.format(resources.getString(R.string.pageviews, 121)) //浏览量
+            binding.homeDetailsTvTitle.text = it.title
+            binding.homeDetailsIvCollect.setImageResource(if (favourite) R.mipmap.icon_collect_22 else R.mipmap.icon_uncollect_22)
+            initBanner(headImgList)
+            initDetailsList(bodyImgList)
+        })
+        //为你推荐数据回掉
+        viewModel.clothesListData.observe(this, {
+            val clothesList = it.clothes_list
+            if(clothesList.isNotEmpty()){
+                //推荐列表
+                binding.homeDetailsRV2.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                binding.homeDetailsRV2.adapter = RecommendAdapter(this, clothesList)
+            }
+        })
     }
 }
 
 class HomeDetailsViewModel : BaseViewModel() {
+
+    private var launch: Job? = null
+
+    val clothesData = MutableLiveData<ClothesInfo>()
+
+    /**
+     * 为你推荐
+     */
+    val clothesListData = MutableLiveData<ClothesList>()
+    val errorLiveData = MutableLiveData<String>()
+
+    /**
+     * 获取衣服详情
+     */
+    fun getClothesInfo(id: String) {
+        launch = viewModelScope.launch {
+            val clothesInfo = repository.getClothesInfo(id)
+            if (clothesInfo.isSuccessful) {
+                clothesData.value = clothesInfo.body()
+            } else {
+                clothesInfo.errorBody()?.stringSuspending()?.let {
+                    Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
+                        errorLiveData.value = message
+                    }
+                }
+            }
+        }
+    }
+
+    //获取为你推荐列表,和首页的款式列表一个接口，这就是请求的  最热 列表数据
+    fun getClothesList(sort: String) {
+        launch = viewModelScope.launch {
+            val clothesList = repository.getClothesList(sort, "", 0, 20)
+            if (clothesList.isSuccessful) {
+                clothesListData.value = clothesList.body()
+            } else {
+                clothesList.errorBody()?.stringSuspending()?.let {
+                    Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
+                        errorLiveData.value = message
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        launch?.cancel()
+    }
 
     /**
      * 美洽聊天初始化
@@ -131,5 +207,29 @@ class HomeDetailsViewModel : BaseViewModel() {
     fun initMeiQia(context: Context) {
 //        val instance = MQManager.getInstance(context)
 //        MQConfig.isShowClientAvatar = true
+    }
+
+    fun initAliBaiChuan(context: Activity) {
+        /*val urls = "https://item.taobao.com/item.htm?ft=t&spm=a211oj.20249227.6003353180.ditem1.a1ae6654pHNgkN&id=623849160849&utparam=null"
+
+        val showParams = AlibcShowParams()
+        showParams.openType = OpenType.Auto
+        showParams.clientType = "taobao"
+//        showParams.backUrl = "fasionai://fasionhost"
+        showParams.nativeOpenFailedMode = AlibcFailModeType.AlibcNativeFailModeJumpH5
+
+        AlibcTrade.openByUrl(context, "淘宝客基础页面包", urls, null,
+            WebViewClient(), WebChromeClient(), showParams,
+            AlibcTaokeParams("", "", ""), mapOf(), object : AlibcTradeCallback {
+                override fun onTradeSuccess(p0: AlibcTradeResult?) {
+
+                }
+
+                override fun onFailure(p0: Int, p1: String) {
+                    if (p0 == -1) {
+                        ToastUtils.show(p1)
+                    }
+                }
+            })*/
     }
 }

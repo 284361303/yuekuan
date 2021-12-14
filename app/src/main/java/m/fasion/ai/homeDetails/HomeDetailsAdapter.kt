@@ -13,12 +13,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import m.fasion.ai.R
+import m.fasion.core.model.BodyImg
 import m.fasion.core.util.CoreUtil
 
 /**
  * 选款详情中的商品图片大图列表
  */
-class HomeDetailsAdapter(private val context: Context, private val mList: List<String>) :
+class HomeDetailsAdapter(private val context: Context, private val mList: List<BodyImg>) :
     RecyclerView.Adapter<HomeDetailsAdapter.HomeDetailsHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeDetailsHolder {
@@ -26,9 +27,9 @@ class HomeDetailsAdapter(private val context: Context, private val mList: List<S
     }
 
     override fun onBindViewHolder(holder: HomeDetailsHolder, position: Int) {
-        val url = mList[position]
+        val list = mList[position]
         val screenWidth = CoreUtil.getScreenWidth(context)
-        Glide.with(context).asBitmap().load(url).into(object : CustomTarget<Bitmap>() {
+        Glide.with(context).asBitmap().load(list.link).into(object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 //根据宽高比 来显示图片
                 val frameLayout = holder.ivBg.layoutParams as LinearLayout.LayoutParams

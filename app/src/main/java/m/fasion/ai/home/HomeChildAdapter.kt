@@ -12,13 +12,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import m.fasion.ai.R
+import m.fasion.core.model.Clothes
 import m.fasion.core.util.CoreUtil
 import java.util.concurrent.ThreadLocalRandom
 
 /**
  *  @param type 0、选款首页下面的列表 1、搜索结果的热度推荐列表
  */
-class HomeChildAdapter(private val context: Context, private val type: Int, private val mList: List<String>) :
+class HomeChildAdapter(private val context: Context, private val type: Int, private val mList: List<Clothes>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -49,13 +50,21 @@ class HomeChildAdapter(private val context: Context, private val type: Int, priv
             } else {
                 holder.space.visibility = View.VISIBLE
             }
-            val random = ThreadLocalRandom.current().nextInt(400, 680)
+            val random = ThreadLocalRandom.current().nextInt(160, 280)
             val layoutParams = holder.ivBg.layoutParams
-            layoutParams.height = random
+            layoutParams.height = CoreUtil.dp2px(context, random.toFloat())
             holder.ivBg.layoutParams = layoutParams
 
-            val url = mList[position]
-            Glide.with(context).load(url).into(holder.ivBg)
+            val clothes = mList[position]
+            val favourite = clothes.favourite
+            val num = clothes.num
+            Glide.with(context).load(clothes.head_img).into(holder.ivBg)
+            if (favourite) {  //收藏
+                holder.ivCollect.setImageResource(R.mipmap.icon_collect)
+            } else {  //没有收藏
+                holder.ivCollect.setImageResource(R.mipmap.icon_uncollect)
+            }
+            holder.tvNum.text = num
 
             if (onItemClickListener != null) {
                 holder.itemView.setOnClickListener {
@@ -82,6 +91,7 @@ class HomeChildAdapter(private val context: Context, private val type: Int, priv
         val ivCollect: AppCompatImageView = itemView.findViewById(R.id.itemStaggered_ivCollect)
         val space: Space = itemView.findViewById(R.id.itemStaggered_space)
         val clCollect: ConstraintLayout = itemView.findViewById(R.id.itemStaggered_clCollect)
+        val tvNum: TextView = itemView.findViewById(R.id.itemStaggered_tvNum)
     }
 
     class EmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

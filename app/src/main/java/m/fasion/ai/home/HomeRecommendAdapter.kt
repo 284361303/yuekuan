@@ -6,11 +6,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import m.fasion.ai.R
 import m.fasion.ai.databinding.ItemImage105140Binding
+import m.fasion.core.model.Body
 
 /**
  * 今日推荐的adapter
  */
-class HomeRecommendAdapter(private val mList: List<RecommendModel>) :
+class HomeRecommendAdapter(private val mList: List<Body>) :
     RecyclerView.Adapter<HomeRecommendAdapter.HomeRecommendHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeRecommendHolder {
@@ -36,7 +37,7 @@ class HomeRecommendAdapter(private val mList: List<RecommendModel>) :
     class HomeRecommendHolder(private val binding: ItemImage105140Binding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(model: RecommendModel, position: Int) {
+        fun bind(model: Body, position: Int) {
             binding.listModel = model
             binding.position = position
             binding.executePendingBindings()
@@ -46,6 +47,6 @@ class HomeRecommendAdapter(private val mList: List<RecommendModel>) :
     var onItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun onItemClick(model: RecommendModel, position: Int)
+        fun onItemClick(model: Body, position: Int)
     }
 }

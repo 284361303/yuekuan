@@ -31,7 +31,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
-            abiFilters 'armeabi-v7a'//, 'arm64-v8a', 'x86'
+            abiFilters 'armeabi-v7a', 'x86'//, 'arm64-v8a', 'x86'
         }
     }
 
@@ -108,4 +108,20 @@ dependencies {
     //room数据库
     implementation "androidx.room:room-ktx:2.3.0"
     kapt "androidx.room:room-compiler:2.3.0"
+
+    //百川SDK---------Start
+    // webview容器
+//    implementation 'com.alibaba.baichuan.sdk:alibcwebview:5.0.0.13'
+    // 电商基础组件
+//    implementation 'com.alibaba.baichuan.sdk:alibctradecommon:5.0.0.13'
+//    implementation 'com.alibaba.baichuan.sdk:alibcnbtrade:5.0.0.13'
+//    implementation 'com.alibaba.baichuan.sdk:alibcprotocol:5.0.0.13'
+    // 辅助排查工具（可选）
+//    implementation "com.alibaba.baichuan.sdk:alibctools:5.0.0.13"
+    // 安全保镖v6版本
+    /*implementation 'com.taobao.android:securityguardaar3:5.0.0.9-v6@aar'
+    implementation 'com.taobao.android:securitybodyaar3:5.0.0.9-v6@aar'
+    implementation 'com.taobao.android:sgmiddletieraar3:5.0.0.9-v6@aar'*/
+//    implementation 'com.alibaba:fastjson:1.1.71.android'
+    //百川SDK---------End
 }

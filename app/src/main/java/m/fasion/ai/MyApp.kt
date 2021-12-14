@@ -50,6 +50,16 @@ class MyApp : BaseApplication() {
             .autoClear(true)
         //mmkv初始化
         MMKV.initialize(this)
+        //阿里百川初始化
+        /*AlibcTradeSDK.asyncInit(this, mapOf(), object : AlibcTradeInitCallback {
+            override fun onSuccess() {
+                LogUtils.log("阿里百川", "百川初始化成功")
+            }
+
+            override fun onFailure(p0: Int, p1: String?) {
+                LogUtils.log("阿里百川", "百川初始化失败 $p0")
+            }
+        })*/
     }
 
     companion object {

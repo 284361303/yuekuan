@@ -55,8 +55,8 @@ class HttpUtils {
                 try {
                     return@Interceptor chain.proceed(build)
                 } catch (e: Exception) {
-                    var msg = ""
-                    var interceptorCode = 0
+                    val msg: String
+                    val interceptorCode:Int
                     when (e) {
                         is SocketTimeoutException -> {
                             msg = "请求超时"

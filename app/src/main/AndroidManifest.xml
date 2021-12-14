@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 用于进行网络定位 -->
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> &lt;!&ndash; 用于进行网络定位 &ndash;&gt;-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission
@@ -31,12 +31,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup"
         tools:targetApi="n">
         <activity
             android:name=".homeDetails.TopicSuitActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:exported="true" />
         <activity
             android:name=".homeDetails.TopicEveryPeriodActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:exported="true" />
         <activity
             android:name=".toolbar.MyFavoriteActivity"
@@ -104,7 +107,20 @@
         <activity
             android:name=".home.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:exported="true" />
+            android:exported="true">
+
+            <!-- 在主 Activity 中配置 scheme -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="ldxhost"
+                    android:scheme="leduoxiao" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"

@@ -105,7 +105,7 @@ class LoginViewModel : BaseViewModel() {
      */
     fun getLogin(phone: String, code: String) {
         launch = viewModelScope.launch {
-            val login = repository.getLogin(mutableMapOf("phone" to phone, "code" to code))
+            val login = repository.getLogin(mutableMapOf("phone" to phone, "code" to code, "channel" to "styled"))
             if (login.isSuccessful) {
                 loginLiveData.value = login.body()
             } else {

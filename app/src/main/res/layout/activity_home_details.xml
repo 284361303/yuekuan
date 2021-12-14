@@ -52,7 +52,9 @@
                     android:layout_marginBottom="13dp"
                     android:text="@string/pageviews"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </m.fasion.ai.util.customize.RadiusCardView>
 
             <TextView

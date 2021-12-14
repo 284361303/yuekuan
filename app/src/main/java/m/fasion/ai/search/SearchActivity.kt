@@ -148,7 +148,7 @@ class SearchActivity : BaseActivity() {
      * 搜索结果和热度推荐列表Adapter
      */
     private fun initListAdapter() {
-        listAdapter = HomeChildAdapter(this, 1, lists).apply {
+        listAdapter = HomeChildAdapter(this, 1, listOf()).apply {
             binding.searchRVAll.adapter = this
             onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {

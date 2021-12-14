@@ -1,17 +1,28 @@
 package m.fasion.ai.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.gson.Gson
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import m.fasion.ai.databinding.FragmentHomeChildBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
+import m.fasion.ai.util.LogUtils
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
+import m.fasion.core.model.Clothes
+import m.fasion.core.model.ClothesList
+import m.fasion.core.model.ErrorDataModel
+import m.fasion.core.model.stringSuspending
 
 /**
  * 款式首页的瀑布流
@@ -21,18 +32,17 @@ class HomeChildFragment : Fragment() {
     private var mAdapter: HomeChildAdapter? = null
     private lateinit var _binding: FragmentHomeChildBinding
     private val viewModel: HomeChildViewModel by activityViewModels()
-    private var param1: String? = null
-    val lists = mutableListOf("https://i.stack.imgur.com/GvWB9.png",
-        "https://lh3.googleusercontent.com/NSVbWbdKFGRzju5r5XsXKMJ9A41PVdWNhGSxDwxk9aO6o_7SeVMU8z27-GhdNw3uS0PZtLPts5tvaxdsHr--NRXZWfyi=s300",
-        "https://t7.baidu.com/it/u=3785402047,1898752523&fm=193&f=GIF", "https://img.zcool.cn/community/01639a56fb62ff6ac725794891960d.jpg",
-        "https://img.zcool.cn/community/01270156fb62fd6ac72579485aa893.jpg",
-        "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg", "https://img.zcool.cn/community/016a2256fb63006ac7257948f83349.jpg",
-        "https://i.stack.imgur.com/GvWB9.png", "https://t7.baidu.com/it/u=3785402047,1898752523&fm=193&f=GIF", "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg")
+    private var mPage: Int = 0
+    private var mSort: String = ""
+    private var mCategoryId = ""
+    private var listData: MutableList<Clothes> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString("childTitle")
+            it.getString("childTitle")?.let { title ->
+                mSort = title
+            }
         }
     }
 
@@ -44,14 +54,24 @@ class HomeChildFragment : Fragment() {
         return _binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setLayoutManager()
         initAdapter()
+        LogUtils.log("sourt参数",mSort)
+        viewModel.getClothesList(mSort, mCategoryId, mPage)
+
+        //列表数据回调
+        viewModel.clothesListData.observe(requireActivity(), {
+            listData.addAll(it.clothes_list)
+            setLayoutManager()
+            mAdapter?.notifyDataSetChanged()
+        })
     }
 
     private fun setLayoutManager() {
-        if (lists.isEmpty()) {
+        if (listData.isEmpty()) {
             _binding.homeChildRV.layoutManager = LinearLayoutManager(requireContext())
         } else {
             _binding.homeChildRV.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -59,7 +79,7 @@ class HomeChildFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        mAdapter = HomeChildAdapter(requireContext(), 0, lists)
+        mAdapter = HomeChildAdapter(requireContext(), 0, listData)
         _binding.homeChildRV.adapter = mAdapter
         mAdapter?.onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
@@ -73,4 +93,30 @@ class HomeChildFragment : Fragment() {
     }
 }
 
-class HomeChildViewModel : BaseViewModel()
+class HomeChildViewModel : BaseViewModel() {
+
+    private var launch: Job? = null
+    val clothesListData = MutableLiveData<ClothesList>()
+    val errorLiveData = MutableLiveData<String>()
+
+    //获取款式列表
+    fun getClothesList(sort: String, categoryId: String, page: Int) {
+        launch = viewModelScope.launch {
+            val clothesList = repository.getClothesList(sort, categoryId, page, 20)
+            if (clothesList.isSuccessful) {
+                clothesListData.value = clothesList.body()
+            } else {
+                clothesList.errorBody()?.stringSuspending()?.let {
+                    Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
+                        errorLiveData.value = message
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        launch?.cancel()
+    }
+}

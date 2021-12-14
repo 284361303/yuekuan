@@ -13,19 +13,21 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.listener.OnPageChangeListener
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import m.fasion.ai.R
-import m.fasion.core.base.ConstantsKey
 import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.FragmentHomeBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
@@ -33,7 +35,8 @@ import m.fasion.ai.homeDetails.TopicSuitActivity
 import m.fasion.ai.search.SearchActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
-import m.fasion.core.model.UserModel
+import m.fasion.core.base.ConstantsKey
+import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
 import kotlin.math.abs
 
@@ -74,23 +77,21 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
             searchHeight = _binding.homeFragmentToolBar.height
         }
 
-        //轮播Start
-        val model1 = HomeBannerModel("1", "https://t7.baidu.com/it/u=3785402047,1898752523&fm=193&f=GIF")
-        val model2 = HomeBannerModel("2", "https://img.zcool.cn/community/01639a56fb62ff6ac725794891960d.jpg")
-        val model3 = HomeBannerModel("3", "https://img.zcool.cn/community/01270156fb62fd6ac72579485aa893.jpg")
-        val model4 = HomeBannerModel("4", "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg")
-        val model5 = HomeBannerModel("5", "https://img.zcool.cn/community/016a2256fb63006ac7257948f83349.jpg")
+        viewModel.getTopBanner("clothes_banner")
+        viewModel.getTopBanner("clothes_recommend")
 
-        _binding.homeFragmentBanner.apply {
-            setAdapter(object :
-                BannerImageAdapter<HomeBannerModel>(listOf(model1, model2, model3, model4, model5)) {
-                override fun onBindView(holder: BannerImageHolder?, data: HomeBannerModel?, position: Int, size: Int) {
-                    Glide.with(requireContext()).load(data?.url).into(holder?.imageView!!)
+        //轮播Start
+        viewModel.bannerData.observe(requireActivity(), {
+            val bodyList = it[0].body
+            _binding.homeFragmentBanner.setAdapter(object : BannerImageAdapter<Body>(bodyList) {
+                override fun onBindView(holder: BannerImageHolder?, data: Body?, position: Int, size: Int) {
+                    Glide.with(requireContext()).load(data?.head_img).into(holder?.imageView!!)
                 }
             })
-            addBannerLifecycleObserver(this@HomeFragment)
-            addOnPageChangeListener(object : OnPageChangeListener {
+            _binding.homeFragmentBanner.addBannerLifecycleObserver(this@HomeFragment)
+            _binding.homeFragmentBanner.addOnPageChangeListener(object : OnPageChangeListener {
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
                 }
 
                 override fun onPageSelected(position: Int) {
@@ -100,12 +101,18 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                 override fun onPageScrollStateChanged(state: Int) {
                 }
             })
-            setOnBannerListener { data, position -> //点击事件
-                ToastUtils.show(position.toString())
+
+            _binding.homeFragmentBanner.setOnBannerListener { data, _ -> //点击事件
+                val body = data as Body
+                when (body.type) {
+                    "topics" -> {   //高级西装搭配
+                        TopicSuitActivity.startActivity(requireContext(), body.target)
+                    }
+                }
             }
-            removeIndicator()
-            _binding.homeFragmentTvAll.text = realCount.toString()  //设置banner总数
-        }
+            _binding.homeFragmentBanner.removeIndicator()
+            _binding.homeFragmentTvAll.text = _binding.homeFragmentBanner.realCount.toString()  //设置banner总数
+        })
         //轮播End
 
         _binding.homeFragmentAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -135,28 +142,22 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         CoreUtil.setTypeFaceMedium(arrayOf(_binding.homeFragmentTvRecommend1, _binding.homeFragmentTvRecommend2,
             _binding.homeFragmentTvMore, _binding.homeFragmentTvDesign1, _binding.homeFragmentTvDesign2, _binding.homeFragmentTvTopTitle).toList())
 
-        val listOf = listOf(RecommendModel("https://i.stack.imgur.com/GvWB9.png"),
-            RecommendModel("https://i.stack.imgur.com/Df5H2.png"),
-            RecommendModel("https://lh3.googleusercontent.com/NSVbWbdKFGRzju5r5XsXKMJ9A41PVdWNhGSxDwxk9aO6o_7SeVMU8z27-GhdNw3uS0PZtLPts5tvaxdsHr--NRXZWfyi=s300"),
-            RecommendModel("https://i.stack.imgur.com/Df5H2.png"),
-            RecommendModel("https://lh3.googleusercontent.com/NSVbWbdKFGRzju5r5XsXKMJ9A41PVdWNhGSxDwxk9aO6o_7SeVMU8z27-GhdNw3uS0PZtLPts5tvaxdsHr--NRXZWfyi=s300"),
-            RecommendModel("https://i.stack.imgur.com/GvWB9.png"),
-            RecommendModel("https://i.stack.imgur.com/GvWB9.png"),
-            RecommendModel("https://lh3.googleusercontent.com/NSVbWbdKFGRzju5r5XsXKMJ9A41PVdWNhGSxDwxk9aO6o_7SeVMU8z27-GhdNw3uS0PZtLPts5tvaxdsHr--NRXZWfyi=s300"),
-            RecommendModel("https://i.stack.imgur.com/Df5H2.png"),
-            RecommendModel("https://lh3.googleusercontent.com/NSVbWbdKFGRzju5r5XsXKMJ9A41PVdWNhGSxDwxk9aO6o_7SeVMU8z27-GhdNw3uS0PZtLPts5tvaxdsHr--NRXZWfyi=s300"))
-
         //今日推荐数据
-        val layoutManager = LinearLayoutManager(requireContext())
-        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        _binding.homeFragmentRecommendRV.recyclerView.layoutManager = layoutManager
-        _binding.homeFragmentRecommendRV.recyclerView.adapter = HomeRecommendAdapter(listOf).also {
-            it.onItemClickListener = object : HomeRecommendAdapter.OnItemClickListener {
-                override fun onItemClick(model: RecommendModel, position: Int) {    //点击事件
-                    HomeDetailsActivity.startActivity(requireContext(), "")
+        viewModel.recommendDataList.observe(requireActivity(), {
+            val bodyList = it[0].body
+            if (bodyList.isNotEmpty()) {
+                val layoutManager = LinearLayoutManager(requireContext())
+                layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+                _binding.homeFragmentRecommendRV.recyclerView.layoutManager = layoutManager
+                _binding.homeFragmentRecommendRV.recyclerView.adapter = HomeRecommendAdapter(bodyList).also {
+                    it.onItemClickListener = object : HomeRecommendAdapter.OnItemClickListener {
+                        override fun onItemClick(model: Body, position: Int) {    //点击事件
+                            HomeDetailsActivity.startActivity(requireContext(), model.target)
+                        }
+                    }
                 }
             }
-        }
+        })
 
         //tabLayout
         initTabLayout()
@@ -173,10 +174,6 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
             startActivity(Intent(requireContext(), TopicSuitActivity::class.java))
         }
 
-        viewModel.errorLiveData.observe(requireActivity(), {
-            System.currentTimeMillis()
-        })
-
         //下拉刷新
         _binding.homeFragmentRefresh.setOnRefreshListener {
             if (initNetWork()) return@setOnRefreshListener
@@ -190,6 +187,10 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         _binding.homeFragmentIncludeState.homeEmptyIvTopSearch.setOnClickListener {
             startActivity(Intent(requireContext(), SearchActivity::class.java))
         }
+
+        viewModel.errorLiveData.observe(requireActivity(), {
+            System.currentTimeMillis()
+        })
 
         //接收筛选条件页面回传的数据
         LiveEventBus.get(ConstantsKey.FILTER_KEY, List::class.java).observe(requireActivity(), {
@@ -239,23 +240,26 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
     private fun initTabLayout() {
         _binding.homeFragmentVP.adapter = object : FragmentStateAdapter(requireActivity()) {
             override fun getItemCount(): Int {
-                return viewModel.tabList.size
+                return viewModel.tabMapList.size
             }
 
             override fun createFragment(position: Int): Fragment {
                 val childFragment = HomeChildFragment()
+                val values = viewModel.tabMapList.values
+                val value = values.toMutableList()[position]
                 childFragment.arguments = Bundle().also {
-                    it.putString("childTitle", viewModel.tabList[position])
+                    it.putString("childTitle", value)
                 }
                 return childFragment
             }
         }
         TabLayoutMediator(_binding.homeFragmentTab, _binding.homeFragmentVP) { tab, position ->
-            tab.text = viewModel.tabList[position]
+//            tab.text = viewModel.tabList[position]
+            tab.text = viewModel.tabMapList.keys.toList()[position]
         }.attach()
 
         //自定义tabLayout的样式
-        viewModel.tabList.forEachIndexed { index, _ ->
+        viewModel.tabMapList.keys.forEachIndexed { index, _ ->
             _binding.homeFragmentTab.getTabAt(index)?.let {
                 it.setCustomView(R.layout.item_tableyout)
                 if (index == 0) {
@@ -265,10 +269,10 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                     }
                     it.customView?.findViewById<View>(R.id.itemTab_view)?.visibility = View.VISIBLE
                 }
-                it.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.text = viewModel.tabList[index]
+                it.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.text = viewModel.tabMapList.keys.toList()[index]
             }
         }
-        _binding.homeFragmentVP.offscreenPageLimit = viewModel.tabList.size
+        _binding.homeFragmentVP.offscreenPageLimit = viewModel.tabMapList.size
         _binding.homeFragmentTab.getTabAt(0)?.select()
 
         //tabLayout点击事件改变字体颜色
@@ -305,9 +309,32 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 class HomeViewModel : BaseViewModel() {
 
     private var launch: Job? = null
-    val tabList = arrayOf("综合", "上新", "热度")
-    val loginLiveData = MutableLiveData<UserModel>()
+    val tabMapList = mapOf("综合" to " ", "上新" to "new", "热度" to "heat")
+    val bannerData = MutableLiveData<BannerModel>()
+    val recommendDataList = MutableLiveData<BannerModel>()
     val errorLiveData = MutableLiveData<String>()
+
+    fun getTopBanner(type: String) {
+        launch = viewModelScope.launch {
+            val banner = repository.getBanner(type)
+            if (banner.isSuccessful) {
+                when (type) {
+                    "clothes_banner" -> { //顶部banner
+                        bannerData.value = banner.body()
+                    }
+                    "clothes_recommend" -> {  //即日推荐
+                        recommendDataList.value = banner.body()
+                    }
+                }
+            } else {
+                banner.errorBody()?.stringSuspending()?.let {
+                    Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
+                        errorLiveData.value = message
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()

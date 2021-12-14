@@ -1,5 +1,6 @@
 package m.fasion.core.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -9,6 +10,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.NonNull
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.regex.Pattern
 
 object CoreUtil {
@@ -150,5 +153,15 @@ object CoreUtil {
     fun String.isNumeric(): Boolean {
         val pattern = Pattern.compile("^-?[0-9]+")
         return pattern.matcher(this).matches()
+    }
+
+    /**
+     * 毫秒转日期
+     */
+    @SuppressLint("SimpleDateFormat")
+    fun millisecond2Date(millisecond: Long): String {
+        val date = Date(millisecond)
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        return format.format(date)
     }
 }
