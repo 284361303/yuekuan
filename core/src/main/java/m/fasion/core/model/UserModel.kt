@@ -93,3 +93,41 @@ data class HeadImg(
     val path: String,
     val type: String
 )
+
+/*收藏列表数据*/
+data class FavoritesListData(
+    val `data`: List<Data>,
+    val links: Links,
+    val total: Int
+)
+
+data class Data(
+    val body: List<FavoritesBody>,
+    val head: List<FavoritesHead>,
+    val id: String,
+    val title: String
+)
+
+data class Links(
+    val last: String
+)
+
+data class FavoritesBody(
+    val id: String,
+    val target: Target,
+    val type: String
+)
+
+data class FavoritesHead(
+    val id: String,
+    val target: TargetX,
+    val type: String
+)
+
+data class Target(
+    val path: String
+)
+
+data class TargetX(
+    val path: String
+)

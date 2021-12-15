@@ -1,11 +1,9 @@
 package m.fasion.core.service
 
-import m.fasion.core.model.BannerModel
-import m.fasion.core.model.ClothesInfo
-import m.fasion.core.model.ClothesList
-import m.fasion.core.model.UserModel
+import m.fasion.core.model.*
 import retrofit2.Response
 import retrofit2.http.*
+import retrofit2.http.Body
 
 interface Service {
 
@@ -61,5 +59,5 @@ interface Service {
      * 收藏列表
      */
     @GET("/api/favorites/clothes")
-    suspend fun getClothesList(): Response<Any>
+    suspend fun getFavoritesList(@Query("id") id: String): Response<FavoritesListData>
 }

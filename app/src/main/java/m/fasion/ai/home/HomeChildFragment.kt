@@ -16,7 +16,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.databinding.FragmentHomeChildBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
-import m.fasion.ai.util.LogUtils
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.Clothes
@@ -29,10 +28,12 @@ import m.fasion.core.model.stringSuspending
  */
 class HomeChildFragment : Fragment() {
 
+    private var totalPage: Int = 0  //总页数
+    private var currentPage: Int = 1    //当前返回的页数
+    private var totalCount: Int = 0    //总的数量
     private var mAdapter: HomeChildAdapter? = null
     private lateinit var _binding: FragmentHomeChildBinding
     private val viewModel: HomeChildViewModel by activityViewModels()
-    private var mPage: Int = 0
     private var mSort: String = ""
     private var mCategoryId = ""
     private var listData: MutableList<Clothes> = mutableListOf()
@@ -59,14 +60,34 @@ class HomeChildFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setLayoutManager()
         initAdapter()
-        LogUtils.log("sourt参数",mSort)
-        viewModel.getClothesList(mSort, mCategoryId, mPage)
+        getData()
+        _binding.homeChildRefresh.setEnableRefresh(false)
 
         //列表数据回调
         viewModel.clothesListData.observe(requireActivity(), {
-            listData.addAll(it.clothes_list)
+            totalPage = it.total_page
+            currentPage = it.current_page
+            totalCount = it.total_count.toInt()
+            if (it.clothes_list.isNotEmpty()) {
+                listData.addAll(it.clothes_list)
+            }
             setLayoutManager()
+            _binding.homeChildRefresh.finishLoadMore()
             mAdapter?.notifyDataSetChanged()
+        })
+
+        //上拉加载事件
+        _binding.homeChildRefresh.setOnLoadMoreListener {
+            if (listData.size >= totalCount) {
+                _binding.homeChildRefresh.finishLoadMore()
+            } else {
+                currentPage += 1
+                getData()
+            }
+        }
+
+        viewModel.errorLiveData.observe(requireActivity(), {
+            setLayoutManager()
         })
     }
 
@@ -90,6 +111,10 @@ class HomeChildFragment : Fragment() {
                 ToastUtils.show("收藏了 $position")
             }
         }
+    }
+
+    private fun getData() {
+        viewModel.getClothesList(mSort, mCategoryId, currentPage)
     }
 }
 

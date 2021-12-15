@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginHorizontal="6dp"
-    android:layout_marginVertical="6dp"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="0dp">
+    android:layout_marginVertical="6dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/itemMyFavorite_iBG"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/itemMyFavorite_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        tools:src="@mipmap/aaa" />
+        app:cardCornerRadius="4dp"
+        app:cardElevation="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/gradient_black_24" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/itemMyFavorite_ivBG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:src="@mipmap/aaa" />
 
-    <TextView
-        android:id="@+id/itemMyFavorite_tv1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:paddingHorizontal="6dp"
-        android:paddingBottom="6dp"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        tools:text="2021秋季新款磨毛短袖T恤早秋可爱印花2021秋季新款磨毛短袖T恤早秋可爱印花" />
-</androidx.cardview.widget.CardView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient_black_24" />
+
+        <TextView
+            android:id="@+id/itemMyFavorite_tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:paddingHorizontal="6dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            tools:text="2021秋季新款磨毛短袖T恤早秋可爱印花2021秋季新款磨毛短袖T恤早秋可爱印花" />
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
