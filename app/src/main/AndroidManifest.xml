@@ -7,8 +7,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> &lt;!&ndash; 用于进行网络定位 &ndash;&gt;-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> &lt;!&ndash; 用于进行网络定位 &ndash;&gt; -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission
@@ -33,6 +32,28 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup"
         tools:targetApi="n">
+        <activity
+            android:name=".mine.userInfo.EditNickNameActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoTitle.TransparentBg"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".mine.userInfo.PreviewImageActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".mine.userInfo.EditingUserPicActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoTitle.TransparentBg"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".toolbar.EditingUserActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".homeDetails.TopicSuitActivity"
             android:configChanges="orientation|keyboardHidden"

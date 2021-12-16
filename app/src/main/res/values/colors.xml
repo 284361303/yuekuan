@@ -24,4 +24,7 @@
     <color name="transparent">#00000000</color>
     <color name="color_F7F7F7">#F7F7F7</color>
     <color name="color_3D000">#3D000000</color>
+    <color name="color_EDEDED">#EDEDED</color>
+    <color name="color_202020">#202020</color>
+    <color name="color_F2F2F2">#F2F2F2</color>
 </resources>

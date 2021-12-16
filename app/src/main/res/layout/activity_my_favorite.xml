@@ -26,4 +26,10 @@
             app:spanCount="2"
             tools:listitem="@layout/item_my_favorite" />
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+    <!--没有网络和没有数据显示的页面提示效果-->
+    <m.fasion.ai.base.StateView
+        android:id="@+id/myFavorite_stateView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

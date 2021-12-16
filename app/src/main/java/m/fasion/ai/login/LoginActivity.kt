@@ -1,6 +1,7 @@
 package m.fasion.ai.login
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,9 +14,11 @@ import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivityLoginBinding
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
+import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.ErrorDataModel
 import m.fasion.core.model.UserModel
 import m.fasion.core.model.stringSuspending
+import m.fasion.core.util.SPUtil
 
 /**
  * 登录页面
@@ -51,9 +54,9 @@ class LoginActivity : BaseActivity() {
          * 登录成功就销毁当前页面
          */
         viewModel.loginLiveData.observe(this, {
-            it.apply {
-                if (token.isNotEmpty()) {
-                    LiveEventBus.get<UserModel>("loginSuccess").post(this)
+            it?.let {model->
+                if (model.token.isNotEmpty()) {
+                    LiveEventBus.get<UserModel>("loginSuccess").post(model)
                     ToastUtils.show("登录成功")
                     finish()
                 }
@@ -65,11 +68,6 @@ class LoginActivity : BaseActivity() {
 class LoginViewModel : BaseViewModel() {
 
     private var launch: Job? = null
-
-    /**
-     * 登录成功
-     */
-    val loginLiveData = MutableLiveData<UserModel>()
 
     /**
      * 登录异常/失败
@@ -98,6 +96,11 @@ class LoginViewModel : BaseViewModel() {
         }
     }
 
+
+    /**
+     * 登录成功
+     */
+    val loginLiveData = MutableLiveData<UserModel>()
     /**
      * 验证码进行登录
      * @param phone 手机号
@@ -107,7 +110,10 @@ class LoginViewModel : BaseViewModel() {
         launch = viewModelScope.launch {
             val login = repository.getLogin(mutableMapOf("phone" to phone, "code" to code, "channel" to "styled"))
             if (login.isSuccessful) {
-                loginLiveData.value = login.body()
+                login.body()?.let {
+                    SPUtil.put(ConstantsKey.USER_TOKEN_KEY, it.token)
+                    loginLiveData.value = it
+                }
             } else {
                 login.errorBody()?.stringSuspending()?.let {
                     Gson().fromJson(it, ErrorDataModel::class.java)?.apply {

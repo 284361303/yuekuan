@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#33000000"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    tools:context=".mine.userInfo.EditingUserPicActivity">
+
+    <View
+        android:id="@+id/editUserPic_viewTop"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="269dp"
+        android:background="@drawable/shape_white_top_15"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editUserPic_tvCamera"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/Photograph"
+            android:textColor="@color/color_4A4A4A"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/editUserPic_tvPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/select_from_album"
+            android:textColor="@color/color_4A4A4A"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/editUserPic_tvBigPic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:text="@string/view_larger_image"
+            android:textColor="@color/color_4A4A4A"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_EDEDED" />
+
+        <TextView
+            android:id="@+id/editUserPic_tvCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:text="@string/cancel"
+            android:textColor="@color/color_999999"
+            android:textSize="16sp" />
+    </LinearLayout>
+</LinearLayout>

@@ -65,10 +65,9 @@ class InputCodeFragment : Fragment() {
 
         //登录成功
         viewModel.loginLiveData.observe(requireActivity(), {
-            it?.apply {
+            it?.let {
                 binding.inputCodeFragmentTvError.visibility = View.GONE
                 binding.inputCodeFragmentTvError.text = ""
-                SPUtil.put(ConstantsKey.USER_KEY, this)
             }
         })
         //登录异常

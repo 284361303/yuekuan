@@ -5,18 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.gson.Gson
+import com.jeremyliao.liveeventbus.LiveEventBus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.FragmentHomeChildBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
-import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.Clothes
 import m.fasion.core.model.ClothesList
@@ -26,7 +26,7 @@ import m.fasion.core.model.stringSuspending
 /**
  * 款式首页的瀑布流
  */
-class HomeChildFragment : Fragment() {
+class HomeChildFragment : BaseFragment() {
 
     private var totalPage: Int = 0  //总页数
     private var currentPage: Int = 1    //当前返回的页数
@@ -89,6 +89,23 @@ class HomeChildFragment : Fragment() {
         viewModel.errorLiveData.observe(requireActivity(), {
             setLayoutManager()
         })
+
+        //取消收藏成功,刷新首页数据改变收藏状态
+        LiveEventBus.get<String>("cancelFavoritesSuccess").observe(requireActivity(), {
+            it?.let { mId ->
+                if (listData.isNotEmpty()) {
+                    val mData = listData.filter { it.id == mId }[0]
+                    listData
+                }
+            }
+        })
+
+        //收藏成功
+        LiveEventBus.get<String>("addFavoritesSuccess").observe(requireActivity(), {
+            it?.let { mId ->
+
+            }
+        })
     }
 
     private fun setLayoutManager() {
@@ -103,12 +120,23 @@ class HomeChildFragment : Fragment() {
         mAdapter = HomeChildAdapter(requireContext(), 0, listData)
         _binding.homeChildRV.adapter = mAdapter
         mAdapter?.onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                HomeDetailsActivity.startActivity(requireContext(), "")
+            override fun onItemClick(model: Clothes, position: Int) {
+                HomeDetailsActivity.startActivity(requireContext(), model.id)
             }
 
-            override fun onCollectClick(position: Int) {
-                ToastUtils.show("收藏了 $position")
+            override fun onCollectClick(model: Clothes, position: Int) {
+                checkLogin {
+                    val favourite = model.favourite
+                    val id = model.id
+                    if (favourite) {
+                        model.favourite = false
+                        viewModel.cancelFavorites(id)
+                    } else {
+                        model.favourite = true
+                        viewModel.addFavorites(id)
+                    }
+                    mAdapter?.notifyItemChanged(position, -1)
+                }
             }
         }
     }
@@ -136,6 +164,26 @@ class HomeChildViewModel : BaseViewModel() {
                         errorLiveData.value = message
                     }
                 }
+            }
+        }
+    }
+
+    val addFavoritesOk = MutableLiveData<String>()
+    fun addFavorites(id: String) {
+        launch = viewModelScope.launch {
+            val addFavorites = repository.addFavorites(id)
+            if (addFavorites.isSuccessful) {
+                addFavoritesOk.value = addFavorites.body()
+            }
+        }
+    }
+
+    val cancelFavoritesOk = MutableLiveData<String>()
+    fun cancelFavorites(id: String) {
+        launch = viewModelScope.launch {
+            val cancelFavorites = repository.cancelFavorites(id)
+            if (cancelFavorites.isSuccessful) {
+                cancelFavoritesOk.value = cancelFavorites.body()
             }
         }
     }

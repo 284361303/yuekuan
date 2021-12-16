@@ -29,6 +29,7 @@ import m.fasion.ai.util.database.History
 import m.fasion.ai.util.database.HistoryDao
 import m.fasion.ai.util.database.HistoryDatabase
 import m.fasion.core.base.BaseViewModel
+import m.fasion.core.model.Clothes
 import m.fasion.core.util.CoreUtil
 
 /**
@@ -151,11 +152,11 @@ class SearchActivity : BaseActivity() {
         listAdapter = HomeChildAdapter(this, 1, listOf()).apply {
             binding.searchRVAll.adapter = this
             onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
-                override fun onItemClick(position: Int) {
+                override fun onItemClick(model: Clothes, position: Int) {
                     HomeDetailsActivity.startActivity(this@SearchActivity, "")
                 }
 
-                override fun onCollectClick(position: Int) {
+                override fun onCollectClick(model: Clothes, position: Int) {
                     ToastUtils.show("收藏了 $position")
                 }
             }

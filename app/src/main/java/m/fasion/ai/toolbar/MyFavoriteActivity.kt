@@ -5,14 +5,13 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.base.BaseActivity
+import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.ActivityMyFavoriteBinding
-import m.fasion.ai.util.ToastUtils
+import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.util.customize.RecyclerItemClickListener
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.Data
@@ -45,7 +44,7 @@ class MyFavoriteActivity : BaseActivity() {
         binding.myFavoriteRV.addOnItemTouchListener(RecyclerItemClickListener(this, binding.myFavoriteRV, object :
             RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                ToastUtils.show(position.toString())
+                HomeDetailsActivity.startActivity(this@MyFavoriteActivity, listData[position].id)
             }
         }))
 
@@ -58,13 +57,13 @@ class MyFavoriteActivity : BaseActivity() {
                 listData.addAll(data)
             }
             finishRefresh(true)
-            setLayoutManager()
+            isShowEmptyView()
             adapter.notifyDataSetChanged()
         })
 
         viewModel.errorLiveData.observe(this, {
             finishRefresh(false)
-            setLayoutManager()
+            isShowEmptyView()
         })
 
         binding.myFavoriteRefresh.setOnRefreshListener {
@@ -84,17 +83,19 @@ class MyFavoriteActivity : BaseActivity() {
         }
     }
 
+    private fun isShowEmptyView() {
+        if (listData.isEmpty()) {
+            binding.myFavoriteRefresh.visibility = View.GONE
+            binding.myFavoriteStateView.setStateView(StateView.State.empty, "暂无喜欢")
+        } else {
+            binding.myFavoriteRefresh.visibility = View.VISIBLE
+            binding.myFavoriteStateView.setStateView(StateView.State.done)
+        }
+    }
+
     private fun finishRefresh(flag: Boolean) {
         binding.myFavoriteRefresh.finishRefresh(flag)
         binding.myFavoriteRefresh.finishLoadMore(flag)
-    }
-
-    private fun setLayoutManager() {
-        if (listData.isEmpty()) {
-            binding.myFavoriteRV.layoutManager = LinearLayoutManager(this)
-        } else {
-            binding.myFavoriteRV.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        }
     }
 }
 

@@ -7,24 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.jeremyliao.liveeventbus.LiveEventBus
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import m.fasion.ai.R
 import m.fasion.ai.databinding.FragmentMineBinding
 import m.fasion.ai.login.LoginActivity
-import m.fasion.ai.toolbar.AboutUsActivity
-import m.fasion.ai.toolbar.EditingDataActivity
-import m.fasion.ai.toolbar.FeedBacksActivity
-import m.fasion.ai.toolbar.MyFavoriteActivity
+import m.fasion.ai.toolbar.*
 import m.fasion.ai.util.ToastUtils
 import m.fasion.ai.util.customize.CustomizeDialog
 import m.fasion.ai.webView.WebViewActivity
-import m.fasion.core.base.BaseViewModel
 import m.fasion.core.base.ConstantsKey
+import m.fasion.core.model.UserInfo
 import m.fasion.core.model.UserModel
 import m.fasion.core.util.CoreUtil
 import m.fasion.core.util.SPUtil
@@ -36,7 +29,7 @@ import m.fasion.core.util.SPUtil
 class MineFragment : Fragment() {
 
     private var _inflate: FragmentMineBinding? = null
-    private val viewModel: MineViewModel by activityViewModels()
+    private val viewModel: EditingUserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,8 +44,8 @@ class MineFragment : Fragment() {
         _inflate?.let {
             CoreUtil.setTypeFaceMedium(listOf(it.mineTvName, it.mineTvAbout, it.mineTvProtocol, it.mineTvPrivacy, it.mineTvFeedbacks, it.mineTvLogout, it.mineTvToolBar))
 
-            SPUtil.getParcelable<UserModel>(ConstantsKey.USER_KEY)?.apply {
-                loginSuccess(this)
+            if (!SPUtil.getToken().isNullOrEmpty()) {
+                viewModel.getUserInfo()
             }
 
             //退出登录
@@ -93,7 +86,7 @@ class MineFragment : Fragment() {
                 if (SPUtil.getToken().isNullOrEmpty()) {
                     startActivity(Intent(requireContext(), LoginActivity::class.java))
                 } else {
-                    startActivity(Intent(requireContext(), EditingDataActivity::class.java))
+                    startActivity(Intent(requireContext(), EditingUserActivity::class.java))
                 }
             }
             //我的喜欢
@@ -103,17 +96,34 @@ class MineFragment : Fragment() {
 
             //登录成功
             LiveEventBus.get<UserModel>("loginSuccess").observe(requireActivity(), { models ->
-                models.apply {
-                    loginSuccess(this)
+                if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
+                    viewModel.getUserInfo()
                 }
             })
 
-            viewModel.logoutLiveData.observe(requireActivity(), {
-                if (it == 200) {
-                    SPUtil.removeKey(ConstantsKey.USER_KEY)
+            //修改用户信息成功就重新请求用户信息接口
+            LiveEventBus.get<String>(ConstantsKey.EDIT_SUCCESS).observe(requireActivity(), { str ->
+                if (str == "1") {
+                    viewModel.getUserInfo()
+                }
+            })
+
+            viewModel.logoutLiveData.observe(requireActivity(), { num ->
+                if (num == 200) {
+                    SPUtil.removeKey(ConstantsKey.USER_TOKEN_KEY)
                     loginError()
                     ToastUtils.show("退出登录成功")
                 }
+            })
+            viewModel.userInfoData.observe(requireActivity(), { userInfo ->
+                userInfo?.let { model ->
+                    loginSuccess(model)
+                }
+            })
+
+            //我的喜欢数量
+            viewModel.favoritesListData.observe(requireActivity(), { favorites ->
+                it.mineTvLikeNum.text = favorites.total.toString()
             })
         }
     }
@@ -121,7 +131,7 @@ class MineFragment : Fragment() {
     /**
      * 登录成功
      */
-    private fun loginSuccess(userModel: UserModel) {
+    private fun loginSuccess(userModel: UserInfo) {
         _inflate?.let {
             it.mineTvEdit.visibility = View.VISIBLE
             it.mineMyFavorite.visibility = View.VISIBLE
@@ -143,30 +153,15 @@ class MineFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!SPUtil.getToken().isNullOrEmpty()) {
+            viewModel.getClothesList("")
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _inflate = null
     }
-}
-
-class MineViewModel : BaseViewModel() {
-
-
-    private var launch: Job? = null
-    val logoutLiveData = MutableLiveData<Int>()
-
-    fun logout() {
-        launch = viewModelScope.launch {
-            val logout = repository.logout()
-            if (logout.isSuccessful) {
-                logoutLiveData.value = logout.code()
-            }
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        launch?.cancel()
-    }
-
 }

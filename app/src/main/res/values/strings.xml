@@ -27,6 +27,7 @@
     <string name="filter">筛选</string>
     <string name="pinlei">品类</string>
     <string name="login_title">手机号登录</string>
+    <string name="mobile_key">手机号</string>
     <string name="login_title2">新用户验证后自动注册</string>
     <string name="login_hint">请输入11位手机号码</string>
     <string name="login_next">下一步</string>
@@ -76,7 +77,10 @@
     <string name="company_name_key">公司名称</string>
     <string name="editing_name_key">输入要修改的昵称</string>
     <string name="editing_name_hint">请输入1-10个字符的昵称</string>
+    <string name="nickName_key">昵称</string>
+    <string name="nickName_input_key">起一个个性的名字吧~</string>
     <string name="editing_img_key">选择要修改的头像</string>
+    <string name="head_key">头像</string>
     <string name="new_in">New In</string>
     <string name="chunk"> HOT 最热门款式合集</string>
     <string name="top_list">TOP LIST</string>
@@ -88,6 +92,10 @@
     <string name="input_code_num">短信验证码已发送至%s</string>
     <string name="like_num">喜欢&#160;&#160;%d</string>
     <string name="second">%ds</string>
+
+    <string name="select_from_album">从相册选择</string>
+    <string name="view_larger_image">查看大图</string>
+    <string name="Photograph">拍照</string>
 
 
     <string name="company_url">Fasion.ai</string>

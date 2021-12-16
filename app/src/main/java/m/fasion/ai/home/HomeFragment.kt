@@ -149,8 +149,9 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                 val layoutManager = LinearLayoutManager(requireContext())
                 layoutManager.orientation = LinearLayoutManager.HORIZONTAL
                 _binding.homeFragmentRecommendRV.recyclerView.layoutManager = layoutManager
-                _binding.homeFragmentRecommendRV.recyclerView.adapter = HomeRecommendAdapter(bodyList).also {
-                    it.onItemClickListener = object : HomeRecommendAdapter.OnItemClickListener {
+                _binding.homeFragmentRecommendRV.recyclerView.adapter = HomeRecommendAdapter(bodyList).also { mAdapter ->
+                    mAdapter.onItemClickListener = object :
+                        HomeRecommendAdapter.OnItemClickListener {
                         override fun onItemClick(model: Body, position: Int) {    //点击事件
                             HomeDetailsActivity.startActivity(requireContext(), model.target)
                         }
@@ -320,10 +321,18 @@ class HomeViewModel : BaseViewModel() {
             if (banner.isSuccessful) {
                 when (type) {
                     "clothes_banner" -> { //顶部banner
-                        bannerData.value = banner.body()
+                        banner.body()?.let { model ->
+                            if (model.isNotEmpty()) {
+                                bannerData.value = model
+                            }
+                        }
                     }
                     "clothes_recommend" -> {  //即日推荐
-                        recommendDataList.value = banner.body()
+                        banner.body()?.let { model ->
+                            if (model.isNotEmpty()) {
+                                recommendDataList.value = model
+                            }
+                        }
                     }
                 }
             } else {

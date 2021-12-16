@@ -1,6 +1,7 @@
 package m.fasion.core.service
 
 import m.fasion.core.model.*
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
 import retrofit2.http.Body
@@ -60,4 +61,37 @@ interface Service {
      */
     @GET("/api/favorites/clothes")
     suspend fun getFavoritesList(@Query("id") id: String): Response<FavoritesListData>
+
+    /**
+     * 收款某一款式
+     * @param clothes_id 款式id
+     */
+    @PUT("/api/favorites/clothes/{clothes_id}")
+    suspend fun addFavorites(@Path("clothes_id") clothesId: String): Response<String>
+
+    /**
+     * 取消收藏
+     * @param clothes_id 款式id
+     */
+    @DELETE("/api/favorites/clothes/{clothes_id}")
+    suspend fun cancelFavorites(@Path("clothes_id") clothesId: String): Response<String>
+
+    /**
+     * 获取用户资料
+     */
+    @GET("/api/me")
+    suspend fun getMe(): Response<UserInfo>
+
+    /**
+     * 更新用户资料
+     */
+    @PATCH("/api/me")
+    suspend fun editMe(@Body maps: MutableMap<String, Any>): Response<UserInfo>
+
+    /**
+     * 上传图片
+     */
+    @Multipart
+    @PUT("/api/upload/avatar")
+    suspend fun uploadImage(@Part part: MultipartBody.Part): Response<String>
 }

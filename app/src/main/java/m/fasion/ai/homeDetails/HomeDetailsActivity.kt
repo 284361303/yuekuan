@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.config.IndicatorConfig
 import com.youth.banner.holder.BannerImageHolder
@@ -26,7 +27,6 @@ import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
-
 
 /**
  * 选款详情
@@ -124,6 +124,20 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
     }
 
     private fun initObserver() {
+        //取消收藏与进行收藏
+        binding.homeDetailsIvCollect.setOnClickListener {
+            viewModel.clothesData.value?.apply {
+                if (favourite) {
+                    viewModel.cancelFavorites(id)
+                    favourite = false
+
+                } else {
+                    viewModel.addFavorites(id)
+                    favourite = true
+                }
+                binding.homeDetailsIvCollect.setImageResource(if (favourite) R.mipmap.icon_collect_22 else R.mipmap.icon_uncollect_22)
+            }
+        }
         viewModel.clothesData.observe(this, {
             val num = it.num    //被收藏的数量
             val createdAt = it.created_at
@@ -141,11 +155,20 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         //为你推荐数据回掉
         viewModel.clothesListData.observe(this, {
             val clothesList = it.clothes_list
-            if(clothesList.isNotEmpty()){
+            if (clothesList.isNotEmpty()) {
                 //推荐列表
                 binding.homeDetailsRV2.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
                 binding.homeDetailsRV2.adapter = RecommendAdapter(this, clothesList)
             }
+        })
+
+        //取消收藏成功,刷新首页数据改变收藏状态
+        viewModel.cancelFavoritesOk.observe(this, {
+            LiveEventBus.get<String>("cancelFavoritesSuccess").post(it)
+        })
+        //收藏成功
+        viewModel.addFavoritesOk.observe(this, {
+            LiveEventBus.get<String>("addFavoritesSuccess").post(it)
         })
     }
 }
@@ -191,6 +214,30 @@ class HomeDetailsViewModel : BaseViewModel() {
                     Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
                         errorLiveData.value = message
                     }
+                }
+            }
+        }
+    }
+
+    val addFavoritesOk = MutableLiveData<String>()
+    fun addFavorites(id: String) {
+        launch = viewModelScope.launch {
+            val addFavorites = repository.addFavorites(id)
+            if (addFavorites.isSuccessful) {
+                addFavorites.body()?.let {
+                    addFavoritesOk.value = id
+                }
+            }
+        }
+    }
+
+    val cancelFavoritesOk = MutableLiveData<String>()
+    fun cancelFavorites(id: String) {
+        launch = viewModelScope.launch {
+            val cancelFavorites = repository.cancelFavorites(id)
+            if (cancelFavorites.isSuccessful) {
+                cancelFavorites.body()?.let {
+                    cancelFavoritesOk.value = id
                 }
             }
         }

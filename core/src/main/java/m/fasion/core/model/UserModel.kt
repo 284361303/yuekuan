@@ -39,7 +39,7 @@ data class Head(
     val link: String,
     val path: String,
     val type: String
-): Parcelable
+) : Parcelable
 
 /**
  * 首页的款式列表Start
@@ -54,7 +54,7 @@ data class ClothesList(
 
 @Parcelize
 data class Clothes(
-    val favourite: Boolean,
+    var favourite: Boolean,
     val head: String,
     val head_img: String,
     val id: String,
@@ -69,7 +69,7 @@ data class ClothesInfo(
     val body: String,
     val body_img_list: List<BodyImg>,
     val created_at: Long,
-    val favourite: Boolean,
+    var favourite: Boolean,
     val head: String,
     val head_img_list: List<HeadImg>,
     val id: String,
@@ -131,3 +131,13 @@ data class Target(
 data class TargetX(
     val path: String
 )
+
+//获取用户信息
+@Parcelize
+data class UserInfo(
+    val avatar: String,
+    val id: String,
+    val nickname: String,
+    val phone: String,
+    val status: String
+) : Parcelable

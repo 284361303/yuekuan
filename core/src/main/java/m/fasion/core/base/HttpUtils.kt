@@ -33,6 +33,7 @@ class HttpUtils {
         return Retrofit.Builder()
             .client(getClient())
             .baseUrl(baseUrl())
+            .addConverterFactory(NullOnEmptyConverterFactory())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -53,10 +54,22 @@ class HttpUtils {
                     .method(request.method, request.body)
                     .build()
                 try {
-                    return@Interceptor chain.proceed(build)
+                    val proceed = chain.proceed(build)
+                    if (proceed.body == null) {   //2021年12月15号，杨宙返回一个空，但是还是200状态码，所以加此判断
+                        val msg = "服务器返回空引用"
+                        val responseBody = JSONObject(mapOf("message" to msg)).toString().toResponseBody(null)
+                        return@Interceptor Response.Builder()
+                            .request(request)
+                            .protocol(Protocol.HTTP_2)
+                            .code(404).message(msg)
+                            .body(responseBody).build()
+                    } else {
+                        return@Interceptor proceed
+                    }
+//                    return@Interceptor chain.proceed(build)
                 } catch (e: Exception) {
                     val msg: String
-                    val interceptorCode:Int
+                    val interceptorCode: Int
                     when (e) {
                         is SocketTimeoutException -> {
                             msg = "请求超时"

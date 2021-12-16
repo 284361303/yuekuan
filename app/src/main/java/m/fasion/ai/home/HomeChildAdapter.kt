@@ -57,8 +57,12 @@ class HomeChildAdapter(private val context: Context, private val type: Int, priv
 
             val clothes = mList[position]
             val favourite = clothes.favourite
+            val imageUrl = clothes.head_img
             val num = clothes.num
-            Glide.with(context).load(clothes.head_img).into(holder.ivBg)
+            if (imageUrl != holder.ivBg.tag) {
+                holder.ivBg.tag = imageUrl
+                Glide.with(context).load(imageUrl).into(holder.ivBg)
+            }
             if (favourite) {  //收藏
                 holder.ivCollect.setImageResource(R.mipmap.icon_collect)
             } else {  //没有收藏
@@ -68,11 +72,11 @@ class HomeChildAdapter(private val context: Context, private val type: Int, priv
 
             if (onItemClickListener != null) {
                 holder.itemView.setOnClickListener {
-                    onItemClickListener?.onItemClick(position)
+                    onItemClickListener?.onItemClick(clothes, position)
                 }
 
                 holder.clCollect.setOnClickListener {
-                    onItemClickListener?.onCollectClick(position)
+                    onItemClickListener?.onCollectClick(clothes, position)
                 }
             }
         } else if (holder is EmptyViewHolder) {
@@ -101,11 +105,11 @@ class HomeChildAdapter(private val context: Context, private val type: Int, priv
     var onItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(model: Clothes, position: Int)
 
         /**
          * 点击收藏/喜欢
          */
-        fun onCollectClick(position: Int)
+        fun onCollectClick(model: Clothes, position: Int)
     }
 }

@@ -55,8 +55,8 @@ object SPUtil {
     }
 
     fun getToken(): String? {
-        getParcelable<UserModel>(ConstantsKey.USER_KEY)?.apply {
-            return token
+        getString(ConstantsKey.USER_TOKEN_KEY)?.apply {
+            return this
         }
         return null
     }
