@@ -90,20 +90,31 @@ class HomeChildFragment : BaseFragment() {
             setLayoutManager()
         })
 
-        //取消收藏成功,刷新首页数据改变收藏状态
+        //详情页面取消收藏成功,刷新首页数据改变收藏状态
         LiveEventBus.get<String>("cancelFavoritesSuccess").observe(requireActivity(), {
             it?.let { mId ->
                 if (listData.isNotEmpty()) {
-                    val mData = listData.filter { it.id == mId }[0]
-                    listData
+                    listData.forEachIndexed { index, _ ->
+                        if (listData[index].id == mId) {
+                            listData[index].favourite = false
+                            mAdapter?.notifyItemChanged(index, -1)
+                        }
+                    }
                 }
             }
         })
 
-        //收藏成功
+        //详情页面收藏成功
         LiveEventBus.get<String>("addFavoritesSuccess").observe(requireActivity(), {
             it?.let { mId ->
-
+                if (listData.isNotEmpty()) {
+                    listData.forEachIndexed { index, _ ->
+                        if (listData[index].id == mId) {
+                            listData[index].favourite = true
+                            mAdapter?.notifyItemChanged(index, -1)
+                        }
+                    }
+                }
             }
         })
     }

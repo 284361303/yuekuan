@@ -10,11 +10,14 @@ import androidx.activity.viewModels
 import androidx.annotation.WorkerThread
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.gson.Gson
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import m.fasion.ai.R
@@ -30,6 +33,9 @@ import m.fasion.ai.util.database.HistoryDao
 import m.fasion.ai.util.database.HistoryDatabase
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.Clothes
+import m.fasion.core.model.ClothesList
+import m.fasion.core.model.ErrorDataModel
+import m.fasion.core.model.stringSuspending
 import m.fasion.core.util.CoreUtil
 
 /**
@@ -37,6 +43,9 @@ import m.fasion.core.util.CoreUtil
  */
 class SearchActivity : BaseActivity() {
 
+    private var totalPage: Int = 0  //总页数
+    private var currentPage: Int = 1    //当前返回的页数
+    private var totalCount: Int = 0    //总的数量
     private var searchAdapter: SearchHistoryAdapter? = null
     private var listAdapter: HomeChildAdapter? = null
     private val binding by lazy {
@@ -47,12 +56,7 @@ class SearchActivity : BaseActivity() {
 
     private val viewModel: SearchViewModel by viewModels()
 
-    private val lists = mutableListOf("https://i.stack.imgur.com/GvWB9.png",
-        "https://lh3.googleusercontent.com/NSVbWbdKFGRzju5r5XsXKMJ9A41PVdWNhGSxDwxk9aO6o_7SeVMU8z27-GhdNw3uS0PZtLPts5tvaxdsHr--NRXZWfyi=s300",
-        "https://t7.baidu.com/it/u=3785402047,1898752523&fm=193&f=GIF", "https://img.zcool.cn/community/01639a56fb62ff6ac725794891960d.jpg",
-        "https://img.zcool.cn/community/01270156fb62fd6ac72579485aa893.jpg",
-        "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg", "https://img.zcool.cn/community/016a2256fb63006ac7257948f83349.jpg",
-        "https://i.stack.imgur.com/GvWB9.png", "https://t7.baidu.com/it/u=3785402047,1898752523&fm=193&f=GIF", "https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg")
+    private val listData: MutableList<Clothes> = mutableListOf()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,12 +69,14 @@ class SearchActivity : BaseActivity() {
             binding.searchEditText.setText("")
         }
         CoreUtil.setTypeFaceMedium(listOf(binding.searchTvHistory))
+        initLayoutManager()
         //搜索历史列表
         initSearchHistoryAdapter()
 
         //搜索结果和热度推荐列表Adapter
-        initLayoutManager()
         initListAdapter()
+        binding.searchRefresh.setEnableRefresh(false)
+        getData()
 
         //输入框事件监听
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
@@ -125,6 +131,16 @@ class SearchActivity : BaseActivity() {
             }).show(supportFragmentManager, "clearHistory")
         }
 
+        //热度列表上拉加载更多
+        binding.searchRefresh.setOnLoadMoreListener {
+            if (listData.size >= totalCount) {
+                binding.searchRefresh.finishLoadMore()
+            } else {
+                currentPage += 1
+                getData()
+            }
+        }
+
         //搜索历史数据
         viewModel.listAll.observe(this, { lists ->
             categoryList.clear()
@@ -138,7 +154,7 @@ class SearchActivity : BaseActivity() {
     }
 
     private fun initLayoutManager() {
-        if (lists.isEmpty()) {
+        if (listData.isEmpty()) {
             binding.searchRVAll.layoutManager = LinearLayoutManager(this)
         } else {
             binding.searchRVAll.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -149,11 +165,11 @@ class SearchActivity : BaseActivity() {
      * 搜索结果和热度推荐列表Adapter
      */
     private fun initListAdapter() {
-        listAdapter = HomeChildAdapter(this, 1, listOf()).apply {
+        listAdapter = HomeChildAdapter(this, 1, listData).apply {
             binding.searchRVAll.adapter = this
             onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
                 override fun onItemClick(model: Clothes, position: Int) {
-                    HomeDetailsActivity.startActivity(this@SearchActivity, "")
+                    HomeDetailsActivity.startActivity(this@SearchActivity, model.id)
                 }
 
                 override fun onCollectClick(model: Clothes, position: Int) {
@@ -190,7 +206,7 @@ class SearchActivity : BaseActivity() {
         binding.searchHistoryAll.visibility = View.VISIBLE
         binding.searchLayout1.visibility = if (categoryList.size > 0) View.VISIBLE else View.GONE
         binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_111111))
-        binding.searchRVAll.visibility = View.GONE
+        binding.searchRefresh.visibility = View.GONE
     }
 
     /**
@@ -200,18 +216,62 @@ class SearchActivity : BaseActivity() {
         binding.searchHistoryAll.visibility = View.GONE
         binding.searchIvDelete.visibility = View.INVISIBLE
         binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_ECECEC))
-        binding.searchRVAll.visibility = View.VISIBLE
+        binding.searchRefresh.visibility = View.VISIBLE
         CoreUtil.hideKeyBoard(binding.searchEditText)   //隐藏软键盘
         binding.searchEditText.clearFocus() //失去焦点
+    }
+
+    /**
+     * 请求款式最热列表
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getData() {
+        viewModel.getClothesList("heat", "", currentPage)
+        viewModel.clothesListData.observe(this, {
+            totalPage = it.total_page
+            currentPage = it.current_page
+            totalCount = it.total_count.toInt()
+            if (it.clothes_list.isNotEmpty()) {
+                listData.addAll(it.clothes_list)
+            }
+            initLayoutManager()
+            binding.searchRefresh.finishLoadMore()
+            listAdapter?.notifyDataSetChanged()
+        })
+
+        viewModel.errorLiveData.observe(this, {
+            initLayoutManager()
+        })
     }
 }
 
 class SearchViewModel : BaseViewModel() {
 
+    private var launch: Job? = null
     private val database by lazy { HistoryDatabase.getDatabase() }
     private val roomRepository by lazy { SearchRepository(database.historyDao()) }
 
     val listAll: LiveData<List<History>> = roomRepository.getListData.asLiveData()
+
+    val clothesListData = MutableLiveData<ClothesList>()
+    val errorLiveData = MutableLiveData<String>()
+
+    //获取款式列表
+    fun getClothesList(sort: String, categoryId: String, page: Int) {
+        launch = viewModelScope.launch {
+            val clothesList = repository.getClothesList(sort, categoryId, page, 20)
+            if (clothesList.isSuccessful) {
+                clothesListData.value = clothesList.body()
+            } else {
+                clothesList.errorBody()?.stringSuspending()?.let {
+                    Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
+                        errorLiveData.value = message
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * 添加数据
@@ -229,6 +289,11 @@ class SearchViewModel : BaseViewModel() {
         viewModelScope.launch {
             roomRepository.delete()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        launch?.cancel()
     }
 }
 

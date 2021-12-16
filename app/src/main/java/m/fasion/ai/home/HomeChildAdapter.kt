@@ -50,17 +50,17 @@ class HomeChildAdapter(private val context: Context, private val type: Int, priv
             } else {
                 holder.space.visibility = View.VISIBLE
             }
-            val random = ThreadLocalRandom.current().nextInt(160, 280)
-            val layoutParams = holder.ivBg.layoutParams
-            layoutParams.height = CoreUtil.dp2px(context, random.toFloat())
-            holder.ivBg.layoutParams = layoutParams
 
             val clothes = mList[position]
             val favourite = clothes.favourite
             val imageUrl = clothes.head_img
             val num = clothes.num
-            if (imageUrl != holder.ivBg.tag) {
+            if (imageUrl != holder.ivBg.tag) {  //防止图片闪动和布局高度变化
                 holder.ivBg.tag = imageUrl
+                val random = ThreadLocalRandom.current().nextInt(160, 280)
+                val layoutParams = holder.ivBg.layoutParams
+                layoutParams.height = CoreUtil.dp2px(context, random.toFloat())
+                holder.ivBg.layoutParams = layoutParams
                 Glide.with(context).load(imageUrl).into(holder.ivBg)
             }
             if (favourite) {  //收藏
