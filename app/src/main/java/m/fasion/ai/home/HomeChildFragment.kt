@@ -18,7 +18,6 @@ import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.FragmentHomeChildBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.core.base.BaseViewModel
-import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.Clothes
 import m.fasion.core.model.ClothesList
 import m.fasion.core.model.ErrorDataModel
@@ -41,9 +40,21 @@ class HomeChildFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        listData.clear()
         arguments?.let {
             it.getString("childTitle")?.let { title ->
                 mSort = title
+            }
+            it.getSerializable("categoryId")?.let { ids ->
+                val idList = ids as List<String>
+                if (idList.isNotEmpty()) {
+                    mCategoryId.clear()
+                    idList.forEach { mIdList ->
+                        mCategoryId.add(mIdList)
+                    }
+                } else {
+                    mCategoryId.clear()
+                }
             }
         }
     }
@@ -117,18 +128,6 @@ class HomeChildFragment : BaseFragment() {
                     }
                 }
             }
-        })
-
-        //接收筛选条件页面回传的数据
-        LiveEventBus.get<MutableList<String>>(ConstantsKey.FILTER_KEY).observe(requireActivity(), {
-            if (it != null && it.isNotEmpty()) {
-                mCategoryId.clear()
-                mCategoryId.addAll(it)
-            } else {
-                mCategoryId.clear()
-            }
-            listData.clear()
-            getData()
         })
     }
 

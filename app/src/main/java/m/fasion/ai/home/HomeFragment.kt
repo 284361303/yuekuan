@@ -34,11 +34,13 @@ import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.homeDetails.RecommendActivity
 import m.fasion.ai.homeDetails.TopicSuitActivity
 import m.fasion.ai.search.SearchActivity
+import m.fasion.ai.util.LogUtils
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
+import java.io.Serializable
 import kotlin.math.abs
 
 /**
@@ -49,8 +51,14 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
     private var barHeight: Int = 0
     private var searchHeight: Int = 0
+    private var currentTabKey: String = ""
     private lateinit var _binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by activityViewModels()
+
+    /**
+     * 选择的筛选合集
+     */
+    private val categories: MutableList<String> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,6 +77,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
     }
 
     private fun initView() {
+        currentTabKey = viewModel.tabMapList.keys.toList()[0]
         //判断是否有网Start
         if (initNetWork()) return
         //判断是否有网End
@@ -175,7 +184,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
         //筛选跳转
         _binding.homeFragmentTvFilter.setOnClickListener {
-            startActivity(Intent(requireContext(), FilterActivity::class.java))
+            FilterActivity.startActivity(requireContext(), categories)
         }
 
         //下拉刷新
@@ -194,6 +203,15 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
         viewModel.errorLiveData.observe(requireActivity(), {
             showErrorView()
+        })
+
+        //接收筛选条件页面回传的数据
+        LiveEventBus.get<MutableList<String>>(ConstantsKey.FILTER_KEY).observe(requireActivity(), {
+            categories.clear()
+            if (it != null && it.isNotEmpty()) {
+                categories.addAll(it)
+            }
+            initTabLayout(true, it.toList())
         })
     }
 
@@ -240,7 +258,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
     /**
      * 初始化tabLayout
      */
-    private fun initTabLayout() {
+    private fun initTabLayout(refresh: Boolean? = false, listId: List<String>? = listOf()) {
         _binding.homeFragmentVP.adapter = object : FragmentStateAdapter(requireActivity()) {
             override fun getItemCount(): Int {
                 return viewModel.tabMapList.size
@@ -248,11 +266,16 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
             override fun createFragment(position: Int): Fragment {
                 val childFragment = HomeChildFragment()
+                val keys = viewModel.tabMapList.keys
                 val values = viewModel.tabMapList.values
+                val key = keys.toMutableList()[position]
                 val value = values.toMutableList()[position]
+
                 childFragment.arguments = Bundle().also {
                     it.putString("childTitle", value)
-//                    it.putStringArrayList("categoryId",categoryIds)
+                    if (refresh == true && key == currentTabKey) {
+                        it.putSerializable("categoryId", listId as Serializable)
+                    }
                 }
                 return childFragment
             }
@@ -285,6 +308,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                 tab?.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.let {
                     it.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_111111))
                     CoreUtil.setTypeFaceMedium(arrayOf(it).toList())
+                    currentTabKey = it.text.toString()
                 }
                 tab?.customView?.findViewById<View>(R.id.itemTab_view)?.visibility = View.VISIBLE
             }

@@ -1,6 +1,8 @@
 package m.fasion.ai.home
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +28,7 @@ import m.fasion.core.model.ChildX
 import m.fasion.core.model.ErrorDataModel
 import m.fasion.core.model.stringSuspending
 import m.fasion.core.util.CoreUtil
+import java.io.Serializable
 
 /**
  * 筛选
@@ -35,8 +38,19 @@ class FilterActivity : BaseActivity() {
     private val binding by lazy { ActivityFilterBinding.inflate(layoutInflater) }
     private val viewModel: FilterViewHolder by viewModels()
     private val listsData: MutableList<ChildX> = mutableListOf()
+    private val selectIds: MutableList<String> = mutableListOf()
 
-    private var addList: MutableList<String> = mutableListOf()
+    companion object {
+        fun startActivity(context: Context, idList: List<String>) {
+            val intent = Intent(context, FilterActivity::class.java)
+            val bundle = Bundle()
+            if (idList.isNotEmpty()) {
+                bundle.putSerializable("selectIds", idList as Serializable)
+            }
+            intent.putExtras(bundle)
+            context.startActivity(intent)
+        }
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,37 +58,48 @@ class FilterActivity : BaseActivity() {
         window?.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         setContentView(binding.root)
 
+        intent.extras?.containsKey("selectIds")?.let {
+            if (it) {
+                val lists = intent.extras?.getSerializable("selectIds") as List<String>
+                if (lists.isNotEmpty()) {
+                    lists.forEach { ids ->
+                        selectIds.add(ids)
+                    }
+                }
+            }
+        }
+
         CoreUtil.setTypeFaceMedium(listOf(binding.filterTvCategory))
 
         viewModel.getCategories()
 
         //adapter点击事件
-        val adapter = FilterAdapter(listsData)
+        val adapter = FilterAdapter(listsData, selectIds)
         binding.filterRV.adapter = adapter
         binding.filterRV.addOnItemTouchListener(RecyclerItemClickListener(this, binding.filterRV, object :
             RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val itemValue = listsData[position]
                 val id = itemValue.id
-                if (addList.contains(id)) {
-                    addList.remove(id)
+                if (selectIds.contains(id)) {
+                    selectIds.remove(id)
                 } else {
-                    addList.add(id)
+                    selectIds.add(id)
                 }
-                adapter.setSelectedData(addList)
+                adapter.notifyDataSetChanged()
             }
         }))
 
         //重置按钮
         binding.filterTvReset.setOnClickListener {
-            addList.clear()
-            adapter.setSelectedData(addList)
-            LiveEventBus.get(ConstantsKey.FILTER_KEY, MutableList::class.java).post(addList)
+            selectIds.clear()
+            adapter.notifyDataSetChanged()
+            LiveEventBus.get(ConstantsKey.FILTER_KEY, MutableList::class.java).post(selectIds)
             finish()
         }
         //确定按钮
         binding.filterTvSure.setOnClickListener {
-            LiveEventBus.get(ConstantsKey.FILTER_KEY, MutableList::class.java).post(addList)
+            LiveEventBus.get(ConstantsKey.FILTER_KEY, MutableList::class.java).post(selectIds)
             finish()
         }
         //左侧点击关闭
@@ -95,21 +120,13 @@ class FilterActivity : BaseActivity() {
                     }
                 }
             }
-            adapter.setSelectedData(listOf())
+            adapter.notifyDataSetChanged()
         })
     }
 }
 
-class FilterAdapter(private val mList: List<ChildX>) :
+class FilterAdapter(private val mList: List<ChildX>, private val mSelectedList: List<String>) :
     RecyclerView.Adapter<FilterAdapter.FilterHolder>() {
-
-    private var mSelectedList: List<String>? = null
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setSelectedData(list: List<String>) {
-        mSelectedList = list
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterHolder {
         return FilterHolder(ItemFilterBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -121,12 +138,10 @@ class FilterAdapter(private val mList: List<ChildX>) :
             val id = lists.id
             val name = lists.name
             binding.itemFilterTvContent.text = name
-            mSelectedList?.let {
-                if (it.contains(id)) {
-                    binding.itemFilterIvSelected.visibility = View.VISIBLE
-                } else {
-                    binding.itemFilterIvSelected.visibility = View.GONE
-                }
+            if (mSelectedList.contains(id)) {
+                binding.itemFilterIvSelected.visibility = View.VISIBLE
+            } else {
+                binding.itemFilterIvSelected.visibility = View.GONE
             }
         }
     }
