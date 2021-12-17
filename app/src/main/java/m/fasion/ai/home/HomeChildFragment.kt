@@ -18,6 +18,7 @@ import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.FragmentHomeChildBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.core.base.BaseViewModel
+import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.Clothes
 import m.fasion.core.model.ClothesList
 import m.fasion.core.model.ErrorDataModel
@@ -35,7 +36,7 @@ class HomeChildFragment : BaseFragment() {
     private lateinit var _binding: FragmentHomeChildBinding
     private val viewModel: HomeChildViewModel by activityViewModels()
     private var mSort: String = ""
-    private var mCategoryId = ""
+    private var mCategoryId: MutableList<String> = mutableListOf()
     private var listData: MutableList<Clothes> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,6 +118,18 @@ class HomeChildFragment : BaseFragment() {
                 }
             }
         })
+
+        //接收筛选条件页面回传的数据
+        LiveEventBus.get<MutableList<String>>(ConstantsKey.FILTER_KEY).observe(requireActivity(), {
+            if (it != null && it.isNotEmpty()) {
+                mCategoryId.clear()
+                mCategoryId.addAll(it)
+            } else {
+                mCategoryId.clear()
+            }
+            listData.clear()
+            getData()
+        })
     }
 
     private fun setLayoutManager() {
@@ -164,7 +177,7 @@ class HomeChildViewModel : BaseViewModel() {
     val errorLiveData = MutableLiveData<String>()
 
     //获取款式列表
-    fun getClothesList(sort: String, categoryId: String, page: Int) {
+    fun getClothesList(sort: String, categoryId: MutableList<String>, page: Int) {
         launch = viewModelScope.launch {
             val clothesList = repository.getClothesList(sort, categoryId, page, 20)
             if (clothesList.isSuccessful) {

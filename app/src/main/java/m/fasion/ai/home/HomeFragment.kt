@@ -31,6 +31,7 @@ import m.fasion.ai.R
 import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.FragmentHomeBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
+import m.fasion.ai.homeDetails.RecommendActivity
 import m.fasion.ai.homeDetails.TopicSuitActivity
 import m.fasion.ai.search.SearchActivity
 import m.fasion.ai.util.ToastUtils
@@ -76,7 +77,6 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         _binding.homeFragmentToolBar.post {
             searchHeight = _binding.homeFragmentToolBar.height
         }
-
         viewModel.getTopBanner("clothes_banner")
         viewModel.getTopBanner("clothes_recommend")
 
@@ -144,7 +144,9 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
         //今日推荐数据
         viewModel.recommendDataList.observe(requireActivity(), {
-            val bodyList = it[0].body
+            val bannerModelItem = it[0]
+            val id = bannerModelItem.id
+            val bodyList = bannerModelItem.body
             if (bodyList.isNotEmpty()) {
                 val layoutManager = LinearLayoutManager(requireContext())
                 layoutManager.orientation = LinearLayoutManager.HORIZONTAL
@@ -158,6 +160,14 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                     }
                 }
             }
+            //今日推荐更多
+            if (id.isNotEmpty()) {
+                _binding.homeFragmentCLMore.setOnClickListener {
+                    RecommendActivity.startActivity(requireContext(), id)
+//            startActivity(Intent(requireContext(), TopicEveryPeriodActivity::class.java))
+//            startActivity(Intent(requireContext(), TopicSuitActivity::class.java))
+                }
+            }
         })
 
         //tabLayout
@@ -166,13 +176,6 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         //筛选跳转
         _binding.homeFragmentTvFilter.setOnClickListener {
             startActivity(Intent(requireContext(), FilterActivity::class.java))
-        }
-
-        //今日推荐更多
-        _binding.homeFragmentTvMore.setOnClickListener {
-//            startActivity(Intent(requireContext(), RecommendActivity::class.java))
-//            startActivity(Intent(requireContext(), TopicEveryPeriodActivity::class.java))
-            startActivity(Intent(requireContext(), TopicSuitActivity::class.java))
         }
 
         //下拉刷新
@@ -190,16 +193,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         }
 
         viewModel.errorLiveData.observe(requireActivity(), {
-            System.currentTimeMillis()
-        })
-
-        //接收筛选条件页面回传的数据
-        LiveEventBus.get(ConstantsKey.FILTER_KEY, List::class.java).observe(requireActivity(), {
-            if (it != null && it.isNotEmpty()) {
-                ToastUtils.show(it[0].toString())
-            } else {
-                ToastUtils.show("重置成功")
-            }
+            showErrorView()
         })
     }
 
@@ -209,18 +203,26 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
     private fun initNetWork(): Boolean {
         val isNetwork = CoreUtil.isNetworkAvailable(requireContext())
         if (!isNetwork) {   //让空布局和网络异常布局显示出来
-            _binding.homeFragmentIncludeState.homeEmptyLlAll.visibility = View.VISIBLE
-            initSearchTop(_binding.homeFragmentIncludeState.homeEmptyToolBarSpace)
-            _binding.homeFragmentIncludeState.homeEmptyStateView.setStateView(StateView.State.error)
-            _binding.homeFragmentIncludeState.homeEmptyStateView.listener = this
-            _binding.homeFragmentRefresh.finishRefresh()
-            _binding.homeFragmentRefresh.visibility = View.GONE
+            showErrorView()
             return true
         } else {    //隐藏空页面和网络错误的布局
-            _binding.homeFragmentRefresh.visibility = View.VISIBLE
-            _binding.homeFragmentIncludeState.homeEmptyLlAll.visibility = View.GONE
+            showNoErrorView()
         }
         return false
+    }
+
+    private fun showNoErrorView() {
+        _binding.homeFragmentRefresh.visibility = View.VISIBLE
+        _binding.homeFragmentIncludeState.homeEmptyLlAll.visibility = View.GONE
+    }
+
+    private fun showErrorView() {
+        _binding.homeFragmentIncludeState.homeEmptyLlAll.visibility = View.VISIBLE
+        initSearchTop(_binding.homeFragmentIncludeState.homeEmptyToolBarSpace)
+        _binding.homeFragmentIncludeState.homeEmptyStateView.setStateView(StateView.State.error)
+        _binding.homeFragmentIncludeState.homeEmptyStateView.listener = this
+        _binding.homeFragmentRefresh.finishRefresh()
+        _binding.homeFragmentRefresh.visibility = View.GONE
     }
 
     /**
@@ -250,6 +252,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                 val value = values.toMutableList()[position]
                 childFragment.arguments = Bundle().also {
                     it.putString("childTitle", value)
+//                    it.putStringArrayList("categoryId",categoryIds)
                 }
                 return childFragment
             }
@@ -318,27 +321,34 @@ class HomeViewModel : BaseViewModel() {
     fun getTopBanner(type: String) {
         launch = viewModelScope.launch {
             val banner = repository.getBanner(type)
-            if (banner.isSuccessful) {
-                when (type) {
-                    "clothes_banner" -> { //顶部banner
-                        banner.body()?.let { model ->
-                            if (model.isNotEmpty()) {
-                                bannerData.value = model
+            val code = banner.code()
+            when (code) {
+                in 200..299 -> {
+                    when (type) {
+                        "clothes_banner" -> { //顶部banner
+                            banner.body()?.let { model ->
+                                if (model.isNotEmpty()) {
+                                    bannerData.value = model
+                                }
                             }
                         }
-                    }
-                    "clothes_recommend" -> {  //即日推荐
-                        banner.body()?.let { model ->
-                            if (model.isNotEmpty()) {
-                                recommendDataList.value = model
+                        "clothes_recommend" -> {  //即日推荐
+                            banner.body()?.let { model ->
+                                if (model.isNotEmpty()) {
+                                    recommendDataList.value = model
+                                }
                             }
                         }
                     }
                 }
-            } else {
-                banner.errorBody()?.stringSuspending()?.let {
-                    Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
-                        errorLiveData.value = message
+                408 -> {  //超时
+                    errorLiveData.value = "服务器请求超时"
+                }
+                else -> {
+                    banner.errorBody()?.stringSuspending()?.let {
+                        Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
+                            ToastUtils.show(message)
+                        }
                     }
                 }
             }
@@ -350,5 +360,3 @@ class HomeViewModel : BaseViewModel() {
         launch?.cancel()
     }
 }
-
-data class HomeBannerModel(val id: String, val url: String)

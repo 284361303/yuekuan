@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="m.fasion.ai.R" />
+
         <variable
             name="recommendViewModel"
             type="m.fasion.ai.homeDetails.RecommendViewModel" />
@@ -19,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            app:imageUrl="@{recommendViewModel.modelLiveData.imageList}"
+            app:imageUrl="@{recommendViewModel.modelItemLiveData.head_img}"
             tools:src="@mipmap/aaa" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -29,7 +31,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
-            android:src="@mipmap/icon_uncollect"
+            android:src="@{recommendViewModel.modelItemLiveData.favourite==true ? R.mipmap.icon_collect : R.mipmap.icon_uncollect}"
             tools:src="@mipmap/icon_collect" />
     </androidx.cardview.widget.CardView>
 </layout>

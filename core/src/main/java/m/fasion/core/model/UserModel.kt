@@ -30,7 +30,8 @@ data class Body(
     val favourite: Boolean,
     val head_img: String,
     val target: String,
-    val type: String
+    val type: String,
+    val title: String
 ) : Parcelable
 
 @Parcelize
@@ -141,3 +142,31 @@ data class UserInfo(
     val phone: String,
     val status: String
 ) : Parcelable
+
+/**今日推荐页面数据*/
+data class RecommendList(
+    val body: List<Body>,
+    val head: List<Head>,
+    val id: String,
+    val title: String,
+    val type: String
+)
+/*筛选条件列表*/
+class Categories : ArrayList<CategoriesItem>()
+
+data class CategoriesItem(
+    val child_list: List<Child>,
+    val id: String,
+    val name: String
+)
+
+data class Child(
+    val child_list: List<ChildX>,
+    val id: String,
+    val name: String
+)
+
+data class ChildX(
+    val id: String,
+    val name: String
+)

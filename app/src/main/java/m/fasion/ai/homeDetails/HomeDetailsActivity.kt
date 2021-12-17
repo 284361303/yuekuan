@@ -206,7 +206,7 @@ class HomeDetailsViewModel : BaseViewModel() {
     //获取为你推荐列表,和首页的款式列表一个接口，这就是请求的  最热 列表数据
     fun getClothesList(sort: String) {
         launch = viewModelScope.launch {
-            val clothesList = repository.getClothesList(sort, "", 0, 20)
+            val clothesList = repository.getClothesList(sort, mutableListOf(), 0, 20)
             if (clothesList.isSuccessful) {
                 clothesListData.value = clothesList.body()
             } else {

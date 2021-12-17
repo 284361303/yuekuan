@@ -1,4 +1,4 @@
-package m.fasion.ai.toolbar
+package m.fasion.ai.mine.userInfo
 
 import android.app.Activity
 import android.content.Intent
@@ -14,8 +14,6 @@ import kotlinx.coroutines.launch
 import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivityEditingUserBinding
-import m.fasion.ai.mine.userInfo.EditNickNameActivity
-import m.fasion.ai.mine.userInfo.EditingUserPicActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.base.ConstantsKey
@@ -73,7 +71,7 @@ class EditingUserActivity : BaseActivity() {
             }
         })
 
-        LiveEventBus.get<String>(ConstantsKey.EDIT_USER_PIC).observe(this,{
+        LiveEventBus.get<String>(ConstantsKey.EDIT_USER_PIC).observe(this, {
             if (!it.isNullOrEmpty()) {
                 mVatar = it
                 Glide.with(this).load(mVatar).into(binding.editUserIvUserBg)
@@ -126,8 +124,8 @@ class EditingUserViewModel : BaseViewModel() {
             } else {
                 me.errorBody()?.stringSuspending()?.let {
                     Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
-                        if (message.isNotEmpty()) {
-                            ToastUtils.show(message)
+                        if (message.isNotEmpty() && message == "暂未登录或token已经过期") {
+                            SPUtil.removeKey(ConstantsKey.USER_TOKEN_KEY)
                         }
                     }
                 }
@@ -169,8 +167,8 @@ class EditingUserViewModel : BaseViewModel() {
     fun editUserInfo(nickName: String, picPath: String) {
         launch = viewModelScope.launch {
             val maps: MutableMap<String, Any> = mutableMapOf()
-            maps.put("nickname", nickName)
-            maps.put("avatar", picPath)
+            maps["nickname"] = nickName
+            maps["avatar"] = picPath
             val editMe = repository.editMe(maps)
             if (editMe.isSuccessful) {
                 editMe.body()?.let {

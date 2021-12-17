@@ -41,7 +41,7 @@ interface Service {
      * @param   size    条数
      */
     @GET("/api/clothes")
-    suspend fun getClothesList(@Query("sort") sort: String, @Query("category_id") categoryId: String,
+    suspend fun getClothesList(@Query("sort") sort: String, @Query("category_ids") categoryId: MutableList<String>,
                                @Query("page") page: Int, @Query("size") size: Int): Response<ClothesList>
 
     /**
@@ -51,10 +51,10 @@ interface Service {
     suspend fun getClothesInfo(@Path("id") id: String): Response<ClothesInfo>
 
     /**
-     * 根据合集id获取合集信息，如：首页banner跳转到高级西装搭配
+     * 根据合集id获取合集信息，如：首页banner跳转到高级西装搭配、今日推荐页面列表数据
      */
     @GET("/api/topics/{id}")
-    suspend fun getTopics(@Path("id") id: String): Response<Any>
+    suspend fun getTopics(@Path("id") id: String): Response<RecommendList>
 
     /**
      * 收藏列表
@@ -64,14 +64,14 @@ interface Service {
 
     /**
      * 收款某一款式
-     * @param clothes_id 款式id
+     * @param clothesId 款式id
      */
     @PUT("/api/favorites/clothes/{clothes_id}")
     suspend fun addFavorites(@Path("clothes_id") clothesId: String): Response<String>
 
     /**
      * 取消收藏
-     * @param clothes_id 款式id
+     * @param clothesId 款式id
      */
     @DELETE("/api/favorites/clothes/{clothes_id}")
     suspend fun cancelFavorites(@Path("clothes_id") clothesId: String): Response<String>
@@ -94,4 +94,16 @@ interface Service {
     @Multipart
     @PUT("/api/upload/avatar")
     suspend fun uploadImage(@Part part: MultipartBody.Part): Response<String>
+
+    /**
+     * 意见反馈
+     */
+    @POST("/api/feedback")
+    suspend fun feedBack(@Body maps: MutableMap<String, Any>): Response<Any>
+
+    /**
+     * 筛选条件返回
+     */
+    @GET("/api/categories")
+    suspend fun getCategories(): Response<Categories>
 }

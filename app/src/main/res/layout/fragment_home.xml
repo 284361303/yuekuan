@@ -165,24 +165,33 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1" />
 
-                                <TextView
-                                    android:id="@+id/homeFragment_tvMore"
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/homeFragment_CLMore"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="1.4dp"
-                                    android:gravity="center"
-                                    android:text="@string/more"
-                                    android:textColor="@color/color_111111"
-                                    android:textSize="14sp" />
+                                    android:layout_height="wrap_content">
 
-                                <androidx.appcompat.widget.AppCompatImageView
-                                    android:id="@+id/homeFragment_tvMore2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@mipmap/icon_more"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintRight_toLeftOf="@+id/homeFragment_tvMore"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                                    <TextView
+                                        android:id="@+id/homeFragment_tvMore"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="@string/more"
+                                        android:textColor="@color/color_111111"
+                                        android:textSize="14sp"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintRight_toLeftOf="@+id/homeFragment_tvMore2"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                    <androidx.appcompat.widget.AppCompatImageView
+                                        android:id="@+id/homeFragment_tvMore2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2.4dp"
+                                        android:src="@mipmap/icon_more"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintRight_toLeftOf="@+id/homeFragment_tvMore"
+                                        app:layout_constraintTop_toTopOf="parent" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
                             </LinearLayout>
 
                             <include
@@ -353,7 +362,6 @@
         <!--没有网络和没有数据显示的页面提示效果-->
         <include
             android:id="@+id/homeFragment_includeState"
-            layout="@layout/include_home_empty"
-            android:visibility="gone" />
+            layout="@layout/include_home_empty" />
     </LinearLayout>
 </layout>

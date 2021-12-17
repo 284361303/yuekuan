@@ -12,6 +12,8 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import m.fasion.ai.R
 import m.fasion.ai.databinding.FragmentMineBinding
 import m.fasion.ai.login.LoginActivity
+import m.fasion.ai.mine.userInfo.EditingUserActivity
+import m.fasion.ai.mine.userInfo.EditingUserViewModel
 import m.fasion.ai.toolbar.*
 import m.fasion.ai.util.ToastUtils
 import m.fasion.ai.util.customize.CustomizeDialog

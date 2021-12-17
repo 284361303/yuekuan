@@ -4,26 +4,15 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.viewModels
-import androidx.lifecycle.viewModelScope
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivityEditingUserPicBinding
-import m.fasion.ai.toolbar.EditingUserViewModel
 import m.fasion.ai.util.customize.GlideEngine
-import m.fasion.core.base.BaseViewModel
 import m.fasion.core.base.ConstantsKey
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 /**

@@ -259,7 +259,7 @@ class SearchViewModel : BaseViewModel() {
     //获取款式列表
     fun getClothesList(sort: String, categoryId: String, page: Int) {
         launch = viewModelScope.launch {
-            val clothesList = repository.getClothesList(sort, categoryId, page, 20)
+            val clothesList = repository.getClothesList(sort, mutableListOf(), page, 20)
             if (clothesList.isSuccessful) {
                 clothesListData.value = clothesList.body()
             } else {

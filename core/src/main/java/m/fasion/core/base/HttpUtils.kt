@@ -92,7 +92,7 @@ class HttpUtils {
                         .body(responseBody).build()
                 }
             }).addInterceptor(HttpLoggingInterceptor { message ->
-                Log.e("请求结果", message)
+                Log.d("请求结果", message)
             }.setLevel(HttpLoggingInterceptor.Level.BODY)).build()
     }
 
