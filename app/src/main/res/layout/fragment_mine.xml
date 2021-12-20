@@ -35,7 +35,7 @@
             android:id="@+id/profile_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@mipmap/aaa" />
+            android:src="@drawable/mine_pic" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mine_editData"
@@ -67,7 +67,7 @@
                 tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Space
+        <android.widget.Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -75,9 +75,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mine_myFavorite"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            tools:visibility="visible">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/mine_tvLikeNum"
@@ -114,7 +112,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mine_view1" />
 
-    <Space
+    <android.widget.Space
         android:id="@+id/mine_space1"
         android:layout_width="match_parent"
         android:layout_height="24dp"

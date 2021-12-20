@@ -123,6 +123,14 @@ object CoreUtil {
     }
 
     /**
+     * 根据手机的分辨率高 单位:px
+     */
+    fun getScreenHeight(context: Context): Int {
+        val appContext = context.applicationContext
+        return appContext.resources.displayMetrics.heightPixels
+    }
+
+    /**
      * 验证是否是手机号
      */
     fun String.isMobile(): Boolean {

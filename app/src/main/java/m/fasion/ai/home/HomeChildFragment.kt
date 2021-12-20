@@ -1,6 +1,7 @@
 package m.fasion.ai.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
@@ -17,11 +19,13 @@ import kotlinx.coroutines.launch
 import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.FragmentHomeChildBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
+import m.fasion.ai.util.LogUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.Clothes
 import m.fasion.core.model.ClothesList
 import m.fasion.core.model.ErrorDataModel
 import m.fasion.core.model.stringSuspending
+import m.fasion.core.util.CoreUtil
 
 /**
  * 款式首页的瀑布流
@@ -73,10 +77,10 @@ class HomeChildFragment : BaseFragment() {
         setLayoutManager()
         initAdapter()
         getData()
-        _binding.homeChildRefresh.setEnableRefresh(false)
 
         //列表数据回调
         viewModel.clothesListData.observe(requireActivity(), {
+            listData.clear()
             totalPage = it.total_page
             currentPage = it.current_page
             totalCount = it.total_count.toInt()
@@ -84,19 +88,8 @@ class HomeChildFragment : BaseFragment() {
                 listData.addAll(it.clothes_list)
             }
             setLayoutManager()
-            _binding.homeChildRefresh.finishLoadMore()
             mAdapter?.notifyDataSetChanged()
         })
-
-        //上拉加载事件
-        _binding.homeChildRefresh.setOnLoadMoreListener {
-            if (listData.size >= totalCount) {
-                _binding.homeChildRefresh.finishLoadMore()
-            } else {
-                currentPage += 1
-                getData()
-            }
-        }
 
         viewModel.errorLiveData.observe(requireActivity(), {
             setLayoutManager()
@@ -133,14 +126,14 @@ class HomeChildFragment : BaseFragment() {
 
     private fun setLayoutManager() {
         if (listData.isEmpty()) {
-            _binding.homeChildRV.layoutManager = LinearLayoutManager(requireContext())
+            _binding.homeChildRV.layoutManager = LinearLayoutManager(_binding.homeChildRV.context)
         } else {
             _binding.homeChildRV.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         }
     }
 
     private fun initAdapter() {
-        mAdapter = HomeChildAdapter(requireContext(), 0, listData)
+        mAdapter = HomeChildAdapter(requireContext(), 0, listData, viewModel.getEmptyHeight(requireContext()))
         _binding.homeChildRV.adapter = mAdapter
         mAdapter?.onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
             override fun onItemClick(model: Clothes, position: Int) {
@@ -162,10 +155,37 @@ class HomeChildFragment : BaseFragment() {
                 }
             }
         }
+        _binding.homeChildRV.addOnScrollListener(LoadMoreListener())
     }
 
     private fun getData() {
         viewModel.getClothesList(mSort, mCategoryId, currentPage)
+    }
+
+    /**
+     * 上拉加载更多数据
+     */
+    private inner class LoadMoreListener : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            val layoutManager = recyclerView.layoutManager
+            if (layoutManager is StaggeredGridLayoutManager) {
+                val staggeredGridLayoutManager = layoutManager as StaggeredGridLayoutManager
+                val visibleItemPositions = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(null)
+                var maxSize = 0
+                for (i in visibleItemPositions.indices) {
+                    if (i == 0) {
+                        maxSize = visibleItemPositions[i]
+                    } else if (visibleItemPositions[i] > maxSize) {
+                        maxSize = visibleItemPositions[i]
+                    }
+                }
+                if (maxSize + layoutManager.spanCount > listData.size && listData.size < totalCount) {
+                    currentPage += 1
+                    getData()
+                }
+            }
+        }
     }
 }
 
@@ -209,6 +229,10 @@ class HomeChildViewModel : BaseViewModel() {
                 cancelFavoritesOk.value = cancelFavorites.body()
             }
         }
+    }
+
+    fun getEmptyHeight(context: Context): Int {
+        return CoreUtil.getScreenHeight(context) - CoreUtil.getStatusBarHeight(context) * 5
     }
 
     override fun onCleared() {

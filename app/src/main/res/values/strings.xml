@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FASION·AI</string>
+    <string name="app_name">悦款</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="main">款式</string>
@@ -54,6 +54,7 @@
     <string name="edit_information">编辑资料</string>
     <string name="my_like">我的喜欢</string>
     <string name="zero">0</string>
+    <string name="one">1</string>
     <string name="toolbar">工具栏</string>
     <string name="mine_agreement1">用户协议</string>
     <string name="mine_agreement2">隐私政策</string>
@@ -89,6 +90,7 @@
 
 
     <string name="pageviews">浏览量：%d</string>
+    <string name="labels">#%1$s&#160;&#160;</string>
     <string name="input_code_num">短信验证码已发送至%s</string>
     <string name="like_num">喜欢&#160;&#160;%d</string>
     <string name="second">%ds</string>
@@ -96,7 +98,6 @@
     <string name="select_from_album">从相册选择</string>
     <string name="view_larger_image">查看大图</string>
     <string name="Photograph">拍照</string>
-
 
     <string name="company_url">Fasion.ai</string>
     <string name="company_email">beta.fasionai.com</string>

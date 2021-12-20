@@ -72,18 +72,27 @@
 
             <!--动态添加标签-->
             <LinearLayout
-                android:id="@+id/homeDetails_tvLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                tools:ignore="UselessLeaf" />
+                tools:ignore="UselessLeaf">
+
+                <TextView
+                    android:id="@+id/homeDetails_tvLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_787878"
+                    android:textSize="13sp"
+                    tools:text="#女人" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="22.5dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -173,37 +182,12 @@
         android:orientation="horizontal"
         android:paddingVertical="6dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/homeDetails_ivChat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="28.5dp"
-            android:padding="10dp"
-            android:src="@mipmap/icon_chat" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/homeDetails_tvProduction"
-            android:layout_width="143dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/shape_333333_2"
-            android:gravity="center"
-            android:text="@string/demo_production"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
         <TextView
             android:id="@+id/homeDetails_tvBuy"
-            android:layout_width="96dp"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginStart="7dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/shape_cc5a3a_2"
+            android:layout_marginHorizontal="52.5dp"
+            android:background="@drawable/shape_333333_2"
             android:gravity="center"
             android:text="@string/buy"
             android:textColor="@color/white"

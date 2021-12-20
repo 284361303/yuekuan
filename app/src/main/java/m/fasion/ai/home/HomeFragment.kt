@@ -34,8 +34,8 @@ import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.homeDetails.RecommendActivity
 import m.fasion.ai.homeDetails.TopicSuitActivity
 import m.fasion.ai.search.SearchActivity
-import m.fasion.ai.util.LogUtils
 import m.fasion.ai.util.ToastUtils
+import m.fasion.ai.webView.WebViewActivity
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.*
@@ -51,7 +51,6 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
     private var barHeight: Int = 0
     private var searchHeight: Int = 0
-    private var currentTabKey: String = ""
     private lateinit var _binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by activityViewModels()
 
@@ -77,7 +76,6 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
     }
 
     private fun initView() {
-        currentTabKey = viewModel.tabMapList.keys.toList()[0]
         //判断是否有网Start
         if (initNetWork()) return
         //判断是否有网End
@@ -92,35 +90,47 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         //轮播Start
         viewModel.bannerData.observe(requireActivity(), {
             val bodyList = it[0].body
-            _binding.homeFragmentBanner.setAdapter(object : BannerImageAdapter<Body>(bodyList) {
-                override fun onBindView(holder: BannerImageHolder?, data: Body?, position: Int, size: Int) {
-                    Glide.with(requireContext()).load(data?.head_img).into(holder?.imageView!!)
-                }
-            })
-            _binding.homeFragmentBanner.addBannerLifecycleObserver(this@HomeFragment)
-            _binding.homeFragmentBanner.addOnPageChangeListener(object : OnPageChangeListener {
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            if (bodyList.isNotEmpty()) {
+                _binding.homeFragmentTvCurrent.text = "1"
+                _binding.homeFragmentBanner.setAdapter(object : BannerImageAdapter<Body>(bodyList) {
+                    override fun onBindView(holder: BannerImageHolder?, data: Body?, position: Int, size: Int) {
+                        Glide.with(requireContext()).load(data?.head_img).into(holder?.imageView!!)
+                    }
+                })
+                _binding.homeFragmentBanner.addBannerLifecycleObserver(this@HomeFragment)
+                _binding.homeFragmentBanner.addOnPageChangeListener(object : OnPageChangeListener {
+                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
-                }
+                    }
 
-                override fun onPageSelected(position: Int) {
-                    _binding.homeFragmentTvCurrent.text = (position + 1).toString()
-                }
+                    override fun onPageSelected(position: Int) {
+                        _binding.homeFragmentTvCurrent.text = (position + 1).toString()
+                    }
 
-                override fun onPageScrollStateChanged(state: Int) {
-                }
-            })
+                    override fun onPageScrollStateChanged(state: Int) {
+                    }
+                })
+            } else {
+                _binding.homeFragmentTvCurrent.text = "0"
+            }
 
             _binding.homeFragmentBanner.setOnBannerListener { data, _ -> //点击事件
                 val body = data as Body
                 when (body.type) {
-                    "topics" -> {   //高级西装搭配
+                    "topics" -> {   //跳转高级西装搭配
                         TopicSuitActivity.startActivity(requireContext(), body.target)
+                    }
+                    "link" -> {
+                        WebViewActivity.startActivity(requireContext(), body.target, "")
+                    }
+                    "clothes" -> {    //跳转详情
+                        HomeDetailsActivity.startActivity(requireContext(), body.target)
                     }
                 }
             }
             _binding.homeFragmentBanner.removeIndicator()
             _binding.homeFragmentTvAll.text = _binding.homeFragmentBanner.realCount.toString()  //设置banner总数
+            _binding.homeFragmentRefresh.finishRefresh()
         })
         //轮播End
 
@@ -163,7 +173,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                 _binding.homeFragmentRecommendRV.recyclerView.adapter = HomeRecommendAdapter(bodyList).also { mAdapter ->
                     mAdapter.onItemClickListener = object :
                         HomeRecommendAdapter.OnItemClickListener {
-                        override fun onItemClick(model: Body, position: Int) {    //点击事件
+                        override fun onItemClick(model: Body, position: Int) {    //跳转详情
                             HomeDetailsActivity.startActivity(requireContext(), model.target)
                         }
                     }
@@ -190,7 +200,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         //下拉刷新
         _binding.homeFragmentRefresh.setOnRefreshListener {
             if (initNetWork()) return@setOnRefreshListener
-            //TODO::请求接口
+            initView()
         }
 
         //搜索
@@ -273,7 +283,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
                 childFragment.arguments = Bundle().also {
                     it.putString("childTitle", value)
-                    if (refresh == true && key == currentTabKey) {
+                    if (refresh == true) {
                         it.putSerializable("categoryId", listId as Serializable)
                     }
                 }
@@ -308,7 +318,6 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                 tab?.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.let {
                     it.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_111111))
                     CoreUtil.setTypeFaceMedium(arrayOf(it).toList())
-                    currentTabKey = it.text.toString()
                 }
                 tab?.customView?.findViewById<View>(R.id.itemTab_view)?.visibility = View.VISIBLE
             }
@@ -345,8 +354,7 @@ class HomeViewModel : BaseViewModel() {
     fun getTopBanner(type: String) {
         launch = viewModelScope.launch {
             val banner = repository.getBanner(type)
-            val code = banner.code()
-            when (code) {
+            when (banner.code()) {
                 in 200..299 -> {
                     when (type) {
                         "clothes_banner" -> { //顶部banner

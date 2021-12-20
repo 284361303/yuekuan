@@ -1,6 +1,7 @@
 package m.fasion.ai.home
 
 import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +18,14 @@ import m.fasion.core.util.CoreUtil
 import java.util.concurrent.ThreadLocalRandom
 
 /**
- *  @param type 0、选款首页下面的列表 1、搜索结果的热度推荐列表
+ *  @param type 0、选款首页下面的列表 1、搜索页面搜索结果的热度推荐列表
  */
-class HomeChildAdapter(private val context: Context, private val type: Int, private val mList: List<Clothes>) :
+class HomeChildAdapter(private val context: Context, private val type: Int, private val mList: List<Clothes>, private var emptyHeight: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == 0) EmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_empty_view, parent, false)) else HomeChildHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_staggered, parent, false))
+        return if (viewType == 0) EmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_empty_view, parent, false))
+        else HomeChildHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_staggered, parent, false))
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -63,11 +65,8 @@ class HomeChildAdapter(private val context: Context, private val type: Int, priv
                 holder.ivBg.layoutParams = layoutParams
                 Glide.with(context).load(imageUrl).into(holder.ivBg)
             }
-            if (favourite) {  //收藏
-                holder.ivCollect.setImageResource(R.mipmap.icon_collect)
-            } else {  //没有收藏
-                holder.ivCollect.setImageResource(R.mipmap.icon_uncollect)
-            }
+
+            holder.ivCollect.setImageResource(if (favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
             holder.tvNum.text = num
 
             if (onItemClickListener != null) {
@@ -80,8 +79,17 @@ class HomeChildAdapter(private val context: Context, private val type: Int, priv
                 }
             }
         } else if (holder is EmptyViewHolder) {
-            if (type == 1) {
+            val layoutParams = holder.llAll.layoutParams as RecyclerView.LayoutParams
+            layoutParams.height = emptyHeight
+            holder.llAll.layoutParams = layoutParams
+
+            if (type == 1) {    //搜索页面使用
                 holder.tvContent.text = context.getString(R.string.empty_search)
+                holder.llAll.gravity = Gravity.CENTER
+                val layoutParams1 = holder.ivContent.layoutParams as LinearLayout.LayoutParams
+                layoutParams1.setMargins(0, 0, 0, 0)
+                holder.ivContent.layoutParams = layoutParams1
+                holder.space.visibility = View.VISIBLE
             }
         }
     }
@@ -99,7 +107,10 @@ class HomeChildAdapter(private val context: Context, private val type: Int, priv
     }
 
     class EmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val llAll: LinearLayout = itemView.findViewById(R.id.emptyView_llAll)
         val tvContent: TextView = itemView.findViewById(R.id.emptyView_tvContent)
+        val ivContent: AppCompatImageView = itemView.findViewById(R.id.emptyView_ivContent)
+        val space: Space = itemView.findViewById(R.id.emptyView_space)
     }
 
     var onItemClickListener: OnItemClickListener? = null

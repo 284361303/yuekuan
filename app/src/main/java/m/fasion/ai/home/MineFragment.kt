@@ -136,10 +136,9 @@ class MineFragment : Fragment() {
     private fun loginSuccess(userModel: UserInfo) {
         _inflate?.let {
             it.mineTvEdit.visibility = View.VISIBLE
-            it.mineMyFavorite.visibility = View.VISIBLE
             it.mineTvLogout.visibility = View.VISIBLE
             it.mineTvName.text = userModel.nickname
-            Glide.with(requireContext()).load(userModel.avatar).into(it.profileImage)
+            Glide.with(requireContext()).load(userModel.avatar).error(R.drawable.mine_pic).into(it.profileImage)
         }
     }
 
@@ -150,7 +149,6 @@ class MineFragment : Fragment() {
         _inflate?.let {
             it.mineTvEdit.visibility = View.GONE
             it.mineTvName.text = getString(R.string.please_login)
-            it.mineMyFavorite.visibility = View.INVISIBLE
             it.mineTvLogout.visibility = View.INVISIBLE
         }
     }

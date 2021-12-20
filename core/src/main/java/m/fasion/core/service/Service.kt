@@ -41,8 +41,18 @@ interface Service {
      * @param   size    条数
      */
     @GET("/api/clothes")
-    suspend fun getClothesList(@Query("sort") sort: String, @Query("category_ids") categoryId: MutableList<String>,
+    suspend fun getClothesList(@Query("sort") sort: String, @Query("categoryIds") categoryId: MutableList<String>,
                                @Query("page") page: Int, @Query("size") size: Int): Response<ClothesList>
+
+    /**
+     * 关键字搜索
+     * @param   sort    上新new 热度heat
+     * @param   categoryId  分类id
+     * @param   page    第几页
+     * @param   size    条数
+     */
+    @GET("/api/clothes")
+    suspend fun getSearchList(@Query("s") searchName: String): Response<ClothesList>
 
     /**
      * 款式详情

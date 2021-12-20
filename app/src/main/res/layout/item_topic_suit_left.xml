@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/itemTopicSuitLeft_ivBg"
             android:layout_width="match_parent"
             android:layout_height="293dp"
             android:layout_gravity="end"
@@ -25,6 +26,7 @@
             android:src="@mipmap/aaa" />
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/itemTopicSuitLeft_ivCollect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
@@ -55,7 +57,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <Space
+    <android.widget.Space
         android:layout_width="match_parent"
         android:layout_height="32dp"
         app:layout_constraintTop_toBottomOf="@+id/itemTopicSuitLeft_card" />

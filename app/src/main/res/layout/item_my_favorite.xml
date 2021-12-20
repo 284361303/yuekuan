@@ -21,7 +21,7 @@
             android:id="@+id/itemMyFavorite_ivBG"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerInside"
+            android:scaleType="centerCrop"
             tools:src="@mipmap/aaa" />
 
         <View
@@ -34,11 +34,11 @@
             android:id="@+id/itemMyFavorite_tv1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
+            android:layout_gravity="bottom"
             android:paddingHorizontal="6dp"
             android:paddingBottom="6dp"
             android:textColor="@color/white"
             android:textSize="12sp"
-            tools:text="2021秋季新款磨毛短袖T恤早秋可爱印花2021秋季新款磨毛短袖T恤早秋可爱印花" />
+            tools:text="2021秋季" />
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

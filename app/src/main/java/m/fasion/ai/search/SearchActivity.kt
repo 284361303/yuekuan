@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.gson.Gson
@@ -48,9 +49,7 @@ class SearchActivity : BaseActivity() {
     private var totalCount: Int = 0    //总的数量
     private var searchAdapter: SearchHistoryAdapter? = null
     private var listAdapter: HomeChildAdapter? = null
-    private val binding by lazy {
-        ActivitySearchBinding.inflate(layoutInflater)
-    }
+    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
 
     private var categoryList: MutableList<History> = mutableListOf()
 
@@ -74,8 +73,7 @@ class SearchActivity : BaseActivity() {
         initSearchHistoryAdapter()
 
         //搜索结果和热度推荐列表Adapter
-        initListAdapter()
-        binding.searchRefresh.setEnableRefresh(false)
+        initAdapter()
         getData()
 
         //输入框事件监听
@@ -102,6 +100,7 @@ class SearchActivity : BaseActivity() {
                 if (content.isNotEmpty()) {
                     viewModel.setSearchContent(History(content))
                     showListView()
+                    viewModel.getSearchList(content)
                 }
             }
             false
@@ -131,16 +130,6 @@ class SearchActivity : BaseActivity() {
             }).show(supportFragmentManager, "clearHistory")
         }
 
-        //热度列表上拉加载更多
-        binding.searchRefresh.setOnLoadMoreListener {
-            if (listData.size >= totalCount) {
-                binding.searchRefresh.finishLoadMore()
-            } else {
-                currentPage += 1
-                getData()
-            }
-        }
-
         //搜索历史数据
         viewModel.listAll.observe(this, { lists ->
             categoryList.clear()
@@ -164,19 +153,32 @@ class SearchActivity : BaseActivity() {
     /**
      * 搜索结果和热度推荐列表Adapter
      */
-    private fun initListAdapter() {
-        listAdapter = HomeChildAdapter(this, 1, listData).apply {
-            binding.searchRVAll.adapter = this
-            onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
-                override fun onItemClick(model: Clothes, position: Int) {
-                    HomeDetailsActivity.startActivity(this@SearchActivity, model.id)
-                }
+    private fun initAdapter() {
+        val layoutParams = binding.searchClTop.layoutParams
+        val height = CoreUtil.getScreenHeight(this) - layoutParams.height
+        listAdapter = HomeChildAdapter(this, 1, listData, height)
+        binding.searchRVAll.adapter = listAdapter
+        listAdapter?.onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
+            override fun onItemClick(model: Clothes, position: Int) {
+                HomeDetailsActivity.startActivity(this@SearchActivity, model.id)
+            }
 
-                override fun onCollectClick(model: Clothes, position: Int) {
-                    ToastUtils.show("收藏了 $position")
+            override fun onCollectClick(model: Clothes, position: Int) {
+                checkLogin {
+                    val favourite = model.favourite
+                    val id = model.id
+                    if (favourite) {
+                        model.favourite = false
+                        viewModel.cancelFavorites(id)
+                    } else {
+                        model.favourite = true
+                        viewModel.addFavorites(id)
+                    }
+                    listAdapter?.notifyItemChanged(position, -1)
                 }
             }
         }
+        binding.searchRVAll.addOnScrollListener(LoadMoreListener())
     }
 
     /**
@@ -195,6 +197,7 @@ class SearchActivity : BaseActivity() {
                 binding.searchEditText.setSelection(binding.searchEditText.text.toString().length)
 
                 showListView()
+                viewModel.getSearchList(itemValue)
             }
         }))
     }
@@ -206,7 +209,7 @@ class SearchActivity : BaseActivity() {
         binding.searchHistoryAll.visibility = View.VISIBLE
         binding.searchLayout1.visibility = if (categoryList.size > 0) View.VISIBLE else View.GONE
         binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_111111))
-        binding.searchRefresh.visibility = View.GONE
+        binding.searchRVAll.visibility = View.GONE
     }
 
     /**
@@ -216,7 +219,7 @@ class SearchActivity : BaseActivity() {
         binding.searchHistoryAll.visibility = View.GONE
         binding.searchIvDelete.visibility = View.INVISIBLE
         binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_ECECEC))
-        binding.searchRefresh.visibility = View.VISIBLE
+        binding.searchRVAll.visibility = View.VISIBLE
         CoreUtil.hideKeyBoard(binding.searchEditText)   //隐藏软键盘
         binding.searchEditText.clearFocus() //失去焦点
     }
@@ -233,15 +236,41 @@ class SearchActivity : BaseActivity() {
             totalCount = it.total_count.toInt()
             if (it.clothes_list.isNotEmpty()) {
                 listData.addAll(it.clothes_list)
+            } else {
+                listData.clear()
             }
             initLayoutManager()
-            binding.searchRefresh.finishLoadMore()
             listAdapter?.notifyDataSetChanged()
         })
 
         viewModel.errorLiveData.observe(this, {
             initLayoutManager()
         })
+    }
+
+    /**
+     * 上拉加载更多数据
+     */
+    private inner class LoadMoreListener : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            val layoutManager = recyclerView.layoutManager
+            if (layoutManager is StaggeredGridLayoutManager) {
+                val visibleItemPositions = layoutManager.findLastCompletelyVisibleItemPositions(null)
+                var maxSize = 0
+                for (i in visibleItemPositions.indices) {
+                    if (i == 0) {
+                        maxSize = visibleItemPositions[i]
+                    } else if (visibleItemPositions[i] > maxSize) {
+                        maxSize = visibleItemPositions[i]
+                    }
+                }
+                if (maxSize + layoutManager.spanCount > listData.size && listData.size < totalCount) {
+                    currentPage += 1
+                    getData()
+                }
+            }
+        }
     }
 }
 
@@ -272,6 +301,45 @@ class SearchViewModel : BaseViewModel() {
         }
     }
 
+    /**
+     * 关键字搜索列表
+     */
+    fun getSearchList(searchName: String) {
+        launch = viewModelScope.launch {
+            val searchList = repository.getSearchList(searchName)
+            if (searchList.isSuccessful) {
+                searchList.body()?.let {
+                    clothesListData.value = it
+                }
+            } else {
+                searchList.errorBody()?.stringSuspending()?.let {
+                    Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
+                        ToastUtils.show(message)
+                    }
+                }
+            }
+        }
+    }
+
+    val addFavoritesOk = MutableLiveData<String>()
+    fun addFavorites(id: String) {
+        launch = viewModelScope.launch {
+            val addFavorites = repository.addFavorites(id)
+            if (addFavorites.isSuccessful) {
+                addFavoritesOk.value = addFavorites.body()
+            }
+        }
+    }
+
+    val cancelFavoritesOk = MutableLiveData<String>()
+    fun cancelFavorites(id: String) {
+        launch = viewModelScope.launch {
+            val cancelFavorites = repository.cancelFavorites(id)
+            if (cancelFavorites.isSuccessful) {
+                cancelFavoritesOk.value = cancelFavorites.body()
+            }
+        }
+    }
 
     /**
      * 添加数据

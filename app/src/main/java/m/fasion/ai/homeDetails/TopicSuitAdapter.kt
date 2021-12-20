@@ -3,14 +3,17 @@ package m.fasion.ai.homeDetails
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import m.fasion.ai.R
 import m.fasion.ai.databinding.ItemTopicSuitLeftBinding
 import m.fasion.ai.databinding.ItemTopicSuitRightBinding
+import m.fasion.core.model.Body
 import m.fasion.core.util.CoreUtil
 
 /**
  * 高级西装搭配
  */
-class TopicSuitAdapter(private val mList: List<String>) :
+class TopicSuitAdapter(private val mList: List<Body>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -24,27 +27,52 @@ class TopicSuitAdapter(private val mList: List<String>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val body = mList[position]
         if (holder is TopicSuitLeftHolder) {
+            val headImg = body.head_img
+            val title = body.title
             CoreUtil.setTypeFaceMedium(listOf(holder.leftBinding.itemTopicSuitLeftTvName))
+            holder.leftBinding.itemTopicSuitLeftTvName.text = title
+            holder.leftBinding.itemTopicSuitLeftIvCollect.setImageResource(if (body.favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
 
+            if (headImg != holder.leftBinding.itemTopicSuitLeftIvBg.tag) {  //防止图片闪动和布局高度变化
+                holder.leftBinding.itemTopicSuitLeftIvBg.tag = headImg
+                Glide.with(holder.itemView.context).load(headImg).into(holder.leftBinding.itemTopicSuitLeftIvBg)
+            }
             if (onClickListener != null) {
                 holder.itemView.setOnClickListener {
-                    onClickListener?.onItemClickListener(position)
+                    onClickListener?.onItemClickListener(body, position)
+                }
+
+                //点赞与取消点赞
+                holder.leftBinding.itemTopicSuitLeftIvCollect.setOnClickListener {
+                    onClickListener?.onCollectClickListener(body, position)
                 }
             }
         } else if (holder is TopicSuitRightHolder) {
+            val headImg = body.head_img
             CoreUtil.setTypeFaceMedium(listOf(holder.rightBinding.itemTopicSuitRightTvName))
-
+            if (headImg != holder.rightBinding.itemTopicSuitRightIvBg.tag) {
+                holder.rightBinding.itemTopicSuitRightIvBg.tag = headImg
+                Glide.with(holder.itemView.context).load(headImg).into(holder.rightBinding.itemTopicSuitRightIvBg)
+            }
+            holder.rightBinding.itemTopicSuitRightTvName.text = body.title
+            holder.rightBinding.itemTopicSuitRightIvCollect.setImageResource(if (body.favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
             if (onClickListener != null) {
                 holder.itemView.setOnClickListener {
-                    onClickListener?.onItemClickListener(position)
+                    onClickListener?.onItemClickListener(body, position)
+                }
+
+                //点赞与取消点赞
+                holder.rightBinding.itemTopicSuitRightIvCollect.setOnClickListener {
+                    onClickListener?.onCollectClickListener(body, position)
                 }
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return if (mList.isEmpty()) 1 else mList.size
+        return mList.size
     }
 
     class TopicSuitLeftHolder(val leftBinding: ItemTopicSuitLeftBinding) :
@@ -56,8 +84,8 @@ class TopicSuitAdapter(private val mList: List<String>) :
     var onClickListener: OnClickListener? = null
 
     interface OnClickListener {
-        fun onItemClickListener(position: Int)
+        fun onItemClickListener(model: Body, position: Int)
 
-        fun onCollectClickListener(position: Int)
+        fun onCollectClickListener(model: Body, position: Int)
     }
 }

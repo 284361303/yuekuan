@@ -47,6 +47,7 @@
                                     android:id="@+id/homeFragment_banner"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:background="@color/color_EEEEEE"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintRight_toRightOf="parent"
@@ -63,7 +64,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="20dp"
-                                    android:text="0"
+                                    android:text="@string/zero"
                                     android:textColor="@color/white"
                                     android:textSize="8sp"
                                     app:layout_constraintBottom_toBottomOf="@+id/homeFragment_tvCurrent"
@@ -90,7 +91,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="24dp"
-                                    android:text="0"
+                                    android:text="@string/zero"
                                     android:textColor="@color/white"
                                     android:textSize="14sp"
                                     app:layout_constraintBottom_toBottomOf="parent"
@@ -128,7 +129,8 @@
                                         android:textSize="20sp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintLeft_toLeftOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        tools:ignore="TooDeepLayout" />
 
                                     <TextView
                                         android:id="@+id/homeFragment_tvRecommend2"
@@ -142,7 +144,7 @@
                                         app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvRecommend1"
                                         app:layout_constraintTop_toTopOf="parent" />
 
-                                    <Space
+                                    <android.widget.Space
                                         android:layout_width="14dp"
                                         android:layout_height="0dp"
                                         app:layout_constraintBottom_toBottomOf="parent"
@@ -160,7 +162,7 @@
                                         app:layout_constraintTop_toTopOf="parent" />
                                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <Space
+                                <android.widget.Space
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1" />
@@ -198,7 +200,7 @@
                                 android:id="@+id/homeFragment_recommendRV"
                                 layout="@layout/include_recycler_view" />
 
-                            <Space
+                            <android.widget.Space
                                 android:layout_width="match_parent"
                                 android:layout_height="32dp" />
 
@@ -237,7 +239,7 @@
                                     app:layout_constraintLeft_toRightOf="@+id/homeFragment_tvDesign1"
                                     app:layout_constraintTop_toTopOf="parent" />
 
-                                <Space
+                                <android.widget.Space
                                     android:layout_width="14dp"
                                     android:layout_height="0dp"
                                     app:layout_constraintBottom_toBottomOf="parent"
@@ -270,7 +272,7 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
 
-                                <Space
+                                <android.widget.Space
                                     android:id="@+id/homeFragment_toolBarSpace"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
@@ -302,7 +304,7 @@
                                         android:src="@mipmap/icon_search_white" />
                                 </RelativeLayout>
 
-                                <Space
+                                <android.widget.Space
                                     android:layout_width="match_parent"
                                     android:layout_height="15dp" />
 
@@ -330,7 +332,7 @@
                             app:tabSelectedTextColor="@color/color_111111"
                             app:tabTextColor="@color/color_787878" />
 
-                        <Space
+                        <android.widget.Space
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
@@ -346,7 +348,7 @@
                             android:textSize="16sp" />
                     </LinearLayout>
 
-                    <Space
+                    <android.widget.Space
                         android:layout_width="match_parent"
                         android:layout_height="9dp" />
                 </com.google.android.material.appbar.AppBarLayout>

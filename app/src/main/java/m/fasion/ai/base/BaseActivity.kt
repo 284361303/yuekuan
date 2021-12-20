@@ -1,6 +1,7 @@
 package m.fasion.ai.base
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -8,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.ActivityCompat
 import m.fasion.ai.R
+import m.fasion.ai.login.LoginActivity
 import m.fasion.ai.util.LogUtils
+import m.fasion.core.util.SPUtil
 
 open class BaseActivity : AppCompatActivity() {
     private val TAG = "BaseActivity"
@@ -67,6 +70,17 @@ open class BaseActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 0) {
             LogUtils.log(TAG, "onRequestPermissionsResult: ")
+        }
+    }
+
+    /**
+     * 判断登录，没有登录就跳转到登录页面
+     */
+    protected open fun checkLogin(callback: () -> Unit) {
+        if (!SPUtil.getToken().isNullOrEmpty()) {
+            callback.invoke()
+        } else {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 }

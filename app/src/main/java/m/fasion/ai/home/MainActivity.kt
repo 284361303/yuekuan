@@ -14,9 +14,7 @@ import m.fasion.ai.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity() {
 
-    private val inflate by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
-    }
+    private val inflate by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private val fragmentList = mutableListOf<Fragment>()
     private var homeFragment: HomeFragment? = null

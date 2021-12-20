@@ -27,7 +27,7 @@ data class BannerModelItem(
 
 @Parcelize
 data class Body(
-    val favourite: Boolean,
+    var favourite: Boolean,
     val head_img: String,
     val target: String,
     val type: String,
@@ -78,7 +78,8 @@ data class ClothesInfo(
     val shop_url: String,
     val status: String,
     val tags: List<Any>,
-    val title: String
+    val title: String,
+    val tag_pos: List<TagPo>?,
 )
 
 data class BodyImg(
@@ -93,6 +94,15 @@ data class HeadImg(
     val link: String,
     val path: String,
     val type: String
+)
+
+data class TagPo(
+    val created_at: Long,
+    val effect_action: String,
+    val id: String,
+    val label: String,
+    val status: String,
+    val updated_at: Long
 )
 
 /*收藏列表数据*/
@@ -149,8 +159,10 @@ data class RecommendList(
     val head: List<Head>,
     val id: String,
     val title: String,
-    val type: String
+    val type: String,
+    val sub_title: String
 )
+
 /*筛选条件列表*/
 class Categories : ArrayList<CategoriesItem>()
 

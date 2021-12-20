@@ -1,9 +1,11 @@
 package m.fasion.ai.homeDetails
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
@@ -22,8 +24,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.R
 import m.fasion.ai.databinding.ActivityHomeDetailsBinding
-import m.fasion.ai.share.ShareActivity
-import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
@@ -32,6 +32,9 @@ import m.fasion.core.util.CoreUtil
  * 选款详情
  */
 class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
+
+    private var recommendListData: MutableList<Clothes> = mutableListOf()
+    private var recommendAdapter: RecommendAdapter? = null
 
     companion object {
         fun startActivity(context: Context, id: String) {
@@ -54,7 +57,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.title.inCludeTitleIvRight.setImageResource(R.mipmap.icon_btn_share)
+        initAdapter()
         initClickListener()
 
         intent.extras?.containsKey("id")?.let {
@@ -72,26 +75,44 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         initObserver()
     }
 
-    private fun initDetailsList(listImae: List<BodyImg>) {
-        binding.homeDetailsRV1.layoutManager = LinearLayoutManager(this)
-        binding.homeDetailsRV1.adapter = HomeDetailsAdapter(this, listImae)
+    private fun initAdapter() {
+        binding.homeDetailsRV2.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recommendAdapter = RecommendAdapter(this, recommendListData)
+        binding.homeDetailsRV2.adapter = recommendAdapter
+
+        recommendAdapter?.onItemClickListener = object : RecommendAdapter.OnItemClickListener {
+            override fun onItemClick(model: Clothes, position: Int) {
+                startActivity(this@HomeDetailsActivity, model.id)
+            }
+
+            override fun onCollectClick(model: Clothes, position: Int) {
+                checkLogin {
+                    val favourite = model.favourite
+                    val id = model.id
+                    if (favourite) {
+                        model.favourite = false
+                        viewModel.cancelFavorites(id)
+                    } else {
+                        model.favourite = true
+                        viewModel.addFavorites(id)
+                    }
+                    recommendAdapter?.notifyItemChanged(position, -1)
+                }
+            }
+        }
+    }
+
+    private fun initDetailsList(listImage: List<BodyImg>?) {
+        if (listImage != null && listImage.isNotEmpty()) {
+            binding.homeDetailsRV1.layoutManager = LinearLayoutManager(this)
+            binding.homeDetailsRV1.adapter = HomeDetailsAdapter(this, listImage)
+        } else {
+            binding.homeDetailsTvDetails.visibility = View.GONE
+        }
     }
 
     private fun initClickListener() {
         binding.title.inCludeTitleIvBack.setOnClickListener { finish() }
-        //分享按钮
-        binding.title.inCludeTitleIvRight.setOnClickListener {
-            ShareActivity.startActivity(this, "")
-        }
-        //聊天
-        binding.homeDetailsIvChat.setOnClickListener {
-//            val intent = MQIntentBuilder(this).build()
-//            startActivity(intent)
-        }
-        binding.homeDetailsTvProduction.setOnClickListener {
-//            val intent = MQIntentBuilder(this).build()
-//            startActivity(intent)
-        }
         //购买
         binding.homeDetailsTvBuy.setOnClickListener {
             viewModel.initAliBaiChuan(this)
@@ -108,9 +129,6 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
                 }
             })
             addBannerLifecycleObserver(this@HomeDetailsActivity)
-            setOnBannerListener { data, position -> //点击事件
-                ToastUtils.show(position.toString())
-            }
             indicator = RoundLinesIndicator(this@HomeDetailsActivity)
             //设置指示器选中显示宽度
             setIndicatorSelectedWidth(BannerUtils.dp2px(20f))
@@ -123,19 +141,21 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
         //取消收藏与进行收藏
         binding.homeDetailsIvCollect.setOnClickListener {
-            viewModel.clothesData.value?.apply {
-                if (favourite) {
-                    viewModel.cancelFavorites(id)
-                    favourite = false
-
-                } else {
-                    viewModel.addFavorites(id)
-                    favourite = true
+            checkLogin {
+                viewModel.clothesData.value?.apply {
+                    favourite = if (favourite) {
+                        viewModel.cancelFavorites(id)
+                        false
+                    } else {
+                        viewModel.addFavorites(id)
+                        true
+                    }
+                    binding.homeDetailsIvCollect.setImageResource(if (favourite) R.mipmap.icon_collect_22 else R.mipmap.icon_uncollect_22)
                 }
-                binding.homeDetailsIvCollect.setImageResource(if (favourite) R.mipmap.icon_collect_22 else R.mipmap.icon_uncollect_22)
             }
         }
         viewModel.clothesData.observe(this, {
@@ -144,6 +164,8 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             val headImgList = it.head_img_list  //轮播图
             val favourite = it.favourite
             val bodyImgList = it.body_img_list
+            val tagPos = it.tag_pos  //标签
+
             binding.homeDetailsTvDate.text = CoreUtil.millisecond2Date(createdAt)
             binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, num))
 //            binding.homeDetailsTvPageViews.text = String.format(resources.getString(R.string.pageviews, 121)) //浏览量
@@ -151,14 +173,23 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             binding.homeDetailsIvCollect.setImageResource(if (favourite) R.mipmap.icon_collect_22 else R.mipmap.icon_uncollect_22)
             initBanner(headImgList)
             initDetailsList(bodyImgList)
+            if (tagPos != null && tagPos.isNotEmpty()) {
+                var addLabel = ""
+                for (tagPo in tagPos) {
+                    addLabel += resources.getString(R.string.labels, tagPo.label)
+                }
+                binding.homeDetailsTvLabel.text = addLabel
+            } else {
+                binding.homeDetailsTvLabel.visibility = View.GONE
+            }
         })
         //为你推荐数据回掉
         viewModel.clothesListData.observe(this, {
             val clothesList = it.clothes_list
             if (clothesList.isNotEmpty()) {
                 //推荐列表
-                binding.homeDetailsRV2.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-                binding.homeDetailsRV2.adapter = RecommendAdapter(this, clothesList)
+                recommendListData.addAll(clothesList)
+                recommendAdapter?.notifyDataSetChanged()
             }
         })
 

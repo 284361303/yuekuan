@@ -111,21 +111,15 @@
     <!--搜索历史End-->
 
     <!--搜索列表和热度列表Start-->
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout
-        android:id="@+id/search_refresh"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_RVAll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:paddingHorizontal="14dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_viewLine">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_RVAll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:paddingHorizontal="14dp"
-            tools:listitem="@layout/item_staggered" />
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+        app:layout_constraintTop_toBottomOf="@+id/search_viewLine"
+        tools:listitem="@layout/item_staggered" />
     <!--搜索列表和热度列表End-->
 </androidx.constraintlayout.widget.ConstraintLayout>
