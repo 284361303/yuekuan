@@ -22,7 +22,7 @@ class WelcomeActivity : AppCompatActivity() {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
             runBlocking {
-                delay(1000L)
+                delay(500L)
                 startActivity(Intent(this@WelcomeActivity, MainActivity::class.java))
                 finish()
             }

@@ -9,7 +9,9 @@ import m.fasion.core.util.CoreUtil
  * 关于我们
  */
 class AboutUsActivity : BaseActivity() {
+
     private val binding by lazy { ActivityAboutUsBinding.inflate(layoutInflater) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)

@@ -40,6 +40,7 @@ import m.fasion.core.base.BaseViewModel
 import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
+import m.fasion.core.util.SPUtil
 import java.io.Serializable
 import kotlin.math.abs
 
@@ -223,6 +224,19 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
             }
             initTabLayout(true, it.toList())
         })
+
+        //退出登录成功、登录成功也要重新请求款式列表
+        LiveEventBus.get<String>(ConstantsKey.LOGOUT_SUCCESS).observe(this, { num ->
+            if (num == "1") {
+                initTabLayout(true, listOf())
+            }
+        })
+        //登录成功
+        LiveEventBus.get<UserModel>("loginSuccess").observe(requireActivity(), { models ->
+            if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
+                initTabLayout()
+            }
+        })
     }
 
     /**
@@ -239,18 +253,27 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         return false
     }
 
+    /**
+     * 加载正常的效果图
+     */
     private fun showNoErrorView() {
         _binding.homeFragmentRefresh.visibility = View.VISIBLE
         _binding.homeFragmentIncludeState.homeEmptyLlAll.visibility = View.GONE
     }
 
+    /**
+     * 网络异常显示异常图效果
+     */
     private fun showErrorView() {
+        _binding.homeFragmentRefresh.finishRefresh()
+        _binding.homeFragmentRefresh.visibility = View.GONE
         _binding.homeFragmentIncludeState.homeEmptyLlAll.visibility = View.VISIBLE
         initSearchTop(_binding.homeFragmentIncludeState.homeEmptyToolBarSpace)
         _binding.homeFragmentIncludeState.homeEmptyStateView.setStateView(StateView.State.error)
+        val layoutParams = _binding.homeFragmentIncludeState.homeEmptyStateView.layoutParams
+        layoutParams.height = CoreUtil.getScreenHeight(requireContext()) - barHeight
+        _binding.homeFragmentIncludeState.homeEmptyStateView.layoutParams = layoutParams
         _binding.homeFragmentIncludeState.homeEmptyStateView.listener = this
-        _binding.homeFragmentRefresh.finishRefresh()
-        _binding.homeFragmentRefresh.visibility = View.GONE
     }
 
     /**
@@ -276,9 +299,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
             override fun createFragment(position: Int): Fragment {
                 val childFragment = HomeChildFragment()
-                val keys = viewModel.tabMapList.keys
                 val values = viewModel.tabMapList.values
-                val key = keys.toMutableList()[position]
                 val value = values.toMutableList()[position]
 
                 childFragment.arguments = Bundle().also {
@@ -291,7 +312,6 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
             }
         }
         TabLayoutMediator(_binding.homeFragmentTab, _binding.homeFragmentVP) { tab, position ->
-//            tab.text = viewModel.tabList[position]
             tab.text = viewModel.tabMapList.keys.toList()[position]
         }.attach()
 

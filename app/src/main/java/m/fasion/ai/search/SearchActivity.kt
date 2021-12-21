@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.gson.Gson
+import com.jeremyliao.liveeventbus.LiveEventBus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -139,6 +140,15 @@ class SearchActivity : BaseActivity() {
             searchAdapter?.notifyDataSetChanged()
             //搜索历史数据为空就显示热度推荐列表
             showListView()
+        })
+
+        //收藏成功
+        viewModel.addFavoritesOk.observe(this, {
+            LiveEventBus.get<String>("addFavoritesSuccess").post(it)
+        })
+        //取消收藏
+        viewModel.cancelFavoritesOk.observe(this, {
+            LiveEventBus.get<String>("cancelFavoritesSuccess").post(it)
         })
     }
 
@@ -326,7 +336,9 @@ class SearchViewModel : BaseViewModel() {
         launch = viewModelScope.launch {
             val addFavorites = repository.addFavorites(id)
             if (addFavorites.isSuccessful) {
-                addFavoritesOk.value = addFavorites.body()
+                addFavorites.body()?.let {
+                    addFavoritesOk.value = id
+                }
             }
         }
     }
@@ -336,7 +348,9 @@ class SearchViewModel : BaseViewModel() {
         launch = viewModelScope.launch {
             val cancelFavorites = repository.cancelFavorites(id)
             if (cancelFavorites.isSuccessful) {
-                cancelFavoritesOk.value = cancelFavorites.body()
+                cancelFavorites.body()?.let {
+                    cancelFavoritesOk.value = id
+                }
             }
         }
     }

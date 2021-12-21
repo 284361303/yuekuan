@@ -114,6 +114,7 @@ class MineFragment : Fragment() {
                 if (num == 200) {
                     SPUtil.removeKey(ConstantsKey.USER_TOKEN_KEY)
                     loginError()
+                    LiveEventBus.get(ConstantsKey.LOGOUT_SUCCESS, String::class.java).post("1")
                     ToastUtils.show("退出登录成功")
                 }
             })

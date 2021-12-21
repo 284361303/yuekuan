@@ -324,7 +324,7 @@
                         <m.fasion.ai.util.customize.CustomTabLayout
                             android:id="@+id/homeFragment_tab"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="wrap_content"
                             app:tabGravity="start"
                             app:tabIndicatorHeight="0dp"
                             app:tabMode="scrollable"
@@ -350,7 +350,7 @@
 
                     <android.widget.Space
                         android:layout_width="match_parent"
-                        android:layout_height="9dp" />
+                        android:layout_height="6dp" />
                 </com.google.android.material.appbar.AppBarLayout>
 
                 <androidx.viewpager2.widget.ViewPager2

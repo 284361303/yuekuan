@@ -10,4 +10,5 @@ object ConstantsKey {
     const val EDIT_NICK = "dit_nick"   //修改用户昵称
     const val EDIT_USER_PIC = "dit_nick"   //修改用户头像
     const val EDIT_SUCCESS = "edit_success"   //用户修改信息完成
+    const val LOGOUT_SUCCESS = "logout_success"   //退出登录
 }
