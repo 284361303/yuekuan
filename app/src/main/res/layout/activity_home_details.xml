@@ -180,7 +180,9 @@
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:orientation="horizontal"
-        android:paddingVertical="6dp">
+        android:paddingVertical="6dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/homeDetails_tvBuy"

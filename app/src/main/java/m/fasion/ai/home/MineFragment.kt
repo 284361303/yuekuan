@@ -5,16 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.jeremyliao.liveeventbus.LiveEventBus
 import m.fasion.ai.R
+import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.FragmentMineBinding
 import m.fasion.ai.login.LoginActivity
 import m.fasion.ai.mine.userInfo.EditingUserActivity
 import m.fasion.ai.mine.userInfo.EditingUserViewModel
-import m.fasion.ai.toolbar.*
+import m.fasion.ai.toolbar.AboutUsActivity
+import m.fasion.ai.toolbar.FeedBacksActivity
+import m.fasion.ai.toolbar.MyFavoriteActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.ai.util.customize.CustomizeDialog
 import m.fasion.ai.webView.WebViewActivity
@@ -28,7 +30,7 @@ import m.fasion.core.util.SPUtil
  * 我的页面
  * 2021年9月23日
  */
-class MineFragment : Fragment() {
+class MineFragment : BaseFragment() {
 
     private var _inflate: FragmentMineBinding? = null
     private val viewModel: EditingUserViewModel by activityViewModels()
@@ -93,7 +95,9 @@ class MineFragment : Fragment() {
             }
             //我的喜欢
             it.mineMyFavorite.setOnClickListener {
-                startActivity(Intent(requireContext(), MyFavoriteActivity::class.java))
+                checkLogin {
+                    startActivity(Intent(requireContext(), MyFavoriteActivity::class.java))
+                }
             }
 
             //登录成功
@@ -139,7 +143,7 @@ class MineFragment : Fragment() {
             it.mineTvEdit.visibility = View.VISIBLE
             it.mineTvLogout.visibility = View.VISIBLE
             it.mineTvName.text = userModel.nickname
-            Glide.with(requireContext()).load(userModel.avatar).error(R.drawable.mine_pic).into(it.profileImage)
+            Glide.with(requireContext()).load(userModel.avatar).error(R.mipmap.no_login_pic).into(it.profileImage)
         }
     }
 

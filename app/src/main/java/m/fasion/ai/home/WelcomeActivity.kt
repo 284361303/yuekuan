@@ -3,7 +3,6 @@ package m.fasion.ai.home
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import m.fasion.ai.databinding.ActivityWelcomeBinding
 
@@ -22,7 +21,6 @@ class WelcomeActivity : AppCompatActivity() {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
             runBlocking {
-                delay(500L)
                 startActivity(Intent(this@WelcomeActivity, MainActivity::class.java))
                 finish()
             }

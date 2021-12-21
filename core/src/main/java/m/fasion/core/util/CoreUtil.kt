@@ -13,6 +13,14 @@ import androidx.annotation.NonNull
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
+import android.content.pm.PackageManager
+
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager.NameNotFoundException
+import java.net.URISyntaxException
+
+import java.net.URI
+
 
 object CoreUtil {
 
@@ -171,5 +179,38 @@ object CoreUtil {
         val date = Date(millisecond)
         val format = SimpleDateFormat("yyyy-MM-dd")
         return format.format(date)
+    }
+
+    /**
+     * 检查本机是否安装某Apk
+     */
+    fun checkInstallSoftware(context: Context, packageName: String): Boolean {
+        val packageManager = context.packageManager
+        try {
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            if (packageInfo != null) {
+                return true
+            }
+        } catch (e: NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return false
+    }
+
+    /**
+     * 判断网址Url是否合法
+     */
+    fun isValidUrl(urlString: String): Boolean {
+        var uri: URI? = null
+        uri = try {
+            URI(urlString)
+        } catch (e: URISyntaxException) {
+            e.printStackTrace()
+            return false
+        }
+        if (uri?.host == null) {
+            return false
+        }
+        return uri.getScheme().equals("http", ignoreCase = true) || uri.getScheme().equals("https", ignoreCase = true)
     }
 }

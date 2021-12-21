@@ -28,7 +28,7 @@
             android:textColor="@color/color_4A4A4A"
             android:textSize="15sp" />
 
-        <Space
+        <android.widget.Space
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1" />
@@ -70,7 +70,7 @@
             android:textColor="@color/color_4A4A4A"
             android:textSize="15sp" />
 
-        <Space
+        <android.widget.Space
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1" />
@@ -104,7 +104,7 @@
             android:textColor="@color/color_4A4A4A"
             android:textSize="15sp" />
 
-        <Space
+        <android.widget.Space
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1" />

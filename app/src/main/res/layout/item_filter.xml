@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Space
+    <android.widget.Space
         android:id="@+id/itemFilter_space"
         android:layout_width="match_parent"
         android:layout_height="16dp"

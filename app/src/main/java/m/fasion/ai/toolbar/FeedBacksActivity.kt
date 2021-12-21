@@ -65,6 +65,11 @@ class FeedBacksActivity : BaseActivity() {
             viewModel.saveContent(binding.feedBacksEt.text.toString(),
                 if (binding.feedBacksEtPhone.text.toString().trim().isNotEmpty()) binding.feedBacksEtPhone.text.toString() else "")
         }
+
+        //点击外部隐藏软键盘
+        binding.feedBacksClAll.setOnClickListener {
+            CoreUtil.hideKeyBoard(binding.feedBacksClAll)
+        }
     }
 }
 

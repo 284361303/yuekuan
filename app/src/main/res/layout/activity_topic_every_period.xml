@@ -69,7 +69,7 @@
                     app:layout_constraintLeft_toRightOf="@+id/topicEveryPeriod_tv1"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Space
+                <android.widget.Space
                     android:layout_width="14dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -115,7 +115,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topicEveryPeriod_tv3">
 
-                <Space
+                <android.widget.Space
                     android:id="@+id/topicEveryPeriod_space1"
                     android:layout_width="match_parent"
                     android:layout_height="26dp"
@@ -145,7 +145,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topicEveryPeriod_spaceTop" />
 
-    <Space
+    <android.widget.Space
         android:id="@+id/topicEveryPeriod_spaceTop"
         android:layout_width="match_parent"
         android:layout_height="44dp"

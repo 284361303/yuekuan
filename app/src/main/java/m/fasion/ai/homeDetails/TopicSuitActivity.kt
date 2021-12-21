@@ -31,7 +31,7 @@ import m.fasion.core.util.CoreUtil
  */
 class TopicSuitActivity : BaseActivity() {
 
-    private var mAadapter: TopicSuitAdapter? = null
+    private var mAdapter: TopicSuitAdapter? = null
     private val binding by lazy { ActivityTopicSuitBinding.inflate(layoutInflater) }
     private val viewModel: TopicSuitViewHolder by viewModels()
     private var listData: MutableList<Body> = mutableListOf()
@@ -87,17 +87,21 @@ class TopicSuitActivity : BaseActivity() {
                 }
                 if (body.isNotEmpty()) {
                     listData.addAll(body)
-                    mAadapter?.notifyDataSetChanged()
+                    mAdapter?.notifyDataSetChanged()
                 }
             }
         })
+
+        binding.topicSuitIvBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun initAdapter() {
-        mAadapter = TopicSuitAdapter(listData)
-        binding.topSuitRV.adapter = mAadapter
+        mAdapter = TopicSuitAdapter(listData)
+        binding.topSuitRV.adapter = mAdapter
 
-        mAadapter?.onClickListener = object : TopicSuitAdapter.OnClickListener {
+        mAdapter?.onClickListener = object : TopicSuitAdapter.OnClickListener {
             override fun onItemClickListener(model: Body, position: Int) {
                 HomeDetailsActivity.startActivity(this@TopicSuitActivity, model.target)
             }
@@ -113,7 +117,7 @@ class TopicSuitActivity : BaseActivity() {
                         model.favourite = true
                         viewModel.addFavorites(id)
                     }
-                    mAadapter?.notifyItemChanged(position, -1)
+                    mAdapter?.notifyItemChanged(position, -1)
                 }
             }
         }

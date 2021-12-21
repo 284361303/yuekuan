@@ -1,8 +1,8 @@
 package m.fasion.core
 
 object Config {
-    const val BASE_DEBUG_URL = "http://192.168.50.200:56100"
-//    const val BASE_DEBUG_URL = "https://play.fasionai.com"
+//    const val BASE_DEBUG_URL = "http://192.168.50.200:56100"
+    const val BASE_DEBUG_URL = "https://play.fasionai.com"
     const val BASE_URL = "http://192.168.50.151:56100"
 
     //微信appId

@@ -52,6 +52,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
 
     private var barHeight: Int = 0
     private var searchHeight: Int = 0
+    private var currentSelectTab: String = ""
     private lateinit var _binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by activityViewModels()
 
@@ -191,7 +192,9 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         })
 
         //tabLayout
-        initTabLayout()
+        initTabLayoutListener()
+        initTabLayoutView()
+        currentSelectTab = viewModel.tabMapList.keys.toList()[0]
 
         //筛选跳转
         _binding.homeFragmentTvFilter.setOnClickListener {
@@ -222,19 +225,44 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
             if (it != null && it.isNotEmpty()) {
                 categories.addAll(it)
             }
-            initTabLayout(true, it.toList())
+            initTabLayoutListener(true, it.toList())
         })
 
         //退出登录成功、登录成功也要重新请求款式列表
         LiveEventBus.get<String>(ConstantsKey.LOGOUT_SUCCESS).observe(this, { num ->
             if (num == "1") {
-                initTabLayout(true, listOf())
+                initTabLayoutListener(true, listOf())
             }
         })
         //登录成功
         LiveEventBus.get<UserModel>("loginSuccess").observe(requireActivity(), { models ->
             if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
-                initTabLayout()
+                initTabLayoutListener()
+            }
+        })
+
+
+        //tabLayout点击事件改变字体颜色
+        _binding.homeFragmentTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {   //选中
+                tab?.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.let {
+                    it.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_111111))
+                    CoreUtil.setTypeFaceMedium(arrayOf(it).toList())
+                }
+                tab?.customView?.findViewById<View>(R.id.itemTab_view)?.visibility = View.VISIBLE
+                currentSelectTab = tab?.text.toString()
+                System.currentTimeMillis()
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) { //未选中
+                tab?.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.let {
+                    it.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_787878))
+                    CoreUtil.setTypeFaceRegular(it)
+                }
+                tab?.customView?.findViewById<View>(R.id.itemTab_view)?.visibility = View.INVISIBLE
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
     }
@@ -288,29 +316,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         }
     }
 
-    /**
-     * 初始化tabLayout
-     */
-    private fun initTabLayout(refresh: Boolean? = false, listId: List<String>? = listOf()) {
-        _binding.homeFragmentVP.adapter = object : FragmentStateAdapter(requireActivity()) {
-            override fun getItemCount(): Int {
-                return viewModel.tabMapList.size
-            }
-
-            override fun createFragment(position: Int): Fragment {
-                val childFragment = HomeChildFragment()
-                val values = viewModel.tabMapList.values
-                val value = values.toMutableList()[position]
-
-                childFragment.arguments = Bundle().also {
-                    it.putString("childTitle", value)
-                    if (refresh == true) {
-                        it.putSerializable("categoryId", listId as Serializable)
-                    }
-                }
-                return childFragment
-            }
-        }
+    private fun initTabLayoutView() {
         TabLayoutMediator(_binding.homeFragmentTab, _binding.homeFragmentVP) { tab, position ->
             tab.text = viewModel.tabMapList.keys.toList()[position]
         }.attach()
@@ -329,30 +335,42 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                 it.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.text = viewModel.tabMapList.keys.toList()[index]
             }
         }
+
         _binding.homeFragmentVP.offscreenPageLimit = viewModel.tabMapList.size
         _binding.homeFragmentTab.getTabAt(0)?.select()
+    }
 
-        //tabLayout点击事件改变字体颜色
-        _binding.homeFragmentTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {   //选中
-                tab?.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.let {
-                    it.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_111111))
-                    CoreUtil.setTypeFaceMedium(arrayOf(it).toList())
+    /**
+     * 初始化tabLayout
+     */
+    private fun initTabLayoutListener(refresh: Boolean? = false, listId: List<String>? = listOf()) {
+        _binding.homeFragmentVP.adapter = object : FragmentStateAdapter(requireActivity()) {
+            override fun getItemCount(): Int {
+                return viewModel.tabMapList.size
+            }
+
+            override fun createFragment(position: Int): Fragment {
+                val childFragment = HomeChildFragment()
+                val values = viewModel.tabMapList.values
+                val keys = viewModel.tabMapList.keys.toList()
+                val value = values.toMutableList()[position]
+
+                childFragment.arguments = Bundle().also {
+                    it.putString("childTitle", value)
+                    if (refresh == true) {
+                        it.putSerializable("categoryId", listId as Serializable)
+                        //假如如果当前显示是第二个Fragment筛选回来就还显示第二个
+                        keys.forEachIndexed { index, s ->
+                            if (s == currentSelectTab) {
+                                _binding.homeFragmentVP.currentItem = index
+                                return@forEachIndexed
+                            }
+                        }
+                    }
                 }
-                tab?.customView?.findViewById<View>(R.id.itemTab_view)?.visibility = View.VISIBLE
+                return childFragment
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) { //未选中
-                tab?.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.let {
-                    it.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_787878))
-                    CoreUtil.setTypeFaceRegular(it)
-                }
-                tab?.customView?.findViewById<View>(R.id.itemTab_view)?.visibility = View.INVISIBLE
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-        })
+        }
     }
 
     /**

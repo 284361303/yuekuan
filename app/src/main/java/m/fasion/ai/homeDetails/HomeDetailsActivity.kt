@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -24,6 +25,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.R
 import m.fasion.ai.databinding.ActivityHomeDetailsBinding
+import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
@@ -165,6 +167,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             val favourite = it.favourite
             val bodyImgList = it.body_img_list
             val tagPos = it.tag_pos  //标签
+            val shopUrl = it.shop_url
 
             binding.homeDetailsTvDate.text = CoreUtil.millisecond2Date(createdAt)
             binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, num))
@@ -181,6 +184,25 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
                 binding.homeDetailsTvLabel.text = addLabel
             } else {
                 binding.homeDetailsTvLabel.visibility = View.GONE
+            }
+
+            //购买按钮
+            if (shopUrl != null && shopUrl.isNotEmpty() && CoreUtil.isValidUrl(shopUrl)) {
+                binding.homeDetailsLlBottom.visibility = View.VISIBLE
+                binding.homeDetailsTvBuy.setOnClickListener {
+                    val checkPackage = CoreUtil.checkInstallSoftware(this, "com.taobao.taobao")
+                    if (checkPackage) { //隐试打开淘宝详情页
+                        packageManager.getLaunchIntentForPackage("com.taobao.taobao")?.apply {
+                            action = "Android.intent.action.VIEW"
+                            val parse = Uri.parse(shopUrl)
+                            data = parse
+                            setClassName("com.taobao.taobao", "com.taobao.tao.detail.activity.DetailActivity")
+                            startActivity(this)
+                        }
+                    } else {
+                        ToastUtils.show("请先安装淘宝")
+                    }
+                }
             }
         })
         //为你推荐数据回掉

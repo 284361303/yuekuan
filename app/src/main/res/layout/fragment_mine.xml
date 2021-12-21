@@ -35,7 +35,7 @@
             android:id="@+id/profile_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/mine_pic" />
+            android:src="@mipmap/no_login_pic" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mine_editData"

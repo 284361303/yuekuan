@@ -111,20 +111,4 @@ dependencies {
 
     //相册选择、拍照
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc10'
-
-    //百川SDK---------Start
-    // webview容器
-//    implementation 'com.alibaba.baichuan.sdk:alibcwebview:5.0.0.13'
-    // 电商基础组件
-//    implementation 'com.alibaba.baichuan.sdk:alibctradecommon:5.0.0.13'
-//    implementation 'com.alibaba.baichuan.sdk:alibcnbtrade:5.0.0.13'
-//    implementation 'com.alibaba.baichuan.sdk:alibcprotocol:5.0.0.13'
-    // 辅助排查工具（可选）
-//    implementation "com.alibaba.baichuan.sdk:alibctools:5.0.0.13"
-    // 安全保镖v6版本
-    /*implementation 'com.taobao.android:securityguardaar3:5.0.0.9-v6@aar'
-    implementation 'com.taobao.android:securitybodyaar3:5.0.0.9-v6@aar'
-    implementation 'com.taobao.android:sgmiddletieraar3:5.0.0.9-v6@aar'*/
-//    implementation 'com.alibaba:fastjson:1.1.71.android'
-    //百川SDK---------End
 }

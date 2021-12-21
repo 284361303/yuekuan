@@ -69,6 +69,9 @@ class EditingUserPicActivity : BaseActivity() {
         binding.editUserPicTvCancel.setOnClickListener {
             finish()
         }
+        binding.editUserPicViewTop.setOnClickListener {
+            finish()
+        }
 
         //上传图片 回调云地址
         viewModel.uploadImageOk.observe(this, { path ->

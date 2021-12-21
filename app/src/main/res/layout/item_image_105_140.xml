@@ -22,13 +22,13 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <Space
+        <android.widget.Space
             android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:visibility="@{position>0 ? View.GONE : View.VISIBLE}" />
 
         <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="4dp">
@@ -36,12 +36,13 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="105dp"
                 android:layout_height="140dp"
+                android:background="@color/color_EEEEEE"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{listModel.head_img}"
                 tools:src="@mipmap/icon_more" />
         </androidx.cardview.widget.CardView>
 
-        <Space
+        <android.widget.Space
             android:layout_width="8dp"
             android:layout_height="wrap_content" />
     </LinearLayout>

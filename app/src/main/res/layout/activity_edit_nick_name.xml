@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
     android:orientation="vertical"
     tools:context=".mine.userInfo.EditNickNameActivity">
 
@@ -11,6 +10,7 @@
         android:id="@+id/editNickName_space"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/color_3D000"
         android:layout_weight="1" />
 
     <LinearLayout

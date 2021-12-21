@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivityEditNickNameBinding
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.Config
@@ -13,7 +14,7 @@ import m.fasion.core.util.CoreUtil
 /**
  * 修改昵称
  */
-class EditNickNameActivity : AppCompatActivity() {
+class EditNickNameActivity : BaseActivity() {
 
     private val binding by lazy { ActivityEditNickNameBinding.inflate(layoutInflater) }
 

@@ -5,6 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Space
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import m.fasion.ai.R
@@ -19,13 +23,24 @@ class RecommendAdapter(private val context: Context, private val mList: List<Clo
     RecyclerView.Adapter<RecommendAdapter.RecommendHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendHolder {
-        return RecommendHolder(LayoutInflater.from(context).inflate(R.layout.item_recommend_staggered, parent, false))
+        return RecommendHolder(LayoutInflater.from(context).inflate(R.layout.item_staggered, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecommendHolder, position: Int) {
+        val layout = holder.space.layoutParams as LinearLayout.LayoutParams
+        layout.height = CoreUtil.dp2px(context, 3f)
+        holder.space.layoutParams = layout
+
         val lists = mList[position]
         val ivBg = lists.head_img
         val favourite = lists.favourite
+        val num = lists.num
+
+        if (position > 1) {
+            holder.space.visibility = View.GONE
+        } else {
+            holder.space.visibility = View.VISIBLE
+        }
 
         if (ivBg != holder.ivBg.tag) {  //防止图片闪动和布局高度变化
             holder.ivBg.tag = ivBg
@@ -38,13 +53,14 @@ class RecommendAdapter(private val context: Context, private val mList: List<Clo
         }
 
         holder.ivCollect.setImageResource(if (favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
+        holder.tvNum.text = num
 
         if (onItemClickListener != null) {
             holder.itemView.setOnClickListener {
                 onItemClickListener?.onItemClick(lists, position)
             }
 
-            holder.ivCollect.setOnClickListener {
+            holder.clCollect.setOnClickListener {
                 onItemClickListener?.onCollectClick(lists, position)
             }
         }
@@ -55,8 +71,11 @@ class RecommendAdapter(private val context: Context, private val mList: List<Clo
     }
 
     class RecommendHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val ivBg: ImageView = itemView.findViewById(R.id.itemRecommendStaggered_iv)
-        val ivCollect: ImageView = itemView.findViewById(R.id.itemRecommendStaggered_ivCollect)
+        val ivBg: ImageView = itemView.findViewById(R.id.itemStaggered_iv)
+        val ivCollect: ImageView = itemView.findViewById(R.id.itemStaggered_ivCollect)
+        val space: Space = itemView.findViewById(R.id.itemStaggered_space)
+        val clCollect: ConstraintLayout = itemView.findViewById(R.id.itemStaggered_clCollect)
+        val tvNum: TextView = itemView.findViewById(R.id.itemStaggered_tvNum)
     }
 
     var onItemClickListener: OnItemClickListener? = null

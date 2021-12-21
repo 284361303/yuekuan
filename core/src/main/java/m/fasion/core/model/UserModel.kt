@@ -75,7 +75,7 @@ data class ClothesInfo(
     val head_img_list: List<HeadImg>,
     val id: String,
     val num: Int,
-    val shop_url: String,
+    val shop_url: String?,
     val status: String,
     val tags: List<Any>,
     val title: String,

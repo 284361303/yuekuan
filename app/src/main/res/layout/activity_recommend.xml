@@ -60,7 +60,7 @@
                         app:layout_constraintLeft_toRightOf="@+id/recommend_tvRecommend1"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Space
+                    <android.widget.Space
                         android:layout_width="14dp"
                         android:layout_height="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -78,7 +78,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <Space
+                <android.widget.Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />

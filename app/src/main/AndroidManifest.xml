@@ -112,7 +112,8 @@
         <activity
             android:name=".home.WelcomeActivity"
             android:configChanges="orientation"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/WelcomeAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

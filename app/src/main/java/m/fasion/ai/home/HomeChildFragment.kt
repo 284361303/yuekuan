@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.FragmentHomeChildBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
-import m.fasion.ai.util.LogUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.Clothes
 import m.fasion.core.model.ClothesList
@@ -133,7 +132,7 @@ class HomeChildFragment : BaseFragment() {
     }
 
     private fun initAdapter() {
-        mAdapter = HomeChildAdapter(requireContext(), 0, listData, viewModel.getEmptyHeight(requireContext()))
+        mAdapter = HomeChildAdapter(requireContext(), listData, viewModel.getEmptyHeight(requireContext()))
         _binding.homeChildRV.adapter = mAdapter
         mAdapter?.onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
             override fun onItemClick(model: Clothes, position: Int) {

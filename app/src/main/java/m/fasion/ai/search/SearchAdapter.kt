@@ -1,5 +1,6 @@
-package m.fasion.ai.home
+package m.fasion.ai.search
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -17,15 +18,23 @@ import m.fasion.core.model.Clothes
 import m.fasion.core.util.CoreUtil
 import java.util.concurrent.ThreadLocalRandom
 
-/**
- *  @param type 0、选款首页下面的列表 1、搜索页面搜索结果的热度推荐列表
- */
-class HomeChildAdapter(private val context: Context, private val mList: List<Clothes>, private var emptyHeight: Int) :
+class SearchAdapter(private val context: Context, private var emptyHeight: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var mList: MutableList<Clothes> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == 0) EmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_empty_view, parent, false))
         else HomeChildHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_staggered, parent, false))
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(list: List<Clothes>) {
+        mList.clear()
+        if (list.isNotEmpty()) {
+            mList.addAll(list)
+        }
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -35,7 +44,7 @@ class HomeChildAdapter(private val context: Context, private val mList: List<Clo
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is HomeChildHolder) {
             val layout = holder.space.layoutParams as LinearLayout.LayoutParams
-            layout.height = CoreUtil.dp2px(context, 3f)
+            layout.height = CoreUtil.dp2px(context, 20f)
             holder.space.layoutParams = layout
 
             if (position > 1) {
@@ -73,6 +82,13 @@ class HomeChildAdapter(private val context: Context, private val mList: List<Clo
             val layoutParams = holder.llAll.layoutParams as RecyclerView.LayoutParams
             layoutParams.height = emptyHeight
             holder.llAll.layoutParams = layoutParams
+
+            holder.tvContent.text = context.getString(R.string.empty_search)
+            holder.llAll.gravity = Gravity.CENTER
+            val layoutParams1 = holder.ivContent.layoutParams as LinearLayout.LayoutParams
+            layoutParams1.setMargins(0, 0, 0, 0)
+            holder.ivContent.layoutParams = layoutParams1
+            holder.space.visibility = View.VISIBLE
         }
     }
 

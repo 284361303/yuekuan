@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivitySearchBinding
-import m.fasion.ai.home.HomeChildAdapter
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.ai.util.customize.CustomizeDialog
@@ -48,28 +47,36 @@ class SearchActivity : BaseActivity() {
     private var totalPage: Int = 0  //总页数
     private var currentPage: Int = 1    //当前返回的页数
     private var totalCount: Int = 0    //总的数量
+
+    private var backFlag: Boolean = false
     private var searchAdapter: SearchHistoryAdapter? = null
-    private var listAdapter: HomeChildAdapter? = null
-    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
-
+    private var listAdapter: SearchAdapter? = null
     private var categoryList: MutableList<History> = mutableListOf()
-
-    private val viewModel: SearchViewModel by viewModels()
-
     private val listData: MutableList<Clothes> = mutableListOf()
+    private val searchListData: MutableList<Clothes> = mutableListOf()
+
+    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
+    private val viewModel: SearchViewModel by viewModels()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         binding.searchIvBack.setOnClickListener {
-            finish()
+            if (backFlag) {
+                backFlag = false
+                initLayoutManager(listData)
+                listAdapter?.setData(listData)
+                binding.searchEditText.setText("")
+            } else {
+                finish()
+            }
         }
         binding.searchIvDelete.setOnClickListener {
             binding.searchEditText.setText("")
         }
         CoreUtil.setTypeFaceMedium(listOf(binding.searchTvHistory))
-        initLayoutManager()
+        initLayoutManager(listData)
         //搜索历史列表
         initSearchHistoryAdapter()
 
@@ -152,8 +159,8 @@ class SearchActivity : BaseActivity() {
         })
     }
 
-    private fun initLayoutManager() {
-        if (listData.isEmpty()) {
+    private fun initLayoutManager(list: List<Clothes>) {
+        if (list.isEmpty()) {
             binding.searchRVAll.layoutManager = LinearLayoutManager(this)
         } else {
             binding.searchRVAll.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -166,9 +173,9 @@ class SearchActivity : BaseActivity() {
     private fun initAdapter() {
         val layoutParams = binding.searchClTop.layoutParams
         val height = CoreUtil.getScreenHeight(this) - layoutParams.height
-        listAdapter = HomeChildAdapter(this, 1, listData, height)
+        listAdapter = SearchAdapter(this, height)
         binding.searchRVAll.adapter = listAdapter
-        listAdapter?.onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
+        listAdapter?.onItemClickListener = object : SearchAdapter.OnItemClickListener {
             override fun onItemClick(model: Clothes, position: Int) {
                 HomeDetailsActivity.startActivity(this@SearchActivity, model.id)
             }
@@ -249,12 +256,29 @@ class SearchActivity : BaseActivity() {
             } else {
                 listData.clear()
             }
-            initLayoutManager()
-            listAdapter?.notifyDataSetChanged()
+            initLayoutManager(listData)
+            listAdapter?.setData(listData)
+        })
+
+        /**
+         * 关键字搜索结果数据
+         */
+        viewModel.searchListData.observe(this, {
+            totalPage = it.total_page
+            currentPage = it.current_page
+            totalCount = it.total_count.toInt()
+            if (it.clothes_list.isNotEmpty()) {
+                searchListData.addAll(it.clothes_list)
+            } else {
+                searchListData.clear()
+            }
+            initLayoutManager(searchListData)
+            listAdapter?.setData(searchListData)
+            backFlag = true
         })
 
         viewModel.errorLiveData.observe(this, {
-            initLayoutManager()
+            initLayoutManager(listData)
         })
     }
 
@@ -293,6 +317,7 @@ class SearchViewModel : BaseViewModel() {
     val listAll: LiveData<List<History>> = roomRepository.getListData.asLiveData()
 
     val clothesListData = MutableLiveData<ClothesList>()
+    val searchListData = MutableLiveData<ClothesList>()
     val errorLiveData = MutableLiveData<String>()
 
     //获取款式列表
@@ -319,7 +344,7 @@ class SearchViewModel : BaseViewModel() {
             val searchList = repository.getSearchList(searchName)
             if (searchList.isSuccessful) {
                 searchList.body()?.let {
-                    clothesListData.value = it
+                    searchListData.value = it
                 }
             } else {
                 searchList.errorBody()?.stringSuspending()?.let {
