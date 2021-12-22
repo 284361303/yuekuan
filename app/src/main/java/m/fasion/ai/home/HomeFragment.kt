@@ -224,6 +224,9 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
             categories.clear()
             if (it != null && it.isNotEmpty()) {
                 categories.addAll(it)
+                _binding.homeFragmentTvFilter.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_CC001E))
+            } else {
+                _binding.homeFragmentTvFilter.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_787878))
             }
             initTabLayoutListener(true, it.toList())
         })
@@ -241,17 +244,15 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
             }
         })
 
-
         //tabLayout点击事件改变字体颜色
         _binding.homeFragmentTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {   //选中
                 tab?.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.let {
-                    it.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_111111))
+                    it.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_CC001E))
                     CoreUtil.setTypeFaceMedium(arrayOf(it).toList())
                 }
                 tab?.customView?.findViewById<View>(R.id.itemTab_view)?.visibility = View.VISIBLE
                 currentSelectTab = tab?.text.toString()
-                System.currentTimeMillis()
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) { //未选中
@@ -327,7 +328,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                 it.setCustomView(R.layout.item_tableyout)
                 if (index == 0) {
                     it.customView?.findViewById<TextView>(R.id.itemTab_tvTitle)?.let { tv ->
-                        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_111111))
+                        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_CC001E))
                         CoreUtil.setTypeFaceMedium(arrayOf(tv).toList())
                     }
                     it.customView?.findViewById<View>(R.id.itemTab_view)?.visibility = View.VISIBLE

@@ -21,20 +21,21 @@ import com.youth.banner.config.IndicatorConfig
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.RoundLinesIndicator
 import com.youth.banner.util.BannerUtils
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import m.fasion.ai.R
 import m.fasion.ai.databinding.ActivityHomeDetailsBinding
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
+import kotlin.concurrent.thread
 
 /**
  * 选款详情
  */
 class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
 
+    private var likeNum: Int = 0
     private var recommendListData: MutableList<Clothes> = mutableListOf()
     private var recommendAdapter: RecommendAdapter? = null
 
@@ -114,7 +115,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
     }
 
     private fun initClickListener() {
-        binding.title.inCludeTitleIvBack.setOnClickListener { finish() }
+        binding.homeDetailsTitle.inCludeTitleIvBack.setOnClickListener { finish() }
         //购买
         binding.homeDetailsTvBuy.setOnClickListener {
             viewModel.initAliBaiChuan(this)
@@ -137,7 +138,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             //设置默认指示器颜色
             setIndicatorNormalColor(ContextCompat.getColor(this@HomeDetailsActivity, R.color.color_ECECEC))
             //设置选中指示器颜色
-            setIndicatorSelectedColor(ContextCompat.getColor(this@HomeDetailsActivity, R.color.color_CC5A3A))
+            setIndicatorSelectedColor(ContextCompat.getColor(this@HomeDetailsActivity, R.color.color_CC001E))
             //设置距底部的距离
             setIndicatorMargins(IndicatorConfig.Margins(0, 0, 0, BannerUtils.dp2px(19f)))
         }
@@ -161,7 +162,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             }
         }
         viewModel.clothesData.observe(this, {
-            val num = it.num    //被收藏的数量
+            likeNum = it.num    //被收藏的数量
             val createdAt = it.created_at
             val headImgList = it.head_img_list  //轮播图
             val favourite = it.favourite
@@ -170,7 +171,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             val shopUrl = it.shop_url
 
             binding.homeDetailsTvDate.text = CoreUtil.millisecond2Date(createdAt)
-            binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, num))
+            binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, likeNum))
 //            binding.homeDetailsTvPageViews.text = String.format(resources.getString(R.string.pageviews, 121)) //浏览量
             binding.homeDetailsTvTitle.text = it.title
             binding.homeDetailsIvCollect.setImageResource(if (favourite) R.mipmap.icon_collect_22 else R.mipmap.icon_uncollect_22)
@@ -190,14 +191,16 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             if (shopUrl != null && shopUrl.isNotEmpty() && CoreUtil.isValidUrl(shopUrl)) {
                 binding.homeDetailsLlBottom.visibility = View.VISIBLE
                 binding.homeDetailsTvBuy.setOnClickListener {
-                    val checkPackage = CoreUtil.checkInstallSoftware(this, "com.taobao.taobao")
+                    val checkPackage = CoreUtil.checkInstallSoftware(this@HomeDetailsActivity, "com.taobao.taobao")
                     if (checkPackage) { //隐试打开淘宝详情页
-                        packageManager.getLaunchIntentForPackage("com.taobao.taobao")?.apply {
-                            action = "Android.intent.action.VIEW"
-                            val parse = Uri.parse(shopUrl)
-                            data = parse
-                            setClassName("com.taobao.taobao", "com.taobao.tao.detail.activity.DetailActivity")
-                            startActivity(this)
+                        thread {
+                            packageManager.getLaunchIntentForPackage("com.taobao.taobao")?.apply {
+                                action = "Android.intent.action.VIEW"
+                                val parse = Uri.parse(shopUrl)
+                                data = parse
+                                setClassName("com.taobao.taobao", "com.taobao.tao.detail.activity.DetailActivity")
+                                startActivity(this)
+                            }
                         }
                     } else {
                         ToastUtils.show("请先安装淘宝")
@@ -216,12 +219,32 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         })
 
         //取消收藏成功,刷新首页数据改变收藏状态
-        viewModel.cancelFavoritesOk.observe(this, {
-            LiveEventBus.get<String>("cancelFavoritesSuccess").post(it)
+        viewModel.cancelFavoritesOk.observe(this, { mId ->
+            if (recommendListData.isNotEmpty()) {
+                recommendListData.forEachIndexed { index, _ ->
+                    if (recommendListData[index].id == mId) {
+                        recommendListData[index].favourite = false
+                        recommendAdapter?.notifyItemChanged(index, -1)
+                    }
+                }
+            }
+            likeNum -= 1
+            binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, likeNum))
+            LiveEventBus.get<String>("cancelFavoritesSuccess").post(mId)
         })
         //收藏成功
-        viewModel.addFavoritesOk.observe(this, {
-            LiveEventBus.get<String>("addFavoritesSuccess").post(it)
+        viewModel.addFavoritesOk.observe(this, { mId ->
+            if (recommendListData.isNotEmpty()) {
+                recommendListData.forEachIndexed { index, _ ->
+                    if (recommendListData[index].id == mId) {
+                        recommendListData[index].favourite = true
+                        recommendAdapter?.notifyItemChanged(index, -1)
+                    }
+                }
+            }
+            likeNum += 1
+            binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, likeNum))
+            LiveEventBus.get<String>("addFavoritesSuccess").post(mId)
         })
     }
 }

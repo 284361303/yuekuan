@@ -95,9 +95,11 @@ class SearchActivity : BaseActivity() {
             override fun afterTextChanged(s: Editable?) {
                 val value = s.toString().trim()
                 if (value.isNotEmpty()) {   //不为空   显示删除按钮，隐藏历史列表，显示出来搜索列表
+                    binding.searchEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
                     hideListView()
                 } else {    //空    ，显示删除按钮 ，显示历史列表  ，隐藏搜索列表
                     showListView()
+                    binding.searchEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(this@SearchActivity, R.mipmap.icon_search), null, null, null)
                 }
             }
         })
@@ -150,12 +152,69 @@ class SearchActivity : BaseActivity() {
         })
 
         //收藏成功
-        viewModel.addFavoritesOk.observe(this, {
-            LiveEventBus.get<String>("addFavoritesSuccess").post(it)
+        viewModel.addFavoritesOk.observe(this, { mId ->
+            if (listData.isNotEmpty()) {
+                listData.forEachIndexed { index, _ ->
+                    if (listData[index].id == mId) {
+                        listData[index].favourite = true
+                    }
+                }
+            }
+            if (searchListData.isNotEmpty()) {
+                searchListData.forEachIndexed { index, _ ->
+                    if (searchListData[index].id == mId) {
+                        searchListData[index].favourite = true
+                    }
+                }
+            }
+            LiveEventBus.get<String>("addFavoritesSuccess").post(mId)
         })
         //取消收藏
-        viewModel.cancelFavoritesOk.observe(this, {
-            LiveEventBus.get<String>("cancelFavoritesSuccess").post(it)
+        viewModel.cancelFavoritesOk.observe(this, { mId ->
+            if (listData.isNotEmpty()) {
+                listData.forEachIndexed { index, _ ->
+                    if (listData[index].id == mId) {
+                        listData[index].favourite = false
+                    }
+                }
+            }
+            if (searchListData.isNotEmpty()) {
+                searchListData.forEachIndexed { index, _ ->
+                    if (searchListData[index].id == mId) {
+                        searchListData[index].favourite = false
+                    }
+                }
+            }
+            LiveEventBus.get<String>("cancelFavoritesSuccess").post(mId)
+        })
+
+
+        //详情页面取消收藏成功,刷新首页数据改变收藏状态
+        LiveEventBus.get<String>("cancelFavoritesSuccess").observe(this, {
+            it?.let { mId ->
+                if (listData.isNotEmpty()) {
+                    listData.forEachIndexed { index, _ ->
+                        if (listData[index].id == mId) {
+                            listData[index].favourite = false
+                            listAdapter?.notifyItemChanged(index, -1)
+                        }
+                    }
+                }
+            }
+        })
+
+        //详情页面收藏成功
+        LiveEventBus.get<String>("addFavoritesSuccess").observe(this, {
+            it?.let { mId ->
+                if (listData.isNotEmpty()) {
+                    listData.forEachIndexed { index, _ ->
+                        if (listData[index].id == mId) {
+                            listData[index].favourite = true
+                            listAdapter?.notifyItemChanged(index, -1)
+                        }
+                    }
+                }
+            }
         })
     }
 
@@ -264,13 +323,12 @@ class SearchActivity : BaseActivity() {
          * 关键字搜索结果数据
          */
         viewModel.searchListData.observe(this, {
+            searchListData.clear()
             totalPage = it.total_page
             currentPage = it.current_page
             totalCount = it.total_count.toInt()
             if (it.clothes_list.isNotEmpty()) {
                 searchListData.addAll(it.clothes_list)
-            } else {
-                searchListData.clear()
             }
             initLayoutManager(searchListData)
             listAdapter?.setData(searchListData)

@@ -22,7 +22,7 @@
         android:layout_width="5dp"
         android:layout_height="5dp"
         android:layout_marginTop="3dp"
-        android:background="@drawable/shape_circle_black"
+        android:background="@drawable/shape_circle_cc001e"
         android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -34,7 +34,7 @@
             android:singleLine="true"
             android:textColor="@color/color_111111"
             android:textColorHint="@color/color_D1D1D1"
-            android:textCursorDrawable="@drawable/cursor_color_cc5a3a"
+            android:textCursorDrawable="@drawable/cursor_color_cc001e"
             android:textSize="16sp"
             app:layout_constraintLeft_toRightOf="@+id/search_ivBack"
             app:layout_constraintRight_toLeftOf="@+id/search_ivDelete" />
@@ -94,7 +94,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="10dp"
                 android:text="@string/clear"
-                android:textColor="@color/color_CC5A3A"
+                android:textColor="@color/color_CC001E"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@+id/search_tvHistory"
                 app:layout_constraintRight_toRightOf="parent" />

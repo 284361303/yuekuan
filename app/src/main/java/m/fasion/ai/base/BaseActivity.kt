@@ -10,11 +10,9 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.ActivityCompat
 import m.fasion.ai.R
 import m.fasion.ai.login.LoginActivity
-import m.fasion.ai.util.LogUtils
 import m.fasion.core.util.SPUtil
 
 open class BaseActivity : AppCompatActivity() {
-    private val TAG = "BaseActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +35,6 @@ open class BaseActivity : AppCompatActivity() {
      * 请求权限
      */
     private fun checkPermission() {
-        LogUtils.log(TAG, "checkPermission: ")
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return
         }
@@ -46,8 +43,8 @@ open class BaseActivity : AppCompatActivity() {
         val permList = arrayOf(
             Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
+//            Manifest.permission.ACCESS_COARSE_LOCATION,
+//            Manifest.permission.ACCESS_FINE_LOCATION
         )
 
         for (perm in permList) {
@@ -68,9 +65,6 @@ open class BaseActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 0) {
-            LogUtils.log(TAG, "onRequestPermissionsResult: ")
-        }
     }
 
     /**

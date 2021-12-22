@@ -3,7 +3,7 @@
 
     <!--修改EditText光标颜色-->
 
-    <solid android:color="@color/color_CC5A3A" />
+    <solid android:color="@color/color_CC001E" />
 
     <size android:width="1.5dp" />
 </shape>

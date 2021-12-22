@@ -38,23 +38,72 @@
         app:layout_constraintLeft_toLeftOf="@+id/login_view"
         app:layout_constraintTop_toBottomOf="@+id/login_tv1" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/login_et"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/login_cl"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="44dp"
-        android:background="@null"
-        android:digits="1234567890"
-        android:hint="@string/login_hint"
-        android:inputType="phone"
-        android:maxLength="13"
-        android:paddingBottom="8dp"
-        android:textColor="@color/color_111111"
-        android:textColorHint="@color/color_D1D1D1"
-        android:textSize="17sp"
         app:layout_constraintLeft_toLeftOf="@+id/login_view"
         app:layout_constraintRight_toRightOf="@+id/login_view"
-        app:layout_constraintTop_toBottomOf="@+id/login_tv2" />
+        app:layout_constraintTop_toBottomOf="@+id/login_tv2">
+
+        <TextView
+            android:id="@+id/login_tvLeft1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:text="@string/_86"
+            android:textColor="@color/color_4A4A4A"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/login_view1"
+            android:layout_width="1dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/color_D1D1D1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/login_tvLeft1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/login_et"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:background="@null"
+            android:digits="1234567890"
+            android:hint="@string/login_hint"
+            android:inputType="phone"
+            android:maxLength="13"
+            android:paddingBottom="8dp"
+            android:textColor="@color/color_111111"
+            android:textColorHint="@color/color_D1D1D1"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toRightOf="@+id/login_view1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/login_ivDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="17dp"
+            android:padding="10dp"
+            android:src="@mipmap/icon_delete_circle"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:id="@+id/login_view2"
@@ -63,7 +112,7 @@
         android:background="@color/color_D8D8D8"
         app:layout_constraintLeft_toLeftOf="@+id/login_view"
         app:layout_constraintRight_toRightOf="@+id/login_view"
-        app:layout_constraintTop_toBottomOf="@+id/login_et" />
+        app:layout_constraintTop_toBottomOf="@+id/login_cl" />
 
     <TextView
         android:id="@+id/login_tvLogin"

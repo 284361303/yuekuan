@@ -38,6 +38,7 @@ class LoginFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.loginEt.isClickable = s.toString().trim().isNotEmpty()
+                binding.loginIvDelete.visibility = if (s.toString().trim().isEmpty()) View.INVISIBLE else View.VISIBLE
                 val length = s.toString().length
                 if (length == 0) return
                 //删除数字

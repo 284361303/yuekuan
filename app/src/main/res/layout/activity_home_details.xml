@@ -8,14 +8,14 @@
     tools:context=".homeDetails.HomeDetailsActivity">
 
     <include
-        android:id="@+id/title"
+        android:id="@+id/homeDetails_title"
         layout="@layout/include_title" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/homeDetails_llBottom"
-        android:layout_below="@+id/title">
+        android:layout_below="@+id/homeDetails_title">
 
         <LinearLayout
             android:layout_width="match_parent"

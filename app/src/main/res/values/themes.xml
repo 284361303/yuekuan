@@ -19,38 +19,15 @@
         <item name="android:statusBarColor">@color/white</item>
     </style>
 
-    <!--  透明页面样式 Start -->
-    <style name="transparent_activity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="colorOnPrimary">@color/white</item>
-
-        <!--  window decor 状态栏字体的颜色 -->
-        <item name="android:windowLightStatusBar" tools:targetApi="m">@bool/use_light_status</item>
-        <!-- Status bar color.状态栏颜色 -->
-        <item name="android:statusBarColor">@color/white</item>
-    </style>
-
+    <!-- 透明页面样式 Start -->
     <style name="AppTheme.NoTitle.TransparentBg" parent="Base.AppTheme">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsTranslucent">true</item>
         <!-- Status bar color.状态栏颜色 -->
         <item name="android:statusBarColor">@color/color_3D000</item>
     </style>
-    <!--  透明页面样式 End -->
-
-    <!--透明页面使用-->
-    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@android:color/transparent</item>
-        <!-- Define window properties as desired -->
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
-    </style>
+    <!-- 透明页面样式 End -->
 
     <!--启动页使用Start-->
     <style name="WelcomeAppTheme" parent="Base.AppTheme" />

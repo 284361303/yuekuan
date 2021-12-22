@@ -118,7 +118,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="36dp"
                 android:background="@color/color_ECECEC"
-                app:tabIndicatorColor="@color/color_CC5A3A"
+                app:tabIndicatorColor="@color/color_CC001E"
                 app:tabIndicatorHeight="2dp" />
 
             <androidx.viewpager2.widget.ViewPager2

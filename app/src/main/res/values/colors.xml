@@ -15,7 +15,6 @@
     <color name="color_EEEEEE">#EEEEEE</color>
     <color name="color_787878">#787878</color>
     <color name="color_F8F8F8">#F8F8F8</color>
-    <color name="color_CC5A3A">#CC5A3A</color>
     <color name="color_999999">#999999</color>
     <color name="color_D8D8D8">#D8D8D8</color>
     <color name="color_333333">#333333</color>
@@ -27,4 +26,5 @@
     <color name="color_EDEDED">#EDEDED</color>
     <color name="color_202020">#202020</color>
     <color name="color_F2F2F2">#F2F2F2</color>
+    <color name="color_CC001E">#CC001E</color>
 </resources>
