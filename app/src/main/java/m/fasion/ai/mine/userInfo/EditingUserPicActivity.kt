@@ -9,6 +9,7 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
+import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivityEditingUserPicBinding
 import m.fasion.ai.util.customize.GlideEngine
@@ -36,6 +37,7 @@ class EditingUserPicActivity : BaseActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        overridePendingTransition(R.anim.activity_in_from_right, 0)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         intent.extras?.containsKey(PIC_PATH)?.let {

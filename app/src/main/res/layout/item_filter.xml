@@ -13,10 +13,10 @@
 
     <TextView
         android:id="@+id/itemFilter_tvContent"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_f7f7f7_1"
-        android:paddingHorizontal="28dp"
+        android:gravity="center"
         android:paddingVertical="7dp"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"

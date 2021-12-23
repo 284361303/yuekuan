@@ -169,8 +169,7 @@ class HomeChildFragment : BaseFragment() {
             super.onScrolled(recyclerView, dx, dy)
             val layoutManager = recyclerView.layoutManager
             if (layoutManager is StaggeredGridLayoutManager) {
-                val staggeredGridLayoutManager = layoutManager as StaggeredGridLayoutManager
-                val visibleItemPositions = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(null)
+                val visibleItemPositions = layoutManager.findLastCompletelyVisibleItemPositions(null)
                 var maxSize = 0
                 for (i in visibleItemPositions.indices) {
                     if (i == 0) {

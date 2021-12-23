@@ -20,6 +20,7 @@ import m.fasion.ai.toolbar.MyFavoriteActivity
 import m.fasion.ai.util.ToastUtils
 import m.fasion.ai.util.customize.CustomizeDialog
 import m.fasion.ai.webView.WebViewActivity
+import m.fasion.core.Config
 import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.UserInfo
 import m.fasion.core.model.UserModel
@@ -46,7 +47,7 @@ class MineFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _inflate?.let {
-            CoreUtil.setTypeFaceMedium(listOf(it.mineTvName, it.mineTvAbout, it.mineTvProtocol, it.mineTvPrivacy, it.mineTvFeedbacks, it.mineTvLogout, it.mineTvToolBar))
+            CoreUtil.setTypeFaceMedium(listOf(it.mineTvName))
 
             if (!SPUtil.getToken().isNullOrEmpty()) {
                 viewModel.getUserInfo()
@@ -79,14 +80,21 @@ class MineFragment : BaseFragment() {
 
             //用户协议
             it.mineTvProtocol.setOnClickListener {
-                WebViewActivity.startActivity(requireContext(), "https://www.fasionai.com", "")
+                WebViewActivity.startActivity(requireContext(), Config.WEBSIT_ADDRESS, "")
             }
             //隐私政策
             it.mineTvPrivacy.setOnClickListener {
-                WebViewActivity.startActivity(requireContext(), "https://www.fasionai.com", "")
+                WebViewActivity.startActivity(requireContext(), Config.WEBSIT_ADDRESS, "")
             }
             //编辑资料按钮事件
             it.mineEditData.setOnClickListener {
+                if (SPUtil.getToken().isNullOrEmpty()) {
+                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                } else {
+                    startActivity(Intent(requireContext(), EditingUserActivity::class.java))
+                }
+            }
+            it.profileImage.setOnClickListener {
                 if (SPUtil.getToken().isNullOrEmpty()) {
                     startActivity(Intent(requireContext(), LoginActivity::class.java))
                 } else {
@@ -100,13 +108,6 @@ class MineFragment : BaseFragment() {
                 }
             }
 
-            //登录成功
-            LiveEventBus.get<UserModel>("loginSuccess").observe(requireActivity(), { models ->
-                if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
-                    viewModel.getUserInfo()
-                }
-            })
-
             //修改用户信息成功就重新请求用户信息接口
             LiveEventBus.get<String>(ConstantsKey.EDIT_SUCCESS).observe(requireActivity(), { str ->
                 if (str == "1") {
@@ -114,6 +115,14 @@ class MineFragment : BaseFragment() {
                 }
             })
 
+            //登录成功
+            LiveEventBus.get<UserModel>("loginSuccess").observe(requireActivity(), { models ->
+                if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
+                    viewModel.getUserInfo()
+                }
+            })
+
+            //退出登录成功
             viewModel.logoutLiveData.observe(requireActivity(), { num ->
                 if (num == 200) {
                     SPUtil.removeKey(ConstantsKey.USER_TOKEN_KEY)
@@ -155,6 +164,8 @@ class MineFragment : BaseFragment() {
             it.mineTvEdit.visibility = View.GONE
             it.mineTvName.text = getString(R.string.please_login)
             it.mineTvLogout.visibility = View.INVISIBLE
+            it.profileImage.setImageResource(R.mipmap.no_login_pic)
+            it.mineTvLikeNum.text = "0"
         }
     }
 

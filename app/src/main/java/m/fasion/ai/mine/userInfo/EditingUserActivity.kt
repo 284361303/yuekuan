@@ -60,7 +60,7 @@ class EditingUserActivity : BaseActivity() {
 
                 //头像更换
                 binding.editUserLlUserBg.setOnClickListener {
-                    EditingUserPicActivity.startActivity(this, model.avatar)
+                    EditingUserPicActivity.startActivity(this, mVatar)
                 }
 
                 //改昵称
@@ -92,9 +92,9 @@ class EditingUserActivity : BaseActivity() {
                     data?.let {
                         val nickName = it.getStringExtra(ConstantsKey.EDIT_NICK)
                         nickName?.let { name ->
-                            editUserInfo()
                             mNickName = name
                             binding.editUserTvNickName.text = name
+                            editUserInfo()
                         }
                     }
                 }

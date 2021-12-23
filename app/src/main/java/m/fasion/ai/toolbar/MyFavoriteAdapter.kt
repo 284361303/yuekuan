@@ -21,13 +21,16 @@ class MyFavoriteAdapter(private val context: Context, private val mList: List<Da
         val data = mList[position]
         val title = data.title
         val path = data.head[0].target.path
-        Glide.with(context).load(path).into(holder.binding.itemMyFavoriteIvBG)
         holder.binding.itemMyFavoriteTv1.text = title
 
-        val random = ThreadLocalRandom.current().nextInt(160, 280)
-        val layoutParams = holder.binding.itemMyFavoriteCard.layoutParams
-        layoutParams.height = CoreUtil.dp2px(context, random.toFloat())
-        holder.binding.itemMyFavoriteCard.layoutParams = layoutParams
+        if (path != holder.binding.itemMyFavoriteIvBG.tag) {  //防止图片闪动和布局高度变化
+            holder.binding.itemMyFavoriteIvBG.tag = path
+            val random = ThreadLocalRandom.current().nextInt(160, 280)
+            val layoutParams = holder.binding.itemMyFavoriteCard.layoutParams
+            layoutParams.height = CoreUtil.dp2px(context, random.toFloat())
+            holder.binding.itemMyFavoriteCard.layoutParams = layoutParams
+            Glide.with(context).load(path).into(holder.binding.itemMyFavoriteIvBG)
+        }
     }
 
     override fun getItemCount(): Int {

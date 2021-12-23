@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
+import m.fasion.ai.base.StateView
 import m.fasion.ai.databinding.ActivitySearchBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.util.ToastUtils
@@ -62,19 +64,6 @@ class SearchActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.searchIvBack.setOnClickListener {
-            if (backFlag) {
-                backFlag = false
-                initLayoutManager(listData)
-                listAdapter?.setData(listData)
-                binding.searchEditText.setText("")
-            } else {
-                finish()
-            }
-        }
-        binding.searchIvDelete.setOnClickListener {
-            binding.searchEditText.setText("")
-        }
         CoreUtil.setTypeFaceMedium(listOf(binding.searchTvHistory))
         initLayoutManager(listData)
         //搜索历史列表
@@ -108,9 +97,12 @@ class SearchActivity : BaseActivity() {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) { //如果是搜索按钮
                 val content = binding.searchEditText.text.toString().trim()
                 if (content.isNotEmpty()) {
-                    viewModel.setSearchContent(History(content))
-                    showListView()
-                    viewModel.getSearchList(content)
+                    viewModel.setSearchContent(History(content, System.currentTimeMillis() / 1000))
+                    viewModel.getSearchList(content) { flag ->
+                        flag?.let {
+                            showListView()
+                        }
+                    }
                 }
             }
             false
@@ -118,9 +110,9 @@ class SearchActivity : BaseActivity() {
         //获取焦点和失去焦点事件监听
         binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) { //得到焦点
-                hideListView()
-            } else {  //失去焦点
-                showListView()
+                if (!backFlag) {
+                    hideListView()
+                }
             }
         }
 
@@ -188,7 +180,6 @@ class SearchActivity : BaseActivity() {
             LiveEventBus.get<String>("cancelFavoritesSuccess").post(mId)
         })
 
-
         //详情页面取消收藏成功,刷新首页数据改变收藏状态
         LiveEventBus.get<String>("cancelFavoritesSuccess").observe(this, {
             it?.let { mId ->
@@ -216,6 +207,31 @@ class SearchActivity : BaseActivity() {
                 }
             }
         })
+
+        //返回按钮
+        binding.searchIvBack.setOnClickListener {
+            backClick()
+        }
+        //清空搜索框按钮
+        binding.searchIvDelete.setOnClickListener {
+            binding.searchEditText.setText("")
+            hideListView()
+        }
+    }
+
+    /**
+     * 返回的时候进行监听
+     */
+    private fun backClick() {
+        if (backFlag) {
+            backFlag = false
+            initLayoutManager(listData)
+            listAdapter?.setData(listData)
+            binding.searchStateView.setStateView(StateView.State.done)
+            binding.searchEditText.setText("")
+        } else {
+            finish()
+        }
     }
 
     private fun initLayoutManager(list: List<Clothes>) {
@@ -224,15 +240,15 @@ class SearchActivity : BaseActivity() {
         } else {
             binding.searchRVAll.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         }
+        CoreUtil.hideKeyBoard(binding.searchEditText)   //隐藏软键盘
+        binding.searchEditText.clearFocus() //失去焦点
     }
 
     /**
      * 搜索结果和热度推荐列表Adapter
      */
     private fun initAdapter() {
-        val layoutParams = binding.searchClTop.layoutParams
-        val height = CoreUtil.getScreenHeight(this) - layoutParams.height
-        listAdapter = SearchAdapter(this, height)
+        listAdapter = SearchAdapter(this)
         binding.searchRVAll.adapter = listAdapter
         listAdapter?.onItemClickListener = object : SearchAdapter.OnItemClickListener {
             override fun onItemClick(model: Clothes, position: Int) {
@@ -272,8 +288,11 @@ class SearchActivity : BaseActivity() {
                 binding.searchEditText.setText(itemValue)
                 binding.searchEditText.setSelection(binding.searchEditText.text.toString().length)
 
-                showListView()
-                viewModel.getSearchList(itemValue)
+                viewModel.getSearchList(itemValue) { flag ->
+                    flag?.let {
+                        showListView()
+                    }
+                }
             }
         }))
     }
@@ -282,10 +301,13 @@ class SearchActivity : BaseActivity() {
         if (binding.searchEditText.text.toString().isNotEmpty()) {
             binding.searchIvDelete.visibility = View.VISIBLE
         }
-        binding.searchHistoryAll.visibility = View.VISIBLE
-        binding.searchLayout1.visibility = if (categoryList.size > 0) View.VISIBLE else View.GONE
-        binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_111111))
         binding.searchRVAll.visibility = View.GONE
+        binding.searchHistoryAll.visibility = View.VISIBLE
+        //搜索历史列表大于0就显示清楚按钮否则隐藏
+        binding.searchTvClearHistory.visibility = if (categoryList.size > 0) View.VISIBLE else View.GONE
+        binding.searchLayout1.visibility = View.VISIBLE
+        binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_111111))
+        binding.searchStateView.setStateView(StateView.State.done)
     }
 
     /**
@@ -293,11 +315,9 @@ class SearchActivity : BaseActivity() {
      */
     private fun showListView() {
         binding.searchHistoryAll.visibility = View.GONE
-        binding.searchIvDelete.visibility = View.INVISIBLE
+        binding.searchIvDelete.visibility = if (binding.searchEditText.text.toString().isEmpty()) View.INVISIBLE else View.VISIBLE
         binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_ECECEC))
         binding.searchRVAll.visibility = View.VISIBLE
-        CoreUtil.hideKeyBoard(binding.searchEditText)   //隐藏软键盘
-        binding.searchEditText.clearFocus() //失去焦点
     }
 
     /**
@@ -305,7 +325,7 @@ class SearchActivity : BaseActivity() {
      */
     @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
-        viewModel.getClothesList("heat", "", currentPage)
+        viewModel.getClothesList("heat", currentPage)
         viewModel.clothesListData.observe(this, {
             totalPage = it.total_page
             currentPage = it.current_page
@@ -331,6 +351,11 @@ class SearchActivity : BaseActivity() {
                 searchListData.addAll(it.clothes_list)
             }
             initLayoutManager(searchListData)
+            if (searchListData.isNullOrEmpty()) {
+                binding.searchStateView.setStateView(StateView.State.empty, resources.getString(R.string.empty_search))
+            } else {
+                binding.searchStateView.setStateView(StateView.State.done, resources.getString(R.string.empty_search))
+            }
             listAdapter?.setData(searchListData)
             backFlag = true
         })
@@ -364,6 +389,14 @@ class SearchActivity : BaseActivity() {
             }
         }
     }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            backClick()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 }
 
 class SearchViewModel : BaseViewModel() {
@@ -379,7 +412,7 @@ class SearchViewModel : BaseViewModel() {
     val errorLiveData = MutableLiveData<String>()
 
     //获取款式列表
-    fun getClothesList(sort: String, categoryId: String, page: Int) {
+    fun getClothesList(sort: String, page: Int) {
         launch = viewModelScope.launch {
             val clothesList = repository.getClothesList(sort, mutableListOf(), page, 20)
             if (clothesList.isSuccessful) {
@@ -397,12 +430,13 @@ class SearchViewModel : BaseViewModel() {
     /**
      * 关键字搜索列表
      */
-    fun getSearchList(searchName: String) {
+    fun getSearchList(searchName: String, observer: ((flag: String?) -> Unit?)? = null) {
         launch = viewModelScope.launch {
             val searchList = repository.getSearchList(searchName)
             if (searchList.isSuccessful) {
                 searchList.body()?.let {
                     searchListData.value = it
+                    observer?.invoke("1")
                 }
             } else {
                 searchList.errorBody()?.stringSuspending()?.let {

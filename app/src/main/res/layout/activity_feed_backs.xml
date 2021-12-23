@@ -102,7 +102,7 @@
         android:alpha="0.4"
         android:background="@drawable/shape_111111_2"
         android:gravity="center"
-        android:text="@string/sure_edit"
+        android:text="@string/submit"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

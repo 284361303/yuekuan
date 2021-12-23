@@ -110,7 +110,7 @@
                     android:layout_marginHorizontal="12dp"
                     android:background="@color/color_D1D1D1" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/homeDetails_tvLikeNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

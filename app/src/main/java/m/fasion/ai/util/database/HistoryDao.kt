@@ -8,12 +8,12 @@ import m.fasion.ai.MyApp
  * 搜索页面中的搜索历史保存数据库中
  */
 @Entity(tableName = "history")
-data class History(@PrimaryKey @ColumnInfo(name = "search_name") val searchName: String)
+data class History(@PrimaryKey @ColumnInfo(name = "search_name") val searchName: String, @ColumnInfo(name = "create_time") val createTime: Long)
 
 @Dao
 interface HistoryDao {
 
-    @Query("SELECT * FROM HISTORY ORDER BY search_name ASC")
+    @Query("SELECT * FROM HISTORY ORDER BY create_time DESC")
     fun getHistoryList(): Flow<List<History>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

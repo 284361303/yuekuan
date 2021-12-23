@@ -55,7 +55,7 @@ class TopicSuitActivity : BaseActivity() {
         setContentView(binding.root)
         window?.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 
-        CoreUtil.setTypeFaceMedium(listOf(binding.topSuitTv2))
+        CoreUtil.setTypeFaceMedium(listOf(binding.topSuitTvTitle))
 
         intent.extras?.containsKey(mId)?.let {
             if (it) {

@@ -16,6 +16,7 @@ import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
 import m.fasion.ai.databinding.ActivityFilterBinding
 import m.fasion.ai.databinding.ItemFilterBinding
@@ -54,6 +55,7 @@ class FilterActivity : BaseActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
+        overridePendingTransition(R.anim.activity_in_from_right, 0)
         super.onCreate(savedInstanceState)
         window?.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         setContentView(binding.root)
@@ -95,7 +97,6 @@ class FilterActivity : BaseActivity() {
             selectIds.clear()
             adapter.notifyDataSetChanged()
             LiveEventBus.get(ConstantsKey.FILTER_KEY, MutableList::class.java).post(selectIds)
-            finish()
         }
         //确定按钮
         binding.filterTvSure.setOnClickListener {

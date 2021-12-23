@@ -17,9 +17,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.youth.banner.transformer.ScaleInTransformer
 import com.youth.banner.util.BannerUtils
 import kotlinx.coroutines.Job
@@ -153,6 +156,7 @@ class RecommendActivity : FragmentActivity() {
 }
 
 class RecommendFragment : Fragment() {
+    private var model: Body? = null
     private lateinit var _binding: FragmentRecommendBinding
 
     private val viewModel: RecommendViewModel by activityViewModels()
@@ -161,9 +165,7 @@ class RecommendFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRecommendBinding.inflate(inflater, container, false).apply {
-            recommendViewModel = viewModel
-        }
+        _binding = FragmentRecommendBinding.inflate(inflater, container, false)
         return _binding.root
     }
 
@@ -171,15 +173,49 @@ class RecommendFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             it.getParcelable<Body>("commendItem")?.let { body ->
-                viewModel.modelItemLiveData.value = body
+                model = body
             }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        model?.let { mBody ->
+            Glide.with(requireContext()).load(mBody.head_img).into(_binding.fragmentRecommendIv)
+            _binding.fragmentRecommendIvCollect.setImageResource(if (mBody.favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
+
+            //取消和进行点赞
+            _binding.fragmentRecommendIvCollect.setOnClickListener {
+                val favourite = mBody.favourite
+                val target = mBody.target
+                if (favourite) {
+                    mBody.favourite = false
+                    viewModel.cancelFavorites(target)
+                } else {
+                    mBody.favourite = true
+                    viewModel.addFavorites(target)
+                }
+                _binding.fragmentRecommendIvCollect.setImageResource(if (mBody.favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
+            }
+
+            _binding.fragmentRecommendIv.setOnClickListener {
+                HomeDetailsActivity.startActivity(requireContext(), mBody.target)
+            }
+
+            //取消收藏成功,刷新首页数据改变收藏状态
+            viewModel.cancelFavoritesOk.observe(requireActivity(), { mId ->
+                LiveEventBus.get<String>("cancelFavoritesSuccess").post(mId)
+            })
+            //收藏成功
+            viewModel.addFavoritesOk.observe(requireActivity(), { mId ->
+                LiveEventBus.get<String>("addFavoritesSuccess").post(mId)
+            })
         }
     }
 }
 
 class RecommendViewModel : BaseViewModel() {
     val modelListLiveData = MutableLiveData<RecommendList>()
-    val modelItemLiveData = MutableLiveData<Body>()
     val errorLiveData = MutableLiveData<String>()
     private var launch: Job? = null
 
@@ -198,6 +234,30 @@ class RecommendViewModel : BaseViewModel() {
                     Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
                         errorLiveData.value = message
                     }
+                }
+            }
+        }
+    }
+
+    val addFavoritesOk = MutableLiveData<String>()
+    fun addFavorites(id: String) {
+        launch = viewModelScope.launch {
+            val addFavorites = repository.addFavorites(id)
+            if (addFavorites.isSuccessful) {
+                addFavorites.body()?.let {
+                    addFavoritesOk.value = id
+                }
+            }
+        }
+    }
+
+    val cancelFavoritesOk = MutableLiveData<String>()
+    fun cancelFavorites(id: String) {
+        launch = viewModelScope.launch {
+            val cancelFavorites = repository.cancelFavorites(id)
+            if (cancelFavorites.isSuccessful) {
+                cancelFavorites.body()?.let {
+                    cancelFavoritesOk.value = id
                 }
             }
         }

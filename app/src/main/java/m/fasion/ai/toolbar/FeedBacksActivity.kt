@@ -44,7 +44,7 @@ class FeedBacksActivity : BaseActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 val trim = s.toString().trim()
-                if (trim.isNotEmpty() && trim.length > 5) {
+                if (trim.isNotEmpty()) {
                     binding.feedBacksTvSubmit.alpha = 1f
                     binding.feedBacksTvSubmit.isClickable = true
                 } else {

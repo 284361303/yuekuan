@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/transparent"
+    android:orientation="vertical"
     tools:context=".mine.userInfo.EditNickNameActivity">
 
     <View
         android:id="@+id/editNickName_space"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/color_3D000"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="@color/color_3D000" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,8 +41,10 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="@string/nickName_input_key"
-                android:maxLength="15"
+                android:maxLength="6"
                 android:paddingTop="20dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:paddingBottom="71dp"
                 android:singleLine="true"
                 android:textColor="@color/color_4A4A4A"

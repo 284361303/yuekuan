@@ -2,6 +2,7 @@ package m.fasion.core.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager.NameNotFoundException
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -10,16 +11,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.NonNull
+import java.net.URI
+import java.net.URISyntaxException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
-import android.content.pm.PackageManager
-
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager.NameNotFoundException
-import java.net.URISyntaxException
-
-import java.net.URI
 
 
 object CoreUtil {
@@ -162,11 +158,11 @@ object CoreUtil {
         }
     }
 
-    fun String.maybePhone(): Boolean {
+    private fun String.maybePhone(): Boolean {
         return if (this.isNumeric()) this.length in 7..11 && this.startsWith("1") else false
     }
 
-    fun String.isNumeric(): Boolean {
+    private fun String.isNumeric(): Boolean {
         val pattern = Pattern.compile("^-?[0-9]+")
         return pattern.matcher(this).matches()
     }
@@ -201,8 +197,7 @@ object CoreUtil {
      * 判断网址Url是否合法
      */
     fun isValidUrl(urlString: String): Boolean {
-        var uri: URI? = null
-        uri = try {
+        val uri: URI? = try {
             URI(urlString)
         } catch (e: URISyntaxException) {
             e.printStackTrace()
@@ -211,6 +206,6 @@ object CoreUtil {
         if (uri?.host == null) {
             return false
         }
-        return uri.getScheme().equals("http", ignoreCase = true) || uri.getScheme().equals("https", ignoreCase = true)
+        return uri.scheme.equals("http", ignoreCase = true) || uri.scheme.equals("https", ignoreCase = true)
     }
 }

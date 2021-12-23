@@ -1,9 +1,10 @@
 package m.fasion.core
 
 object Config {
-    const val BASE_DEBUG_URL = "http://192.168.50.200:56100"
-//    const val BASE_DEBUG_URL = "https://play.fasionai.com"
-    const val BASE_URL = "http://192.168.50.151:56100"
+//    const val BASE_DEBUG_URL = "http://192.168.50.200:56100"
+
+    const val BASE_DEBUG_URL = "https://play.fasionai.com"
+    const val BASE_URL = "https://play.fasionai.com"
 
     //微信appId
     const val APP_ID = "wx485a5432191e5d37"
@@ -25,4 +26,9 @@ object Config {
     //腾讯bugly
     const val BUGLY_APP_ID = "asdcafcd3454fvd"
 
+    //官网地址
+    const val WEBSIT_ADDRESS = "https://www.fasionai.com"
+
+    //企业服务邮箱
+    const val WEBSIT_EMAIL = "beta.fasionai.com"
 }

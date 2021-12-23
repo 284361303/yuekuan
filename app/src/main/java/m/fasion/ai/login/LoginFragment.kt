@@ -8,8 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import m.fasion.ai.R
 import m.fasion.ai.databinding.FragmentLoginBinding
 import m.fasion.ai.util.ToastUtils
+import m.fasion.ai.webView.WebViewActivity
+import m.fasion.core.Config
 import m.fasion.core.util.CoreUtil
 import m.fasion.core.util.CoreUtil.isMobile
 
@@ -40,7 +43,10 @@ class LoginFragment : Fragment() {
                 binding.loginEt.isClickable = s.toString().trim().isNotEmpty()
                 binding.loginIvDelete.visibility = if (s.toString().trim().isEmpty()) View.INVISIBLE else View.VISIBLE
                 val length = s.toString().length
-                if (length == 0) return
+                if (length == 0) {
+                    binding.loginTvLogin.setBackgroundResource(R.drawable.shape_dcdddc_2)
+                    return
+                }
                 //删除数字
                 when (count) {
                     0 -> {
@@ -69,11 +75,11 @@ class LoginFragment : Fragment() {
                 }
 
                 if (length == 13) { //按钮可以点击
-                    binding.loginTvLogin.alpha = 1f
+                    binding.loginTvLogin.setBackgroundResource(R.drawable.shape_111111_2)
                     binding.loginTvLogin.isClickable = true
                 } else {    //不可点击
                     binding.loginTvLogin.isClickable = false
-                    binding.loginTvLogin.alpha = 0.55f
+                    binding.loginTvLogin.setBackgroundResource(R.drawable.shape_dcdddc_2)
                 }
             }
 
@@ -84,6 +90,15 @@ class LoginFragment : Fragment() {
 
         //下一步
         binding.loginTvLogin.setOnClickListener {
+            val trim = binding.loginEt.text.toString().trim()
+            if (trim.isEmpty()) {
+                ToastUtils.show("请输入手机号码")
+                return@setOnClickListener
+            }
+            if (trim.isMobile()) {
+                ToastUtils.show("输入的手机号码不正确")
+                return@setOnClickListener
+            }
             if (!binding.loginCheckBox.isChecked) {
                 CoreUtil.hideKeyBoard(binding.loginEt)
                 ToastUtils.show("请先勾选同意用户协议与隐私政策")
@@ -104,6 +119,18 @@ class LoginFragment : Fragment() {
 
         binding.loginLlAgreement.setOnClickListener {
             binding.loginCheckBox.isChecked = !binding.loginCheckBox.isChecked
+        }
+        //点击清除按钮清除输入框
+        binding.loginIvDelete.setOnClickListener {
+            binding.loginEt.setText("")
+        }
+        //点击用户协议
+        binding.loginTvAgreement.setOnClickListener {
+            WebViewActivity.startActivity(requireContext(), Config.WEBSIT_ADDRESS, "用户协议")
+        }
+        //隐私政策
+        binding.loginTvAgreement1.setOnClickListener {
+            WebViewActivity.startActivity(requireContext(), Config.WEBSIT_ADDRESS, "隐私政策")
         }
     }
 }
