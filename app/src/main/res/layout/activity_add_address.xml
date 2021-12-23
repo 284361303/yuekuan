@@ -235,8 +235,7 @@
                         android:id="@+id/mine_ivBg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/aaa" />
+                        android:scaleType="centerCrop" />
                 </m.fasion.ai.util.customize.RadiusCardView>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

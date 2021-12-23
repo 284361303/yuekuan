@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        android:src="@mipmap/aaa"
+        android:background="@color/color_EEEEEE"
         tools:layout_height="200dp" />
 
     <androidx.appcompat.widget.AppCompatImageView

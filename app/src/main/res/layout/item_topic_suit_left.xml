@@ -22,8 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="293dp"
             android:layout_gravity="end"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/aaa" />
+            android:background="@color/color_EEEEEE"
+            android:scaleType="centerCrop" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/itemTopicSuitLeft_ivCollect"

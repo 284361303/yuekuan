@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="6dp"
@@ -18,8 +17,8 @@
             android:id="@+id/itemRecommendStaggered_iv"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/aaa" />
+            android:background="@color/color_EEEEEE"
+            android:scaleType="centerCrop" />
 
         <View
             android:layout_width="match_parent"
