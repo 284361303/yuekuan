@@ -2,6 +2,8 @@ package m.fasion.ai.util.customize;
 
 import androidx.fragment.app.FragmentManager;
 
+import java.util.Objects;
+
 /**
  * 加载框工具类
  */
@@ -15,9 +17,6 @@ public class ProgressDialog {
 
     /**
      * 显示加载框
-     *
-     * @param context
-     * @param dialog
      */
     public static void showProgress(FragmentManager context, LoadingDialog dialog) {
         dismissProgress();
@@ -33,7 +32,7 @@ public class ProgressDialog {
      */
     public static void dismissProgress() {
         try {
-            if (mDialog != null && mDialog.getDialog().isShowing()) {
+            if (mDialog != null && Objects.requireNonNull(mDialog.getDialog()).isShowing()) {
                 mDialog.dismiss();
             }
         } catch (Exception e) {

@@ -1,7 +1,6 @@
 package m.fasion.ai.login
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -54,7 +53,7 @@ class LoginActivity : BaseActivity() {
          * 登录成功就销毁当前页面
          */
         viewModel.loginLiveData.observe(this, {
-            it?.let {model->
+            it?.let { model ->
                 if (model.token.isNotEmpty()) {
                     LiveEventBus.get<UserModel>("loginSuccess").post(model)
                     ToastUtils.show("登录成功")
@@ -101,6 +100,7 @@ class LoginViewModel : BaseViewModel() {
      * 登录成功
      */
     val loginLiveData = MutableLiveData<UserModel>()
+
     /**
      * 验证码进行登录
      * @param phone 手机号

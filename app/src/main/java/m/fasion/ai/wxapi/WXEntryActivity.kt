@@ -35,7 +35,6 @@ class WXEntryActivity : Activity(), IWXAPIEventHandler {
     //发送到微信请求的响应结果
     override fun onResp(p0: BaseResp?) {
         val errCode = p0?.errCode
-        Log.e("微信分享回调数据", "onRespCode: " + errCode)
         when (errCode) {
             BaseResp.ErrCode.ERR_USER_CANCEL -> {
                 Toast.makeText(this, "取消分享", Toast.LENGTH_SHORT).show()

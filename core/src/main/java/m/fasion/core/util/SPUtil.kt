@@ -3,7 +3,6 @@ package m.fasion.core.util
 import android.os.Parcelable
 import com.tencent.mmkv.MMKV
 import m.fasion.core.base.ConstantsKey
-import m.fasion.core.model.UserModel
 
 object SPUtil {
 

@@ -12,7 +12,7 @@ import m.fasion.ai.util.BitmapUtils
  */
 object WXShareUtil {
 
-    private val THUMB_SIZE: Int = 150
+    private const val THUMB_SIZE: Int = 150
 
     /**
      * 分享微信文本内容

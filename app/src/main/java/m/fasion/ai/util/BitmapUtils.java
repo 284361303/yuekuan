@@ -8,10 +8,6 @@ public class BitmapUtils {
 
     /**
      * bitmap 转 byte
-     *
-     * @param bmp
-     * @param needRecycle
-     * @return
      */
     public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();

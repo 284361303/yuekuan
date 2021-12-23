@@ -24,7 +24,7 @@ class GlideEngine : ImageEngine {
     override fun loadImage(context: Context, url: String, imageView: ImageView) {
         Glide.with(context)
                 .load(url)
-                .into(imageView);
+                .into(imageView)
     }
 
     /* 加载网络图片适配长图方案
@@ -57,13 +57,13 @@ class GlideEngine : ImageEngine {
                                 resource.width,
                                 resource.height
                             )
-                            longImageView!!.setVisibility(if (eqLongImage) View.VISIBLE else View.GONE)
+                            longImageView!!.visibility = if (eqLongImage) View.VISIBLE else View.GONE
                             imageView.visibility = if (eqLongImage) View.GONE else View.VISIBLE
                             if (eqLongImage) {
                                 // 加载长图
-                                longImageView.setQuickScaleEnabled(true)
-                                longImageView.setZoomEnabled(true)
-                                longImageView.setPanEnabled(true)
+                                longImageView.isQuickScaleEnabled = true
+                                longImageView.isZoomEnabled = true
+                                longImageView.isPanEnabled = true
                                 longImageView.setDoubleTapZoomDuration(100)
                                 longImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP)
                                 longImageView.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
@@ -84,7 +84,7 @@ class GlideEngine : ImageEngine {
         Glide.with(context)
                 .asGif()
                 .load(url)
-                .into(imageView);
+                .into(imageView)
     }
 
     override fun loadGridImage(context: Context, url: String, imageView: ImageView) {

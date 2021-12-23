@@ -1,7 +1,6 @@
 package m.fasion.ai.home
 
 import android.content.Context
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +16,6 @@ import m.fasion.core.model.Clothes
 import m.fasion.core.util.CoreUtil
 import java.util.concurrent.ThreadLocalRandom
 
-/**
- *  @param type 0、选款首页下面的列表 1、搜索页面搜索结果的热度推荐列表
- */
 class HomeChildAdapter(private val context: Context, private val mList: List<Clothes>, private var emptyHeight: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -90,8 +86,6 @@ class HomeChildAdapter(private val context: Context, private val mList: List<Clo
 
     class EmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val llAll: LinearLayout = itemView.findViewById(R.id.emptyView_llAll)
-        val tvContent: TextView = itemView.findViewById(R.id.emptyView_tvContent)
-        val ivContent: AppCompatImageView = itemView.findViewById(R.id.emptyView_ivContent)
         val space: Space = itemView.findViewById(R.id.emptyView_space)
     }
 

@@ -3,7 +3,6 @@ package m.fasion.ai.share
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import com.sina.weibo.sdk.api.WeiboMultiMessage
 import com.sina.weibo.sdk.auth.AuthInfo
@@ -27,7 +26,6 @@ class ShareActivity : BaseActivity(), WbShareCallback {
     private var message: WeiboMultiMessage? = null
     private var wbApi: IWBAPI? = null
     private var wxApi: IWXAPI? = null
-    private val TAG = "ShareActivity"
 
     private val inflate by lazy {
         ActivityShareBinding.inflate(layoutInflater)
@@ -88,7 +86,6 @@ class ShareActivity : BaseActivity(), WbShareCallback {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        Log.e(TAG, "onAttachedToWindow: ")
     }
 
     private fun getExtra() {

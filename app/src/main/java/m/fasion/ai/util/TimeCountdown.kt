@@ -1,4 +1,4 @@
-package com.aisway.faceswap.utils
+package m.fasion.ai.util
 
 import android.os.CountDownTimer
 import android.widget.TextView

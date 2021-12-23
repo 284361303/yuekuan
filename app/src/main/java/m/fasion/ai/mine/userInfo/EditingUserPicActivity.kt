@@ -91,7 +91,7 @@ class EditingUserPicActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && data != null) {
             when (requestCode) {
                 PictureConfig.CHOOSE_REQUEST, PictureConfig.REQUEST_CAMERA -> {

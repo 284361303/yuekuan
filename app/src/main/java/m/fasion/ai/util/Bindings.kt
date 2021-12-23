@@ -1,6 +1,5 @@
 package m.fasion.ai.util
 
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter

@@ -42,7 +42,7 @@ class MyApp : BaseApplication() {
             }
         })*/
         //腾讯bugly   ,最后一个参数语义：建议在测试阶段建议设置成true，发布时设置为false
-        CrashReport.initCrashReport(getApplicationContext(), Config.BUGLY_APP_ID, false)
+        CrashReport.initCrashReport(applicationContext, Config.BUGLY_APP_ID, false)
 
         //
         LiveEventBus.config()

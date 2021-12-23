@@ -46,10 +46,6 @@ interface Service {
 
     /**
      * 关键字搜索
-     * @param   sort    上新new 热度heat
-     * @param   categoryId  分类id
-     * @param   page    第几页
-     * @param   size    条数
      */
     @GET("/api/clothes")
     suspend fun getSearchList(@Query("s") searchName: String): Response<ClothesList>

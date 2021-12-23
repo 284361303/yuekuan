@@ -7,14 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.aisway.faceswap.utils.TimeCountdown
+import m.fasion.ai.util.TimeCountdown
 import m.fasion.ai.R
-import m.fasion.core.base.ConstantsKey
 import m.fasion.ai.databinding.FragmentInputCodeBinding
 import m.fasion.ai.util.verifyCode.VerifyCodeView
 import m.fasion.core.util.CoreUtil
 import m.fasion.core.util.CoreUtil.toSecret
-import m.fasion.core.util.SPUtil
 
 /**
  *  输入验证码页面
