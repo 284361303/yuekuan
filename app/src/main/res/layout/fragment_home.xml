@@ -170,7 +170,9 @@
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:id="@+id/homeFragment_CLMore"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="match_parent"
+                                    android:paddingStart="15dp"
+                                    android:paddingEnd="0dp">
 
                                     <TextView
                                         android:id="@+id/homeFragment_tvMore"
@@ -324,7 +326,7 @@
                         <m.fasion.ai.util.customize.CustomTabLayout
                             android:id="@+id/homeFragment_tab"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="35dp"
                             app:tabGravity="start"
                             app:tabIndicatorHeight="0dp"
                             app:tabMode="scrollable"

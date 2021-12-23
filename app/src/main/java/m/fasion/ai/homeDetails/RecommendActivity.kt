@@ -17,7 +17,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -90,6 +89,7 @@ class RecommendActivity : FragmentActivity() {
 
         binding.recommendTvAll.text = listData.size.toString()
         binding.recommendVP.adapter = object : FragmentStateAdapter(this) {
+
             override fun getItemCount(): Int = listData.size
 
             override fun createFragment(position: Int): Fragment {
@@ -112,18 +112,18 @@ class RecommendActivity : FragmentActivity() {
                     binding.recommendTvCurrent.text = (currentPosition).toString()
                     //获取当前下标并控制底部按钮点击事件
                     if (currentPosition > 0 && currentPosition < listData.size) {
-                        binding.recommendIvLeft.setImageResource(R.mipmap.icon_btn_left_select)
-                        binding.recommendIvLeft.isClickable = true
-                    } else if (currentPosition == listData.size) {
-                        binding.recommendIvLeft.setImageResource(R.mipmap.icon_btn_left_unselect)
-                        binding.recommendIvLeft.isClickable = false
-                    }
-                    if (currentPosition > 1) {
                         binding.recommendIvRight.setImageResource(R.mipmap.icon_btn_right_select)
                         binding.recommendIvRight.isClickable = true
-                    } else if (currentPosition == 1) {
+                    } else if (currentPosition == listData.size) {
                         binding.recommendIvRight.setImageResource(R.mipmap.icon_btn_right_unselect)
                         binding.recommendIvRight.isClickable = false
+                    }
+                    if (currentPosition > 1) {
+                        binding.recommendIvLeft.setImageResource(R.mipmap.icon_btn_left_select)
+                        binding.recommendIvLeft.isClickable = true
+                    } else if (currentPosition == 1) {
+                        binding.recommendIvLeft.setImageResource(R.mipmap.icon_btn_left_unselect)
+                        binding.recommendIvLeft.isClickable = false
                     }
                 }
             }
@@ -141,14 +141,14 @@ class RecommendActivity : FragmentActivity() {
 
     private fun initClick() {
         binding.recommendIvLeft.setOnClickListener {
-            if (listData.isNotEmpty() && currentPosition > 0 && currentPosition < listData.size) {
-                currentPosition += 1
+            if (listData.isNotEmpty() && currentPosition > 1 && currentPosition <= listData.size) {
+                currentPosition -= 1
                 binding.recommendTabLayout.getTabAt(currentPosition - 1)?.select()
             }
         }
         binding.recommendIvRight.setOnClickListener {
-            if (listData.isNotEmpty() && currentPosition > 1 && currentPosition <= listData.size) {
-                currentPosition -= 1
+            if (listData.isNotEmpty() && currentPosition > 0 && currentPosition < listData.size) {
+                currentPosition += 1
                 binding.recommendTabLayout.getTabAt(currentPosition - 1)?.select()
             }
         }

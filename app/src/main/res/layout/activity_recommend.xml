@@ -11,146 +11,142 @@
         android:id="@+id/title"
         layout="@layout/include_title" />
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/recommend_tvRecommend1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="2dp"
-                        android:text="@string/recommend_en"
-                        android:textColor="@color/color_111111"
-                        android:textSize="20sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/recommend_tvRecommend2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/recommend_zh"
-                        android:textColor="@color/color_111111"
-                        android:textSize="14sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toRightOf="@+id/recommend_tvRecommend1"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <android.widget.Space
-                        android:layout_width="14dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toRightOf="@+id/recommend_tvRecommend2"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="14dp"
-                        android:background="#14CC5A3A"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <android.widget.Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/recommend_tvCurrent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1"
-                    android:textColor="@color/color_111111"
-                    android:textSize="17sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/left"
-                    android:textColor="@color/color_111111"
-                    android:textSize="10sp"
-                    tools:ignore="SmallSp" />
-
-                <TextView
-                    android:id="@+id/recommend_tvAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/color_111111"
-                    android:textSize="10sp"
-                    tools:ignore="SmallSp"
-                    tools:text="10" />
-            </LinearLayout>
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/recommend_tabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="36dp"
-                android:background="@color/color_ECECEC"
-                app:tabIndicatorColor="@color/color_CC001E"
-                app:tabIndicatorHeight="2dp" />
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/recommend_VP"
-                android:layout_width="match_parent"
-                android:layout_height="447dp" />
-
-            <LinearLayout
-                android:id="@+id/recommend_llBtn"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/recommend_ivLeft"
+                <TextView
+                    android:id="@+id/recommend_tvRecommend1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="14dp"
-                    android:src="@mipmap/icon_btn_left_select" />
+                    android:paddingBottom="2dp"
+                    android:text="@string/recommend_en"
+                    android:textColor="@color/color_111111"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/recommend_ivRight"
+                <TextView
+                    android:id="@+id/recommend_tvRecommend2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="0dp"
-                    android:src="@mipmap/icon_btn_right_unselect" />
-            </LinearLayout>
+                    android:layout_marginStart="8dp"
+                    android:text="@string/recommend_zh"
+                    android:textColor="@color/color_111111"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/recommend_tvRecommend1"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <android.widget.Space
+                    android:layout_width="14dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/recommend_tvRecommend2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="14dp"
+                    android:background="#14CC5A3A"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <android.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/recommend_tvCurrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/one"
+                android:textColor="@color/color_111111"
+                android:textSize="17sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/left"
+                android:textColor="@color/color_111111"
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/recommend_tvAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_111111"
+                android:textSize="10sp"
+                tools:ignore="SmallSp"
+                tools:text="10" />
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/recommend_tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="48dp"
+            android:background="@color/color_ECECEC"
+            app:tabIndicatorColor="@color/color_CC001E"
+            app:tabIndicatorHeight="2dp" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/recommend_VP"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/recommend_llBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="60dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/recommend_ivLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingEnd="14dp"
+                android:src="@mipmap/icon_btn_left_unselect" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/recommend_ivRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:paddingStart="14dp"
+                android:paddingEnd="0dp"
+                android:src="@mipmap/icon_btn_right_select" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
