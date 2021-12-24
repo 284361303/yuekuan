@@ -18,6 +18,7 @@
         android:background="@drawable/shape_f7f7f7_1"
         android:gravity="center"
         android:paddingVertical="7dp"
+        android:textColor="@color/color_787878"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

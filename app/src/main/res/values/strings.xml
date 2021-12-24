@@ -55,6 +55,7 @@
     <string name="my_like">我的喜欢</string>
     <string name="zero">0</string>
     <string name="one">1</string>
+    <string name="comma">、</string>
     <string name="toolbar">工具栏</string>
     <string name="mine_agreement1">用户协议</string>
     <string name="mine_agreement2">隐私政策</string>
@@ -89,7 +90,7 @@
     <string name="please_login">请登录</string>
     <string name="_86">+86</string>
     <string name="submit">提交</string>
-
+    <string name="privacyAndProtocol">个人信息保护指引</string>
 
     <string name="pageviews">浏览量：%d</string>
     <string name="labels">#%1$s&#160;&#160;</string>
@@ -100,24 +101,13 @@
     <string name="select_from_album">从相册选择</string>
     <string name="view_larger_image">查看大图</string>
     <string name="Photograph">拍照</string>
-
+    <!--<![CDATA[<b><font color=#0000FF>Hello world!</font></b>]]>-->
+    <string name="private_dialog_info_1">感谢您信任并使用"悦款"APP,在开始使用之前，请您务必审慎阅读、充分理解“用户服务协议”和“隐私政策”各条款，包括但不限于下载、安装、注册、登录、使用等方面所订立的相关权利义务规范。本服务条款对用户和“悦款”均具有法律效力。本协议连同所有更新材料、补充条款以及“悦款”的其他规则和政策共同构成了用户与“悦款”之间的协议。</string>
+    <string name="private_dialog_info_2">您可阅读完整版</string>
+    <string name="private_dialog_info_3">《用户协议》</string>
+    <string name="private_dialog_info_4">《隐私政策》</string>
+    <string name="private_dialog_info_5">了解详细信息。如您同意，请点击同意开始接受我们的产品和服务，我们依法全力保护您的个人信息安全。</string>
     <string name="company_name">北京智美源素科技有限公司</string>
-
-    <string-array name="categoryList">
-        <item>衬衫</item>
-        <item>卫衣</item>
-        <item>T恤</item>
-        <item>毛衣</item>
-        <item>连衣裙</item>
-        <item>半身裙</item>
-        <item>西装</item>
-        <item>风衣</item>
-        <item>大衣</item>
-        <item>棉服</item>
-        <item>羽绒服</item>
-        <item>裤子</item>
-        <item>套装</item>
-        <item>家居服</item>
-    </string-array>
-
+    <string name="agree">同意</string>
+    <string name="no_agree">不同意</string>
 </resources>

@@ -3,7 +3,7 @@ package m.fasion.core
 object Config {
 //    const val BASE_DEBUG_URL = "http://192.168.50.200:56100"
 
-    const val BASE_DEBUG_URL = "https://play.fasionai.com"
+        const val BASE_DEBUG_URL = "https://play.fasionai.com"
     const val BASE_URL = "https://play.fasionai.com"
 
     //微信appId
@@ -30,5 +30,11 @@ object Config {
     const val WEBSIT_ADDRESS = "https://www.fasionai.com"
 
     //企业服务邮箱
-    const val WEBSIT_EMAIL = "beta.fasionai.com"
+    const val WEBSIT_EMAIL = "yuekuan@fasion.ai"
+
+    //隐私政策
+    const val PRIVACY_URL = "file:///android_asset/privacy.html"
+
+    //用户协议
+    const val PROTOCOL_URL = "file:///android_asset/protocol.html"
 }

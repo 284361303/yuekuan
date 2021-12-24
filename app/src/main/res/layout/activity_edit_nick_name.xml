@@ -40,11 +40,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="@string/nickName_input_key"
-                android:maxLength="6"
-                android:paddingTop="20dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:hint="@string/nickName_input_key"
+                android:paddingTop="20dp"
                 android:paddingBottom="71dp"
                 android:singleLine="true"
                 android:textColor="@color/color_4A4A4A"
@@ -61,7 +60,7 @@
                 android:paddingEnd="0dp"
                 android:paddingBottom="15dp"
                 android:text="@string/sure"
-                android:textColor="@color/color_999999"
+                android:textColor="@color/color_CC001E"
                 android:textSize="15sp" />
         </FrameLayout>
     </LinearLayout>

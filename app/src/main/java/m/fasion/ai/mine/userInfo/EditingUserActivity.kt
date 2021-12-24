@@ -3,6 +3,7 @@ package m.fasion.ai.mine.userInfo
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -38,6 +39,19 @@ class EditingUserActivity : BaseActivity() {
     private var mNickName: String = ""
     private var mVatar: String = ""
 
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.let {
+                val nickName = it.getStringExtra(ConstantsKey.EDIT_NICK)
+                nickName?.let { name ->
+                    mNickName = name
+                    binding.editUserTvNickName.text = name
+                    editUserInfo()
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -66,7 +80,7 @@ class EditingUserActivity : BaseActivity() {
                 //改昵称
                 binding.editUserLlNickName.setOnClickListener {
                     val intent = Intent(this, EditNickNameActivity::class.java)
-                    startActivityForResult(intent, 102)
+                    resultLauncher.launch(intent)
                 }
             }
         })
@@ -82,24 +96,6 @@ class EditingUserActivity : BaseActivity() {
 
     private fun editUserInfo() {
         viewModel.editUserInfo(mNickName, mVatar)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                102 -> {  //昵称
-                    data?.let {
-                        val nickName = it.getStringExtra(ConstantsKey.EDIT_NICK)
-                        nickName?.let { name ->
-                            mNickName = name
-                            binding.editUserTvNickName.text = name
-                            editUserInfo()
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 

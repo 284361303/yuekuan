@@ -301,8 +301,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_alignParentEnd="true"
                                         android:layout_centerVertical="true"
-                                        android:paddingStart="0dp"
-                                        android:paddingEnd="18dp"
+                                        android:paddingHorizontal="18dp"
                                         android:src="@mipmap/icon_search_white" />
                                 </RelativeLayout>
 

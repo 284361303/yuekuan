@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
 import android.view.inputmethod.InputMethodManager
 import m.fasion.ai.R
 import m.fasion.ai.base.BaseActivity
@@ -11,6 +12,7 @@ import m.fasion.ai.databinding.ActivityEditNickNameBinding
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.ConstantsKey
 import m.fasion.core.util.CoreUtil
+import java.nio.charset.Charset
 import java.util.*
 
 
@@ -20,6 +22,17 @@ import java.util.*
 class EditNickNameActivity : BaseActivity() {
 
     private val binding by lazy { ActivityEditNickNameBinding.inflate(layoutInflater) }
+
+    private val blockCharacterSet = "[`~!@#\$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？ ]"
+
+    /**
+     * 过滤特殊字符
+     */
+    private val filter = InputFilter { source, _, _, _, _, _ ->
+        if (source != null && blockCharacterSet.contains("" + source)) {
+            ""
+        } else null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         overridePendingTransition(R.anim.activity_in_from_right, 0)
@@ -31,6 +44,7 @@ class EditNickNameActivity : BaseActivity() {
         binding.editNickNameSpace.setOnClickListener {
             finish()
         }
+        binding.editNickNameEtContent.filters = arrayOf(filter)
 
         binding.editNickNameEtContent.isFocusable = true
         binding.editNickNameEtContent.isFocusableInTouchMode = true
@@ -48,7 +62,13 @@ class EditNickNameActivity : BaseActivity() {
         binding.editNickNameTvSave.setOnClickListener {
             val trim = binding.editNickNameEtContent.text.toString().trim()
             if (trim.isEmpty()) {
-                ToastUtils.show("昵称不能为空")
+                ToastUtils.showCenter("昵称不能为空")
+                return@setOnClickListener
+            }
+
+            val byteLength = trim.toByteArray(Charset.forName("GBK")).size
+            if (byteLength > 12) {
+                ToastUtils.showCenter("昵称最多设置6个字符！")
                 return@setOnClickListener
             }
             val intent = Intent()

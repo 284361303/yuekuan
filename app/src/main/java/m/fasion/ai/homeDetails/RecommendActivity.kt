@@ -27,6 +27,7 @@ import com.youth.banner.util.BannerUtils
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.R
+import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.ActivityRecommendBinding
 import m.fasion.ai.databinding.FragmentRecommendBinding
 import m.fasion.core.base.BaseViewModel
@@ -155,7 +156,7 @@ class RecommendActivity : FragmentActivity() {
     }
 }
 
-class RecommendFragment : Fragment() {
+class RecommendFragment : BaseFragment() {
     private var model: Body? = null
     private lateinit var _binding: FragmentRecommendBinding
 
@@ -186,16 +187,18 @@ class RecommendFragment : Fragment() {
 
             //取消和进行点赞
             _binding.fragmentRecommendIvCollect.setOnClickListener {
-                val favourite = mBody.favourite
-                val target = mBody.target
-                if (favourite) {
-                    mBody.favourite = false
-                    viewModel.cancelFavorites(target)
-                } else {
-                    mBody.favourite = true
-                    viewModel.addFavorites(target)
+                checkLogin {
+                    val favourite = mBody.favourite
+                    val target = mBody.target
+                    if (favourite) {
+                        mBody.favourite = false
+                        viewModel.cancelFavorites(target)
+                    } else {
+                        mBody.favourite = true
+                        viewModel.addFavorites(target)
+                    }
+                    _binding.fragmentRecommendIvCollect.setImageResource(if (mBody.favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
                 }
-                _binding.fragmentRecommendIvCollect.setImageResource(if (mBody.favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
             }
 
             _binding.fragmentRecommendIv.setOnClickListener {

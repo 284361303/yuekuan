@@ -28,6 +28,7 @@ import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
+import m.fasion.core.util.SPUtil
 import kotlin.concurrent.thread
 
 /**
@@ -38,6 +39,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
     private var likeNum: Int = 0
     private var recommendListData: MutableList<Clothes> = mutableListOf()
     private var recommendAdapter: RecommendAdapter? = null
+    private var mId: String = ""
 
     companion object {
         fun startActivity(context: Context, id: String) {
@@ -61,11 +63,11 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initAdapter()
-        initClickListener()
 
         intent.extras?.containsKey("id")?.let {
             if (it) {
-                intent.extras?.getString("id")?.let { mId ->
+                intent.extras?.getString("id")?.let { ids ->
+                    mId = ids
                     viewModel.getClothesInfo(mId)
                     viewModel.getClothesList("heat")
                 }
@@ -76,6 +78,8 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         //美洽聊天初始化
 //        viewModel.initMeiQia(this)
         initObserver()
+
+        binding.homeDetailsTitle.inCludeTitleIvBack.setOnClickListener { finish() }
     }
 
     private fun initAdapter() {
@@ -111,14 +115,6 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             binding.homeDetailsRV1.adapter = HomeDetailsAdapter(this, listImage)
         } else {
             binding.homeDetailsTvDetails.visibility = View.GONE
-        }
-    }
-
-    private fun initClickListener() {
-        binding.homeDetailsTitle.inCludeTitleIvBack.setOnClickListener { finish() }
-        //购买
-        binding.homeDetailsTvBuy.setOnClickListener {
-            viewModel.initAliBaiChuan(this)
         }
     }
 
@@ -191,24 +187,26 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             if (shopUrl != null && shopUrl.isNotEmpty() && CoreUtil.isValidUrl(shopUrl)) {
                 binding.homeDetailsLlBottom.visibility = View.VISIBLE
                 binding.homeDetailsTvBuy.setOnClickListener {
-                    val checkPackage = CoreUtil.checkInstallSoftware(this@HomeDetailsActivity, "com.taobao.taobao")
-                    if (checkPackage) { //隐试打开淘宝详情页
-                        thread {
-                            packageManager.getLaunchIntentForPackage("com.taobao.taobao")?.apply {
-                                action = "Android.intent.action.VIEW"
-                                val parse = Uri.parse(shopUrl)
-                                data = parse
-                                setClassName("com.taobao.taobao", "com.taobao.tao.detail.activity.DetailActivity")
-                                startActivity(this)
+                    checkLogin {
+                        val checkPackage = CoreUtil.checkInstallSoftware(this@HomeDetailsActivity, "com.taobao.taobao")
+                        if (checkPackage) { //隐试打开淘宝详情页
+                            thread {
+                                packageManager.getLaunchIntentForPackage("com.taobao.taobao")?.apply {
+                                    action = "Android.intent.action.VIEW"
+                                    val parse = Uri.parse(shopUrl)
+                                    data = parse
+                                    setClassName("com.taobao.taobao", "com.taobao.tao.detail.activity.DetailActivity")
+                                    startActivity(this)
+                                }
                             }
+                        } else {
+                            ToastUtils.show("请先安装淘宝")
                         }
-                    } else {
-                        ToastUtils.show("请先安装淘宝")
                     }
                 }
             }
         })
-        //为你推荐数据回掉
+        //为你推荐数据回调
         viewModel.clothesListData.observe(this, {
             val clothesList = it.clothes_list
             if (clothesList.isNotEmpty()) {
@@ -245,6 +243,17 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             likeNum += 1
             binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, likeNum))
             LiveEventBus.get<String>("addFavoritesSuccess").post(mId)
+        })
+
+        //登录成功
+        LiveEventBus.get<UserModel>("loginSuccess").observe(this, { models ->
+            if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
+                if (mId.isNotEmpty()) {
+                    recommendListData.clear()
+                    viewModel.getClothesInfo(mId)
+                    viewModel.getClothesList("heat")
+                }
+            }
         })
     }
 }

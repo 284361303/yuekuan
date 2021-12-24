@@ -126,11 +126,11 @@ class LoginFragment : Fragment() {
         }
         //点击用户协议
         binding.loginTvAgreement.setOnClickListener {
-            WebViewActivity.startActivity(requireContext(), Config.WEBSIT_ADDRESS, "用户协议")
+            WebViewActivity.startActivity(requireContext(), Config.PROTOCOL_URL, "用户协议")
         }
         //隐私政策
         binding.loginTvAgreement1.setOnClickListener {
-            WebViewActivity.startActivity(requireContext(), Config.WEBSIT_ADDRESS, "隐私政策")
+            WebViewActivity.startActivity(requireContext(), Config.PRIVACY_URL, "隐私政策")
         }
     }
 }

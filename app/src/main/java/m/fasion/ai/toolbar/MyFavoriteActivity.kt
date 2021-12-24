@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.jeremyliao.liveeventbus.LiveEventBus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.base.BaseActivity
@@ -76,11 +77,23 @@ class MyFavoriteActivity : BaseActivity() {
             if (listData.size >= total) {
                 finishRefresh(true)
             } else {
-                val get = listData.get(listData.size - 1)
+                val get = listData[listData.size - 1]
                 val id = get.head[0].id
                 viewModel.getClothesList(id)
             }
         }
+
+        //详情页面取消和收藏成功回来重新刷新数据
+        LiveEventBus.get<String>("cancelFavoritesSuccess").observe(this, {
+            it?.let { _ ->
+                binding.myFavoriteRefresh.autoRefresh()
+            }
+        })
+        LiveEventBus.get<String>("addFavoritesSuccess").observe(this, {
+            it?.let { _ ->
+                binding.myFavoriteRefresh.autoRefresh()
+            }
+        })
     }
 
     private fun isShowEmptyView() {

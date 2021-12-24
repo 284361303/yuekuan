@@ -33,18 +33,13 @@
             android:layout_height="1dp"
             android:layout_weight="1" />
 
-        <m.fasion.ai.util.customize.roundedimageview.RoundedImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/editUser_ivUserBg"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_gravity="center"
-            android:background="@color/white"
-            android:scaleType="centerCrop"
-            app:riv_border_color="@color/white"
-            app:riv_border_width="1dip"
-            app:riv_corner_radius="16dip"
-            app:riv_oval="false"
-            tools:src="@mipmap/aaa" />
+            android:src="@mipmap/no_login_pic"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="1dp" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"

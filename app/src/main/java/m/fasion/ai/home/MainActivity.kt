@@ -84,7 +84,7 @@ class MainActivity : BaseActivity() {
                 mExitTime = System.currentTimeMillis()
             } else {
                 if (!this.isFinishing) {
-                    finish()
+                    finishAndRemoveTask()
                 }
             }
             return true

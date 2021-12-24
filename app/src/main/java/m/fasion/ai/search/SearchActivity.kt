@@ -84,10 +84,10 @@ class SearchActivity : BaseActivity() {
             override fun afterTextChanged(s: Editable?) {
                 val value = s.toString().trim()
                 if (value.isNotEmpty()) {   //不为空   显示删除按钮，隐藏历史列表，显示出来搜索列表
+                    binding.searchIvDelete.visibility = View.VISIBLE
                     binding.searchEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
-                    hideListView()
                 } else {    //空    ，显示删除按钮 ，显示历史列表  ，隐藏搜索列表
-                    showListView()
+                    hideListView()
                     binding.searchEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(this@SearchActivity, R.mipmap.icon_search), null, null, null)
                 }
             }
@@ -110,9 +110,12 @@ class SearchActivity : BaseActivity() {
         //获取焦点和失去焦点事件监听
         binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) { //得到焦点
-                if (!backFlag) {
-                    hideListView()
+                if (!backFlag) {    //搜索结果页面
+                    hideListView()  //就显示搜索历史页面
                 }
+                binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_111111))
+            } else {  //失去焦点
+                binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_ECECEC))
             }
         }
 
@@ -223,7 +226,7 @@ class SearchActivity : BaseActivity() {
      * 返回的时候进行监听
      */
     private fun backClick() {
-        if (backFlag) {
+        if (backFlag && searchListData.isNotEmpty()) {
             backFlag = false
             initLayoutManager(listData)
             listAdapter?.setData(listData)
@@ -300,13 +303,14 @@ class SearchActivity : BaseActivity() {
     private fun hideListView() {
         if (binding.searchEditText.text.toString().isNotEmpty()) {
             binding.searchIvDelete.visibility = View.VISIBLE
+        } else {
+            binding.searchIvDelete.visibility = View.GONE
         }
         binding.searchRVAll.visibility = View.GONE
         binding.searchHistoryAll.visibility = View.VISIBLE
         //搜索历史列表大于0就显示清楚按钮否则隐藏
         binding.searchTvClearHistory.visibility = if (categoryList.size > 0) View.VISIBLE else View.GONE
         binding.searchLayout1.visibility = View.VISIBLE
-        binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_111111))
         binding.searchStateView.setStateView(StateView.State.done)
     }
 
@@ -316,7 +320,6 @@ class SearchActivity : BaseActivity() {
     private fun showListView() {
         binding.searchHistoryAll.visibility = View.GONE
         binding.searchIvDelete.visibility = if (binding.searchEditText.text.toString().isEmpty()) View.INVISIBLE else View.VISIBLE
-        binding.searchViewLine.setBackgroundColor(ContextCompat.getColor(this@SearchActivity, R.color.color_ECECEC))
         binding.searchRVAll.visibility = View.VISIBLE
     }
 

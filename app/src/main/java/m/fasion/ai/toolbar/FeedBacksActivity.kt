@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
@@ -70,6 +71,11 @@ class FeedBacksActivity : BaseActivity() {
         binding.feedBacksClAll.setOnClickListener {
             CoreUtil.hideKeyBoard(binding.feedBacksClAll)
         }
+
+        viewModel.saveSuccessLiveData.observe(this, {
+            ToastUtils.show(it)
+            finish()
+        })
     }
 }
 
@@ -77,6 +83,7 @@ class FeedBackViewModel : BaseViewModel() {
 
     private var launch: Job? = null
 
+    val saveSuccessLiveData = MutableLiveData<String>()
     fun saveContent(contents: String, phone: String) {
         val map: MutableMap<String, Any> = mutableMapOf()
         map["contents"] = contents
@@ -87,7 +94,7 @@ class FeedBackViewModel : BaseViewModel() {
             launch = viewModelScope.launch {
                 val feedBack = repository.feedBack(map)
                 if (feedBack.isSuccessful) {
-                    ToastUtils.show("提交成功")
+                    saveSuccessLiveData.value = "感谢您的反馈"
                 } else {
                     feedBack.errorBody()?.stringSuspending()?.let {
                         Gson().fromJson(it, ErrorDataModel::class.java)?.apply {

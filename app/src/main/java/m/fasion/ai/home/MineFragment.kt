@@ -80,11 +80,11 @@ class MineFragment : BaseFragment() {
 
             //用户协议
             it.mineTvProtocol.setOnClickListener {
-                WebViewActivity.startActivity(requireContext(), Config.WEBSIT_ADDRESS, "")
+                WebViewActivity.startActivity(requireContext(), Config.PROTOCOL_URL, "")
             }
             //隐私政策
             it.mineTvPrivacy.setOnClickListener {
-                WebViewActivity.startActivity(requireContext(), Config.WEBSIT_ADDRESS, "")
+                WebViewActivity.startActivity(requireContext(), Config.PRIVACY_URL, "")
             }
             //编辑资料按钮事件
             it.mineEditData.setOnClickListener {
