@@ -20,6 +20,7 @@ open class BaseActivity : AppCompatActivity() {
         checkPermission()
 
         initTitle()
+        m.fasion.ai.util.ActivityManager.instance?.addActivity(this)
     }
 
     private fun initTitle() {

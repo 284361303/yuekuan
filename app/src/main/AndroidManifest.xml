@@ -42,80 +42,114 @@
             android:name=".mine.userInfo.EditNickNameActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="true"
-            android:theme="@style/AppTheme.NoTitle.TransparentBg" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoTitle.TransparentBg"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".mine.userInfo.PreviewImageActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".mine.userInfo.EditingUserPicActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoTitle.TransparentBg"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".mine.userInfo.EditingUserActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".homeDetails.TopicSuitActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".homeDetails.TopicEveryPeriodActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".toolbar.MyFavoriteActivity"
             android:configChanges="orientation"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".webView.WebViewActivity"
             android:configChanges="orientation"
             android:exported="true"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".toolbar.AboutUsActivity"
             android:configChanges="orientation"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".toolbar.FeedBacksActivity"
             android:configChanges="orientation"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".search.SearchActivity"
             android:configChanges="orientation"
             android:exported="true"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".homeDetails.HomeDetailsActivity"
             android:configChanges="orientation"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".homeDetails.RecommendActivity"
             android:configChanges="orientation"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".login.LoginActivity"
             android:configChanges="orientation"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <!-- 让软键盘把布局给顶上去 android:windowSoftInputMode="stateVisible|adjustResize"-->
         <activity
             android:name=".home.FilterActivity"
             android:configChanges="orientation"
             android:exported="true"
-            android:theme="@style/AppTheme.NoTitle.TransparentBg" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoTitle.TransparentBg"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".mine.AddAddressActivity"
             android:configChanges="orientation"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".home.WelcomeActivity"
             android:configChanges="orientation"
             android:exported="true"
-            android:theme="@style/WelcomeAppTheme">
+            android:screenOrientation="portrait"
+            android:theme="@style/WelcomeAppTheme"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -127,11 +161,15 @@
             android:configChanges="orientation"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoTitle.TransparentBg" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoTitle.TransparentBg"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".home.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
 
             <!-- 在主 Activity 中配置 scheme -->
             <intent-filter>
@@ -150,8 +188,10 @@
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:taskAffinity="m.fasion.ai"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:ignore="LockedOrientationActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -166,7 +206,5 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="251780f6690daf03da7b53feb80420a5" />
-
     </application>
-
 </manifest>

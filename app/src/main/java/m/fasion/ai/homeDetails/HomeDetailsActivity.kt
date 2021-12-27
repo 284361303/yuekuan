@@ -24,6 +24,7 @@ import com.youth.banner.util.BannerUtils
 import kotlinx.coroutines.*
 import m.fasion.ai.R
 import m.fasion.ai.databinding.ActivityHomeDetailsBinding
+import m.fasion.ai.util.ActivityManager
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.model.*
@@ -255,6 +256,11 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
                 }
             }
         })
+
+        //回到首页
+        binding.homeDetailsTvBackHome.setOnClickListener {
+            ActivityManager.instance?.finishActivity(this)
+        }
     }
 }
 
