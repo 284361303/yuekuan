@@ -33,7 +33,7 @@ class TopicSuitAdapter(private val mList: List<Body>) :
             val title = body.title
             CoreUtil.setTypeFaceMedium(listOf(holder.leftBinding.itemTopicSuitLeftTvName))
             holder.leftBinding.itemTopicSuitLeftTvName.text = title
-            holder.leftBinding.itemTopicSuitLeftIvCollect.setImageResource(if (body.favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
+            holder.leftBinding.itemTopicSuitLeftIvCollect.setImageResource(if (body.favourite) R.mipmap.icon_collect_22 else R.mipmap.icon_uncollect_22)
 
             if (headImg != holder.leftBinding.itemTopicSuitLeftIvBg.tag) {  //防止图片闪动和布局高度变化
                 holder.leftBinding.itemTopicSuitLeftIvBg.tag = headImg
@@ -57,7 +57,7 @@ class TopicSuitAdapter(private val mList: List<Body>) :
                 Glide.with(holder.itemView.context).load(headImg).into(holder.rightBinding.itemTopicSuitRightIvBg)
             }
             holder.rightBinding.itemTopicSuitRightTvName.text = body.title
-            holder.rightBinding.itemTopicSuitRightIvCollect.setImageResource(if (body.favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
+            holder.rightBinding.itemTopicSuitRightIvCollect.setImageResource(if (body.favourite) R.mipmap.icon_collect_22 else R.mipmap.icon_uncollect_22)
             if (onClickListener != null) {
                 holder.itemView.setOnClickListener {
                     onClickListener?.onItemClickListener(body, position)

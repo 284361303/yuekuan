@@ -31,7 +31,8 @@ data class Body(
     val head_img: String,
     val target: String,
     val type: String,
-    val title: String
+    val title: String,
+    val sub_title: String
 ) : Parcelable
 
 @Parcelize

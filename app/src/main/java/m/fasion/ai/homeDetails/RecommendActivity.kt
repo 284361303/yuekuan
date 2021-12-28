@@ -31,17 +31,18 @@ import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.ActivityRecommendBinding
 import m.fasion.ai.databinding.FragmentRecommendBinding
 import m.fasion.core.base.BaseViewModel
-import m.fasion.core.model.Body
-import m.fasion.core.model.ErrorDataModel
-import m.fasion.core.model.RecommendList
-import m.fasion.core.model.stringSuspending
+import m.fasion.core.base.ConstantsKey
+import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
+import m.fasion.core.util.SPUtil
 
 /**
  * 今日推荐页面
  */
 class RecommendActivity : FragmentActivity() {
+    private var mId: String = ""
     private var currentPosition: Int = 1
+    private var isRefresh = false
 
     private val viewModel: RecommendViewModel by viewModels()
     private val binding by lazy { ActivityRecommendBinding.inflate(layoutInflater) }
@@ -62,11 +63,12 @@ class RecommendActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        m.fasion.ai.util.ActivityManager.instance?.addActivity(this)
         intent.extras?.containsKey("id")?.let {
             if (it) {
-                intent.extras?.getString("id")?.let { mId ->
-                    viewModel.getTopics(mId)
+                intent.extras?.getString("id")?.let { id ->
+                    mId = id
+                    viewModel.getTopics(id)
                 }
             }
         }
@@ -75,16 +77,35 @@ class RecommendActivity : FragmentActivity() {
         CoreUtil.setTypeFaceMedium(arrayOf(binding.recommendTvRecommend1, binding.recommendTvRecommend2, binding.recommendTvCurrent).toList())
 
         viewModel.modelListLiveData.observe(this, {
+            listData.clear()
             val body = it.body
             if (body.isNotEmpty()) {
                 listData.addAll(body)
-                initTablet()
+                initObserver()
+                if (!isRefresh) {
+                    initTablet()
+                }
                 initClick()
+            }
+        })
+
+        //登录成功
+        LiveEventBus.get<UserModel>("loginSuccess").observe(this, { models ->
+            if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
+                val collectionId = viewModel.collectionId.value
+                if (collectionId.isNullOrEmpty()) { //登录成功判断是否有登录之前的收藏操作，有就登录成功后直接收藏当前的款式
+                    viewModel.getTopics(mId)
+                } else {
+                    viewModel.addFavorites(collectionId) {
+                        isRefresh = true
+                        viewModel.getTopics(mId)
+                    }
+                }
             }
         })
     }
 
-    private fun initTablet() {
+    private fun initObserver() {
         //有数据就显示底部切换按钮，否则就隐藏
         binding.recommendLlBtn.visibility = if (listData.isNotEmpty()) View.VISIBLE else View.INVISIBLE
 
@@ -97,13 +118,16 @@ class RecommendActivity : FragmentActivity() {
                 val recommendFragment = RecommendFragment()
                 recommendFragment.arguments = Bundle().also {
                     it.putParcelable("commendItem", listData[position])
+                    if (isRefresh && currentPosition > 1) {
+                        binding.recommendVP.currentItem = currentPosition - 1
+                    }
                 }
                 return recommendFragment
             }
         }
+    }
 
-        TabLayoutMediator(binding.recommendTabLayout, binding.recommendVP) { _, _ -> }.attach()
-
+    private fun initTablet() {
         //tabLayout滑动位置监听
         binding.recommendTabLayout.addOnTabSelectedListener(object :
             TabLayout.OnTabSelectedListener {
@@ -135,6 +159,9 @@ class RecommendActivity : FragmentActivity() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
+
+
+        TabLayoutMediator(binding.recommendTabLayout, binding.recommendVP) { _, _ -> }.attach()
 
         //设置画廊效果
         viewModel.setBannerGalleryEffect(this, binding.recommendVP, 12, 12, 8, .85f)
@@ -187,6 +214,9 @@ class RecommendFragment : BaseFragment() {
 
             //取消和进行点赞
             _binding.fragmentRecommendIvCollect.setOnClickListener {
+                if (SPUtil.getToken().isNullOrEmpty()) {
+                    viewModel.collectionId.value = mBody.target
+                }
                 checkLogin {
                     val favourite = mBody.favourite
                     val target = mBody.target
@@ -204,20 +234,12 @@ class RecommendFragment : BaseFragment() {
             _binding.fragmentRecommendIv.setOnClickListener {
                 HomeDetailsActivity.startActivity(requireContext(), mBody.target)
             }
-
-            //取消收藏成功,刷新首页数据改变收藏状态
-            viewModel.cancelFavoritesOk.observe(requireActivity(), { mId ->
-                LiveEventBus.get<String>("cancelFavoritesSuccess").post(mId)
-            })
-            //收藏成功
-            viewModel.addFavoritesOk.observe(requireActivity(), { mId ->
-                LiveEventBus.get<String>("addFavoritesSuccess").post(mId)
-            })
         }
     }
 }
 
 class RecommendViewModel : BaseViewModel() {
+    val collectionId = MutableLiveData<String>()
     val modelListLiveData = MutableLiveData<RecommendList>()
     val errorLiveData = MutableLiveData<String>()
     private var launch: Job? = null
@@ -242,25 +264,24 @@ class RecommendViewModel : BaseViewModel() {
         }
     }
 
-    val addFavoritesOk = MutableLiveData<String>()
-    fun addFavorites(id: String) {
+    fun addFavorites(id: String, observer: ((flag: String?) -> Unit?)? = null) {
         launch = viewModelScope.launch {
             val addFavorites = repository.addFavorites(id)
             if (addFavorites.isSuccessful) {
                 addFavorites.body()?.let {
-                    addFavoritesOk.value = id
+                    LiveEventBus.get<String>(ConstantsKey.ADD_FAVORITES_OK).post(id)
+                    observer?.invoke(id)
                 }
             }
         }
     }
 
-    val cancelFavoritesOk = MutableLiveData<String>()
     fun cancelFavorites(id: String) {
         launch = viewModelScope.launch {
             val cancelFavorites = repository.cancelFavorites(id)
             if (cancelFavorites.isSuccessful) {
                 cancelFavorites.body()?.let {
-                    cancelFavoritesOk.value = id
+                    LiveEventBus.get<String>(ConstantsKey.CANCEL_FAVORITES_OK).post(id)
                 }
             }
         }

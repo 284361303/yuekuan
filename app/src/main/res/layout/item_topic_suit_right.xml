@@ -22,8 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="293dp"
             android:layout_gravity="end"
-            android:scaleType="centerCrop"
-            tools:src="@mipmap/aaa" />
+            android:background="@color/color_EEEEEE"
+            android:scaleType="centerCrop" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/itemTopicSuitRight_ivCollect"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:padding="10dp"
-            android:src="@mipmap/icon_uncollect" />
+            android:src="@mipmap/icon_uncollect_22" />
     </androidx.cardview.widget.CardView>
 
     <TextView

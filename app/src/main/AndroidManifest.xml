@@ -179,8 +179,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
-                    android:host="ldxhost"
-                    android:scheme="leduoxiao" />
+                    android:host="fasionhost"
+                    android:scheme="fasionai" />
             </intent-filter>
         </activity>
         <activity

@@ -97,8 +97,10 @@ class EditingUserPicActivity : BaseActivity() {
                 PictureConfig.CHOOSE_REQUEST, PictureConfig.REQUEST_CAMERA -> {
                     val result = PictureSelector.obtainMultipleResult(data)
                     if (result != null && result.size > 0) {
-                        result[0].realPath?.let {
-                            viewModel.uploadImage(File(it))
+                        if (result[0].isCut) {
+                            viewModel.uploadImage(File(result[0].cutPath))
+                        } else {
+                            viewModel.uploadImage(File(result[0].path))
                         }
                     }
                 }

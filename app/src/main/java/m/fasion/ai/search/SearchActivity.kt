@@ -35,6 +35,7 @@ import m.fasion.ai.util.database.History
 import m.fasion.ai.util.database.HistoryDao
 import m.fasion.ai.util.database.HistoryDatabase
 import m.fasion.core.base.BaseViewModel
+import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.Clothes
 import m.fasion.core.model.ClothesList
 import m.fasion.core.model.ErrorDataModel
@@ -162,7 +163,7 @@ class SearchActivity : BaseActivity() {
                     }
                 }
             }
-            LiveEventBus.get<String>("addFavoritesSuccess").post(mId)
+            LiveEventBus.get<String>(ConstantsKey.ADD_FAVORITES_OK).post(mId)
         })
         //取消收藏
         viewModel.cancelFavoritesOk.observe(this, { mId ->
@@ -180,11 +181,11 @@ class SearchActivity : BaseActivity() {
                     }
                 }
             }
-            LiveEventBus.get<String>("cancelFavoritesSuccess").post(mId)
+            LiveEventBus.get<String>(ConstantsKey.CANCEL_FAVORITES_OK).post(mId)
         })
 
         //详情页面取消收藏成功,刷新首页数据改变收藏状态
-        LiveEventBus.get<String>("cancelFavoritesSuccess").observe(this, {
+        LiveEventBus.get<String>(ConstantsKey.CANCEL_FAVORITES_OK).observe(this, {
             it?.let { mId ->
                 if (listData.isNotEmpty()) {
                     listData.forEachIndexed { index, _ ->
@@ -198,7 +199,7 @@ class SearchActivity : BaseActivity() {
         })
 
         //详情页面收藏成功
-        LiveEventBus.get<String>("addFavoritesSuccess").observe(this, {
+        LiveEventBus.get<String>(ConstantsKey.ADD_FAVORITES_OK).observe(this, {
             it?.let { mId ->
                 if (listData.isNotEmpty()) {
                     listData.forEachIndexed { index, _ ->

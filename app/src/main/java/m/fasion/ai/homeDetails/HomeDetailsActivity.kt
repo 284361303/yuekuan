@@ -27,6 +27,7 @@ import m.fasion.ai.databinding.ActivityHomeDetailsBinding
 import m.fasion.ai.util.ActivityManager
 import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
+import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.*
 import m.fasion.core.util.CoreUtil
 import m.fasion.core.util.SPUtil
@@ -37,6 +38,7 @@ import kotlin.concurrent.thread
  */
 class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
 
+    private var mFavouriteId: String = ""
     private var likeNum: Int = 0
     private var recommendListData: MutableList<Clothes> = mutableListOf()
     private var recommendAdapter: RecommendAdapter? = null
@@ -145,6 +147,11 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
     private fun initObserver() {
         //取消收藏与进行收藏
         binding.homeDetailsIvCollect.setOnClickListener {
+            if (SPUtil.getToken().isNullOrEmpty()) {
+                viewModel.clothesData.value?.apply {
+                    mFavouriteId = id
+                }
+            }
             checkLogin {
                 viewModel.clothesData.value?.apply {
                     favourite = if (favourite) {
@@ -186,6 +193,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
 
             //购买按钮
             if (shopUrl != null && shopUrl.isNotEmpty() && CoreUtil.isValidUrl(shopUrl)) {
+                binding.homeDetailsTvBuy.background = ContextCompat.getDrawable(this, R.drawable.shape_333333_2)
                 binding.homeDetailsLlBottom.visibility = View.VISIBLE
                 binding.homeDetailsTvBuy.setOnClickListener {
                     checkLogin {
@@ -205,6 +213,8 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
                         }
                     }
                 }
+            } else {
+                binding.homeDetailsTvBuy.background = ContextCompat.getDrawable(this, R.drawable.shape_dcdddc_2)
             }
         })
         //为你推荐数据回调
@@ -218,24 +228,25 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         })
 
         //取消收藏成功,刷新首页数据改变收藏状态
-        viewModel.cancelFavoritesOk.observe(this, { mId ->
-            if (recommendListData.isNotEmpty()) {
-                recommendListData.forEachIndexed { index, _ ->
-                    if (recommendListData[index].id == mId) {
-                        recommendListData[index].favourite = false
-                        recommendAdapter?.notifyItemChanged(index, -1)
+        LiveEventBus.get<String>(ConstantsKey.CANCEL_FAVORITES_OK).observe(this, { favoritesId ->
+            favoritesId?.let {
+                if (recommendListData.isNotEmpty()) {
+                    recommendListData.forEachIndexed { index, _ ->
+                        if (recommendListData[index].id == favoritesId) {
+                            recommendListData[index].favourite = false
+                            recommendAdapter?.notifyItemChanged(index, -1)
+                        }
                     }
                 }
+                likeNum -= 1
+                binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, likeNum))
             }
-            likeNum -= 1
-            binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, likeNum))
-            LiveEventBus.get<String>("cancelFavoritesSuccess").post(mId)
         })
         //收藏成功
-        viewModel.addFavoritesOk.observe(this, { mId ->
+        LiveEventBus.get<String>(ConstantsKey.ADD_FAVORITES_OK).observe(this, { favoritesId ->
             if (recommendListData.isNotEmpty()) {
                 recommendListData.forEachIndexed { index, _ ->
-                    if (recommendListData[index].id == mId) {
+                    if (recommendListData[index].id == favoritesId) {
                         recommendListData[index].favourite = true
                         recommendAdapter?.notifyItemChanged(index, -1)
                     }
@@ -243,13 +254,15 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             }
             likeNum += 1
             binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, likeNum))
-            LiveEventBus.get<String>("addFavoritesSuccess").post(mId)
         })
 
         //登录成功
         LiveEventBus.get<UserModel>("loginSuccess").observe(this, { models ->
             if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
                 if (mId.isNotEmpty()) {
+                    if (mFavouriteId.isNotEmpty()) {
+                        viewModel.addFavorites(mFavouriteId)
+                    }
                     recommendListData.clear()
                     viewModel.getClothesInfo(mId)
                     viewModel.getClothesList("heat")
@@ -310,25 +323,24 @@ class HomeDetailsViewModel : BaseViewModel() {
         }
     }
 
-    val addFavoritesOk = MutableLiveData<String>()
-    fun addFavorites(id: String) {
+    fun addFavorites(id: String, observer: ((flag: String?) -> Unit?)? = null) {
         launch = viewModelScope.launch {
             val addFavorites = repository.addFavorites(id)
             if (addFavorites.isSuccessful) {
                 addFavorites.body()?.let {
-                    addFavoritesOk.value = id
+                    LiveEventBus.get(ConstantsKey.ADD_FAVORITES_OK, String::class.java).post(id)
+                    observer?.invoke(id)
                 }
             }
         }
     }
 
-    val cancelFavoritesOk = MutableLiveData<String>()
     fun cancelFavorites(id: String) {
         launch = viewModelScope.launch {
             val cancelFavorites = repository.cancelFavorites(id)
             if (cancelFavorites.isSuccessful) {
                 cancelFavorites.body()?.let {
-                    cancelFavoritesOk.value = id
+                    LiveEventBus.get(ConstantsKey.CANCEL_FAVORITES_OK, String::class.java).post(id)
                 }
             }
         }

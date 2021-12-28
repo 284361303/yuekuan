@@ -16,14 +16,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.youth.banner.adapter.BannerImageAdapter
-import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.listener.OnPageChangeListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -94,23 +91,15 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
             val bodyList = it[0].body
             if (bodyList.isNotEmpty()) {
                 _binding.homeFragmentTvCurrent.text = "1"
-                _binding.homeFragmentBanner.setAdapter(object : BannerImageAdapter<Body>(bodyList) {
-                    override fun onBindView(holder: BannerImageHolder?, data: Body?, position: Int, size: Int) {
-                        Glide.with(requireContext()).load(data?.head_img).into(holder?.imageView!!)
-                    }
-                })
+                _binding.homeFragmentBanner.setAdapter(HomeBannerAdapter(bodyList))
                 _binding.homeFragmentBanner.addBannerLifecycleObserver(this@HomeFragment)
                 _binding.homeFragmentBanner.addOnPageChangeListener(object : OnPageChangeListener {
-                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-                    }
-
+                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
                     override fun onPageSelected(position: Int) {
                         _binding.homeFragmentTvCurrent.text = (position + 1).toString()
                     }
 
-                    override fun onPageScrollStateChanged(state: Int) {
-                    }
+                    override fun onPageScrollStateChanged(state: Int) {}
                 })
             } else {
                 _binding.homeFragmentTvCurrent.text = "0"

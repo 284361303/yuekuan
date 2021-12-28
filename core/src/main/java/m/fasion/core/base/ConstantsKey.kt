@@ -12,4 +12,6 @@ object ConstantsKey {
     const val EDIT_SUCCESS = "edit_success"   //用户修改信息完成
     const val LOGOUT_SUCCESS = "logout_success"   //退出登录
     const val PRIVACY_FLAG = "privacy_flag" //启动页隐私弹窗
+    const val ADD_FAVORITES_OK = "add_favorites_ok" //收藏成功LiveData通知
+    const val CANCEL_FAVORITES_OK = "cancel_favorites_ok" //取消收藏成功LiveData通知
 }

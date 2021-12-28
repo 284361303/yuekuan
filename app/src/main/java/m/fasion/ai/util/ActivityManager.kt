@@ -53,14 +53,14 @@ open class ActivityManager {
     }
 
     /**
-     * 结束指定的Activity
+     * 返回到首页，也就是MainActivity页面，把其他的Activity都删除了
      */
     fun finishActivity(activity: Activity?) {
         if (activityStack == null || activity == null) {
             return
         }
         activityStack?.filter {
-            activityName(it.toString()) == activityName(activity.toString())
+            activityName(it.toString()) != "MainActivity"
         }?.let { mList ->
             mList.forEach { mActivity ->
                 if (!mActivity.isFinishing) {

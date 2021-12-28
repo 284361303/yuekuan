@@ -20,6 +20,7 @@ import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.FragmentHomeChildBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.core.base.BaseViewModel
+import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.Clothes
 import m.fasion.core.model.ClothesList
 import m.fasion.core.model.ErrorDataModel
@@ -95,7 +96,7 @@ class HomeChildFragment : BaseFragment() {
         })
 
         //详情页面取消收藏成功,刷新首页数据改变收藏状态
-        LiveEventBus.get<String>("cancelFavoritesSuccess").observe(requireActivity(), {
+        LiveEventBus.get<String>(ConstantsKey.CANCEL_FAVORITES_OK).observe(requireActivity(), {
             it?.let { mId ->
                 if (listData.isNotEmpty()) {
                     listData.forEachIndexed { index, _ ->
@@ -109,7 +110,7 @@ class HomeChildFragment : BaseFragment() {
         })
 
         //详情页面收藏成功
-        LiveEventBus.get<String>("addFavoritesSuccess").observe(requireActivity(), {
+        LiveEventBus.get<String>(ConstantsKey.ADD_FAVORITES_OK).observe(requireActivity(), {
             it?.let { mId ->
                 if (listData.isNotEmpty()) {
                     listData.forEachIndexed { index, _ ->
