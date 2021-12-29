@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.ScrollView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
@@ -99,6 +100,9 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             }
 
             override fun onCollectClick(model: Clothes, position: Int) {
+                if (SPUtil.getToken().isNullOrEmpty()) {
+                    mFavouriteId = model.id
+                }
                 checkLogin {
                     val favourite = model.favourite
                     val id = model.id
@@ -269,12 +273,19 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
                 if (mId.isNotEmpty()) {
                     if (mFavouriteId.isNotEmpty()) {
-                        viewModel.addFavorites(mFavouriteId)
-                        MobclickAgent.onEventObject(this@HomeDetailsActivity, "20211213014", mapOf("modelId" to mFavouriteId))
+                        viewModel.addFavorites(mFavouriteId) {
+                            recommendListData.clear()
+                            recommendAdapter?.notifyDataSetChanged()
+                            viewModel.getClothesInfo(mId)
+                            viewModel.getClothesList("heat")
+                            MobclickAgent.onEventObject(this@HomeDetailsActivity, "20211213014", mapOf("modelId" to mFavouriteId))
+                        }
+                    } else {
+                        recommendListData.clear()
+                        recommendAdapter?.notifyDataSetChanged()
+                        viewModel.getClothesInfo(mId)
+                        viewModel.getClothesList("heat")
                     }
-                    recommendListData.clear()
-                    viewModel.getClothesInfo(mId)
-                    viewModel.getClothesList("heat")
                 }
             }
         })

@@ -12,6 +12,7 @@
         layout="@layout/include_title" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/homeDetails_sclroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/homeDetails_llBottom"
