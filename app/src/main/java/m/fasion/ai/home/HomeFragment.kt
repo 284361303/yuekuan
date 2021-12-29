@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.umeng.analytics.MobclickAgent
 import com.youth.banner.listener.OnPageChangeListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -45,7 +46,8 @@ import kotlin.math.abs
  * 首页Fragment
  * 2021年9月23日
  */
-class HomeFragment : Fragment(), StateView.OnRetryListener {
+class HomeFragment : Fragment(), StateView.OnRetryListener,
+    HomeChildFragment.OnCollectClickListener {
 
     private var barHeight: Int = 0
     private var searchHeight: Int = 0
@@ -57,6 +59,11 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
      * 选择的筛选合集
      */
     private val categories: MutableList<String> = mutableListOf()
+
+    /**
+     * 没有登录情况下点击列表某个Item的id，用来登录成功之后自动进行收藏喜欢使用
+     */
+    private var mCollectId: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -118,6 +125,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                         HomeDetailsActivity.startActivity(requireContext(), body.target)
                     }
                 }
+                MobclickAgent.onEventObject(requireContext(), "20211213001", mapOf("type" to body.type, "target" to body.target))
             }
             _binding.homeFragmentBanner.removeIndicator()
             _binding.homeFragmentTvAll.text = _binding.homeFragmentBanner.realCount.toString()  //设置banner总数
@@ -166,6 +174,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                         HomeRecommendAdapter.OnItemClickListener {
                         override fun onItemClick(model: Body, position: Int) {    //跳转详情
                             HomeDetailsActivity.startActivity(requireContext(), model.target)
+                            MobclickAgent.onEventObject(requireContext(), "20211213003", mapOf("target" to model.target))
                         }
                     }
                 }
@@ -174,6 +183,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
             if (id.isNotEmpty()) {
                 _binding.homeFragmentCLMore.setOnClickListener {
                     RecommendActivity.startActivity(requireContext(), id)
+                    MobclickAgent.onEventObject(requireContext(), "20211213002", mapOf("commendId" to id))
 //            startActivity(Intent(requireContext(), TopicEveryPeriodActivity::class.java))
 //            startActivity(Intent(requireContext(), TopicSuitActivity::class.java))
                 }
@@ -199,9 +209,11 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         //搜索
         _binding.homeFragmentIvTopSearch.setOnClickListener {
             startActivity(Intent(requireContext(), SearchActivity::class.java))
+            MobclickAgent.onEventObject(requireContext(), "20211213011", null)
         }
         _binding.homeFragmentIncludeState.homeEmptyIvTopSearch.setOnClickListener {
             startActivity(Intent(requireContext(), SearchActivity::class.java))
+            MobclickAgent.onEventObject(requireContext(), "20211213011", null)
         }
 
         viewModel.errorLiveData.observe(requireActivity(), {
@@ -229,7 +241,14 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
         //登录成功
         LiveEventBus.get<UserModel>("loginSuccess").observe(requireActivity(), { models ->
             if (models.uid.isNotEmpty() && SPUtil.getToken() != null) {
-                initTabLayoutListener()
+                if (mCollectId.isNotEmpty()) {
+                    viewModel.addFavorites(mCollectId) {
+                        initTabLayoutListener()
+                        MobclickAgent.onEventObject(requireContext(), "20211213014", mapOf("modelId" to mCollectId))
+                    }
+                } else {
+                    initTabLayoutListener()
+                }
             }
         })
 
@@ -344,6 +363,7 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
                 val values = viewModel.tabMapList.values
                 val keys = viewModel.tabMapList.keys.toList()
                 val value = values.toMutableList()[position]
+                childFragment.onCollectClickListener = this@HomeFragment
 
                 childFragment.arguments = Bundle().also {
                     it.putString("childTitle", value)
@@ -368,6 +388,12 @@ class HomeFragment : Fragment(), StateView.OnRetryListener {
      */
     override fun onRetry() {
         initView()
+    }
+
+    override fun noLoginCollectListener(id: String) {
+        if (id.isNotEmpty()) {
+            mCollectId = id
+        }
     }
 }
 
@@ -410,6 +436,17 @@ class HomeViewModel : BaseViewModel() {
                             ToastUtils.show(message)
                         }
                     }
+                }
+            }
+        }
+    }
+
+    fun addFavorites(id: String, observer: ((flag: String?) -> Unit?)? = null) {
+        launch = viewModelScope.launch {
+            val addFavorites = repository.addFavorites(id)
+            if (addFavorites.isSuccessful) {
+                addFavorites.body()?.let {
+                    observer?.invoke(id)
                 }
             }
         }

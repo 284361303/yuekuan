@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
+import com.umeng.analytics.MobclickAgent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.base.BaseActivity
@@ -113,9 +114,11 @@ class TopicSuitActivity : BaseActivity() {
                     if (favourite) {
                         model.favourite = false
                         viewModel.cancelFavorites(id)
+                        MobclickAgent.onEventObject(this@TopicSuitActivity, "20211213019", mapOf("modelId" to id))
                     } else {
                         model.favourite = true
                         viewModel.addFavorites(id)
+                        MobclickAgent.onEventObject(this@TopicSuitActivity, "20211213014", mapOf("modelId" to id))
                     }
                     mAdapter?.notifyItemChanged(position, -1)
                 }

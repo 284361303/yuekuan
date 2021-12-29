@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.runBlocking
 import m.fasion.ai.databinding.ActivityWelcomeBinding
+import m.fasion.ai.util.LogUtils
 import m.fasion.ai.util.customize.PrivacyDialog
 import m.fasion.core.base.ConstantsKey
 import m.fasion.core.util.SPUtil

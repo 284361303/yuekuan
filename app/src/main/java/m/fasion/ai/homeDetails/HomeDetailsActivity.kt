@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.umeng.analytics.MobclickAgent
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.config.IndicatorConfig
 import com.youth.banner.holder.BannerImageHolder
@@ -83,6 +84,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         initObserver()
 
         binding.homeDetailsTitle.inCludeTitleIvBack.setOnClickListener { finish() }
+        MobclickAgent.onEventObject(this, "20211213015", mapOf("modelId" to mId))
     }
 
     private fun initAdapter() {
@@ -93,6 +95,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
         recommendAdapter?.onItemClickListener = object : RecommendAdapter.OnItemClickListener {
             override fun onItemClick(model: Clothes, position: Int) {
                 startActivity(this@HomeDetailsActivity, model.id)
+                MobclickAgent.onEventObject(this@HomeDetailsActivity, "20211213022", mapOf("modelId" to model.id))
             }
 
             override fun onCollectClick(model: Clothes, position: Int) {
@@ -102,9 +105,11 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
                     if (favourite) {
                         model.favourite = false
                         viewModel.cancelFavorites(id)
+                        MobclickAgent.onEventObject(this@HomeDetailsActivity, "20211213019", mapOf("modelId" to id))
                     } else {
                         model.favourite = true
                         viewModel.addFavorites(id)
+                        MobclickAgent.onEventObject(this@HomeDetailsActivity, "20211213014", mapOf("modelId" to id))
                     }
                     recommendAdapter?.notifyItemChanged(position, -1)
                 }
@@ -156,9 +161,11 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
                 viewModel.clothesData.value?.apply {
                     favourite = if (favourite) {
                         viewModel.cancelFavorites(id)
+                        MobclickAgent.onEventObject(this@HomeDetailsActivity, "20211213019", mapOf("modelId" to id))
                         false
                     } else {
                         viewModel.addFavorites(id)
+                        MobclickAgent.onEventObject(this@HomeDetailsActivity, "20211213014", mapOf("modelId" to id))
                         true
                     }
                     binding.homeDetailsIvCollect.setImageResource(if (favourite) R.mipmap.icon_collect_22 else R.mipmap.icon_uncollect_22)
@@ -212,6 +219,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
                             ToastUtils.show("请先安装淘宝")
                         }
                     }
+                    MobclickAgent.onEventObject(this, "20211213016", mapOf("url" to shopUrl))
                 }
             } else {
                 binding.homeDetailsTvBuy.background = ContextCompat.getDrawable(this, R.drawable.shape_dcdddc_2)
@@ -262,6 +270,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
                 if (mId.isNotEmpty()) {
                     if (mFavouriteId.isNotEmpty()) {
                         viewModel.addFavorites(mFavouriteId)
+                        MobclickAgent.onEventObject(this@HomeDetailsActivity, "20211213014", mapOf("modelId" to mFavouriteId))
                     }
                     recommendListData.clear()
                     viewModel.getClothesInfo(mId)

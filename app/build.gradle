@@ -119,4 +119,7 @@ dependencies {
 
     //相册选择、拍照
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc10'
+    //友盟统计SDK
+    implementation  'com.umeng.umsdk:common:9.4.4'// 必选
+    implementation  'com.umeng.umsdk:asms:1.4.1'// 必选
 }

@@ -4,9 +4,9 @@ object Config {
     /**
      * 友盟账号：aisway   WUdi0922
      */
-    const val BASE_DEBUG_URL = "http://192.168.50.114:56100"
+    const val BASE_DEBUG_URL = "http://192.168.50.113:56100"
 
-//            const val BASE_DEBUG_URL = "https://play.fasionai.com"
+//    const val BASE_DEBUG_URL = "https://play.fasionai.com"
     const val BASE_URL = "https://play.fasionai.com"
 
     //微信appId
@@ -17,6 +17,9 @@ object Config {
 
     //在微博开放平台设置的授权回调页
     const val REDIRECT_URL = "http://www.sina.com"
+
+    //友盟统计埋点
+    const val UMENG_APP_KEY = "61c96f8ce014255fcbcbecc2"
 
     //在微博开放平台为应用申请的高级权限
     const val SCOPE = ("email,direct_messages_read,direct_messages_write,"

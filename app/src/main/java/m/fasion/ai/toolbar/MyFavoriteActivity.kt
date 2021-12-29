@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.umeng.analytics.MobclickAgent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.base.BaseActivity
@@ -15,6 +16,7 @@ import m.fasion.ai.databinding.ActivityMyFavoriteBinding
 import m.fasion.ai.homeDetails.HomeDetailsActivity
 import m.fasion.ai.util.customize.RecyclerItemClickListener
 import m.fasion.core.base.BaseViewModel
+import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.Data
 import m.fasion.core.model.ErrorDataModel
 import m.fasion.core.model.FavoritesListData
@@ -46,6 +48,7 @@ class MyFavoriteActivity : BaseActivity() {
             RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 HomeDetailsActivity.startActivity(this@MyFavoriteActivity, listData[position].id)
+                MobclickAgent.onEventObject(this@MyFavoriteActivity, "20211213023", mapOf("modelId" to listData[position].id))
             }
         }))
 
@@ -84,16 +87,18 @@ class MyFavoriteActivity : BaseActivity() {
         }
 
         //详情页面取消和收藏成功回来重新刷新数据
-        LiveEventBus.get<String>("cancelFavoritesSuccess").observe(this, {
+        LiveEventBus.get<String>(ConstantsKey.CANCEL_FAVORITES_OK).observe(this, {
             it?.let { _ ->
                 binding.myFavoriteRefresh.autoRefresh()
             }
         })
-        LiveEventBus.get<String>("addFavoritesSuccess").observe(this, {
+        LiveEventBus.get<String>(ConstantsKey.ADD_FAVORITES_OK).observe(this, {
             it?.let { _ ->
                 binding.myFavoriteRefresh.autoRefresh()
             }
         })
+
+        MobclickAgent.onEventObject(this, "20211213018", null)
     }
 
     private fun isShowEmptyView() {

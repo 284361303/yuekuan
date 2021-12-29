@@ -22,6 +22,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.umeng.analytics.MobclickAgent
 import com.youth.banner.transformer.ScaleInTransformer
 import com.youth.banner.util.BannerUtils
 import kotlinx.coroutines.Job
@@ -97,6 +98,7 @@ class RecommendActivity : FragmentActivity() {
                     viewModel.getTopics(mId)
                 } else {
                     viewModel.addFavorites(collectionId) {
+                        MobclickAgent.onEventObject(this, "20211213014", mapOf("modelId" to collectionId))
                         isRefresh = true
                         viewModel.getTopics(mId)
                     }
@@ -223,9 +225,11 @@ class RecommendFragment : BaseFragment() {
                     if (favourite) {
                         mBody.favourite = false
                         viewModel.cancelFavorites(target)
+                        MobclickAgent.onEventObject(requireContext(), "20211213019", mapOf("modelId" to target))
                     } else {
                         mBody.favourite = true
                         viewModel.addFavorites(target)
+                        MobclickAgent.onEventObject(requireContext(), "20211213014", mapOf("modelId" to target))
                     }
                     _binding.fragmentRecommendIvCollect.setImageResource(if (mBody.favourite) R.mipmap.icon_collect else R.mipmap.icon_uncollect)
                 }

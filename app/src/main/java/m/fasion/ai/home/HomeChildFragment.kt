@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.umeng.analytics.MobclickAgent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import m.fasion.ai.base.BaseFragment
@@ -26,6 +27,7 @@ import m.fasion.core.model.ClothesList
 import m.fasion.core.model.ErrorDataModel
 import m.fasion.core.model.stringSuspending
 import m.fasion.core.util.CoreUtil
+import m.fasion.core.util.SPUtil
 
 /**
  * 款式首页的瀑布流
@@ -138,18 +140,36 @@ class HomeChildFragment : BaseFragment() {
         mAdapter?.onItemClickListener = object : HomeChildAdapter.OnItemClickListener {
             override fun onItemClick(model: Clothes, position: Int) {
                 HomeDetailsActivity.startActivity(requireContext(), model.id)
+                when (mSort) {
+                    " " -> {
+                        MobclickAgent.onEventObject(requireContext(), "20211213008", mapOf("modelId" to model.id))
+                    }
+                    "new" -> {
+                        MobclickAgent.onEventObject(requireContext(), "20211213009", mapOf("modelId" to model.id))
+                    }
+                    "heat" -> {
+                        MobclickAgent.onEventObject(requireContext(), "20211213010", mapOf("modelId" to model.id))
+                    }
+                }
             }
 
             override fun onCollectClick(model: Clothes, position: Int) {
+                if (SPUtil.getToken().isNullOrEmpty()) {
+                    if (onCollectClickListener != null) {
+                        onCollectClickListener?.noLoginCollectListener(model.id)
+                    }
+                }
                 checkLogin {
                     val favourite = model.favourite
                     val id = model.id
                     if (favourite) {
                         model.favourite = false
                         viewModel.cancelFavorites(id)
+                        MobclickAgent.onEventObject(requireContext(), "20211213019", mapOf("modelId" to id))
                     } else {
                         model.favourite = true
                         viewModel.addFavorites(id)
+                        MobclickAgent.onEventObject(requireContext(), "20211213014", mapOf("modelId" to id))
                     }
                     mAdapter?.notifyItemChanged(position, -1)
                 }
@@ -185,6 +205,16 @@ class HomeChildFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    var onCollectClickListener: OnCollectClickListener? = null
+
+    interface OnCollectClickListener {
+
+        /**
+         * 没有登录时候收藏才调用，给首页调用
+         */
+        fun noLoginCollectListener(id: String)
     }
 }
 

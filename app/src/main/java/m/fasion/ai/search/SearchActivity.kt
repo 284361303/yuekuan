@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.umeng.analytics.MobclickAgent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -257,6 +258,11 @@ class SearchActivity : BaseActivity() {
         listAdapter?.onItemClickListener = object : SearchAdapter.OnItemClickListener {
             override fun onItemClick(model: Clothes, position: Int) {
                 HomeDetailsActivity.startActivity(this@SearchActivity, model.id)
+                if (backFlag) {
+                    MobclickAgent.onEventObject(this@SearchActivity, "20211213013", mapOf("modelId" to model.id))
+                } else {
+                    MobclickAgent.onEventObject(this@SearchActivity, "20211213012", mapOf("modelId" to model.id))
+                }
             }
 
             override fun onCollectClick(model: Clothes, position: Int) {
@@ -266,9 +272,11 @@ class SearchActivity : BaseActivity() {
                     if (favourite) {
                         model.favourite = false
                         viewModel.cancelFavorites(id)
+                        MobclickAgent.onEventObject(this@SearchActivity, "20211213019", mapOf("modelId" to id))
                     } else {
                         model.favourite = true
                         viewModel.addFavorites(id)
+                        MobclickAgent.onEventObject(this@SearchActivity, "20211213014", mapOf("modelId" to id))
                     }
                     listAdapter?.notifyItemChanged(position, -1)
                 }

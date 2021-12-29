@@ -6,8 +6,12 @@ import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mmkv.MMKV
+import com.umeng.analytics.MobclickAgent
+import com.umeng.commonsdk.UMConfigure
 import m.fasion.core.Config
 import m.fasion.core.base.BaseApplication
+import m.fasion.core.base.ConstantsKey
+import m.fasion.core.util.SPUtil
 
 class MyApp : BaseApplication() {
 
@@ -50,6 +54,18 @@ class MyApp : BaseApplication() {
             .autoClear(true)
         //mmkv初始化
         MMKV.initialize(this)
+        //友盟预初始化
+        //设置LOG开关，默认为false
+        UMConfigure.setLogEnabled(true)
+        UMConfigure.preInit(applicationContext, Config.UMENG_APP_KEY, "Umeng")
+
+        val string = SPUtil.getString(ConstantsKey.PRIVACY_FLAG)
+        if (!string.isNullOrEmpty()) {
+            //初始化组件化基础库, 统计SDK/推送SDK/分享SDK都必须调用此初始化接口
+            UMConfigure.init(this, Config.UMENG_APP_KEY, "Umeng", UMConfigure.DEVICE_TYPE_PHONE, null)
+            // 选用AUTO页面采集模式
+            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
+        }
     }
 
     companion object {
