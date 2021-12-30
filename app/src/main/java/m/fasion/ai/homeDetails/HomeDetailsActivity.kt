@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.ScrollView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
@@ -41,6 +40,11 @@ import kotlin.concurrent.thread
 class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
 
     private var mFavouriteId: String = ""
+
+    /**
+     * 热门推荐无登录下进行保存id和位置，登录成功进行自动喜欢
+     */
+    private var mFavouriteMap: MutableMap<String, Int> = mutableMapOf()
     private var likeNum: Int = 0
     private var recommendListData: MutableList<Clothes> = mutableListOf()
     private var recommendAdapter: RecommendAdapter? = null
@@ -101,7 +105,7 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
 
             override fun onCollectClick(model: Clothes, position: Int) {
                 if (SPUtil.getToken().isNullOrEmpty()) {
-                    mFavouriteId = model.id
+                    mFavouriteMap.put(model.id, position)
                 }
                 checkLogin {
                     val favourite = model.favourite
@@ -234,7 +238,10 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             val clothesList = it.clothes_list
             if (clothesList.isNotEmpty()) {
                 //推荐列表
-                recommendListData.addAll(clothesList)
+                val filter = clothesList.filter { it.id != mId }
+                if (filter.isNotEmpty()) {
+                    recommendListData.addAll(filter)
+                }
                 recommendAdapter?.notifyDataSetChanged()
             }
         })
@@ -274,17 +281,20 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
                 if (mId.isNotEmpty()) {
                     if (mFavouriteId.isNotEmpty()) {
                         viewModel.addFavorites(mFavouriteId) {
-                            recommendListData.clear()
-                            recommendAdapter?.notifyDataSetChanged()
-                            viewModel.getClothesInfo(mId)
-                            viewModel.getClothesList("heat")
-                            MobclickAgent.onEventObject(this@HomeDetailsActivity, "20211213014", mapOf("modelId" to mFavouriteId))
+                            viewModel.clothesData.value?.let {
+                                it.favourite = true
+                                likeNum += 1
+                                binding.homeDetailsTvLikeNum.text = String.format(resources.getString(R.string.like_num, likeNum))
+                            }
                         }
-                    } else {
-                        recommendListData.clear()
-                        recommendAdapter?.notifyDataSetChanged()
-                        viewModel.getClothesInfo(mId)
-                        viewModel.getClothesList("heat")
+                    }
+
+                    if (mFavouriteMap.isNotEmpty()) {
+                        val keys = mFavouriteMap.keys.toList()[0]
+                        val position = mFavouriteMap.getValue(keys)
+                        viewModel.addFavorites(keys) {
+                            recommendAdapter?.notifyItemChanged(position, -1)
+                        }
                     }
                 }
             }
