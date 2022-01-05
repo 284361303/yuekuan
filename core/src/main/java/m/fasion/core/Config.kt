@@ -4,9 +4,9 @@ object Config {
     /**
      * 友盟账号：aisway   WUdi0922
      */
-    const val BASE_DEBUG_URL = "http://192.168.50.113:56100"
+//    const val BASE_DEBUG_URL = "http://192.168.50.113:56100"
 
-//    const val BASE_DEBUG_URL = "https://play.fasionai.com"
+    const val BASE_DEBUG_URL = "https://play.fasionai.com"
     const val BASE_URL = "https://play.fasionai.com"
 
     //微信appId

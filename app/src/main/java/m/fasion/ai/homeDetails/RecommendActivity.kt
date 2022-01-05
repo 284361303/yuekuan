@@ -31,6 +31,7 @@ import m.fasion.ai.R
 import m.fasion.ai.base.BaseFragment
 import m.fasion.ai.databinding.ActivityRecommendBinding
 import m.fasion.ai.databinding.FragmentRecommendBinding
+import m.fasion.ai.util.ToastUtils
 import m.fasion.core.base.BaseViewModel
 import m.fasion.core.base.ConstantsKey
 import m.fasion.core.model.*
@@ -262,6 +263,9 @@ class RecommendViewModel : BaseViewModel() {
                 topics.errorBody()?.stringSuspending()?.let {
                     Gson().fromJson(it, ErrorDataModel::class.java)?.apply {
                         errorLiveData.value = message
+                        if (message.isNotEmpty()) {
+                            ToastUtils.show(message)
+                        }
                     }
                 }
             }
