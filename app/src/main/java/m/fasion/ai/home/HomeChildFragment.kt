@@ -34,7 +34,6 @@ import m.fasion.core.util.SPUtil
  */
 class HomeChildFragment : BaseFragment() {
 
-    private var totalPage: Int = 0  //总页数
     private var currentPage: Int = 1    //当前返回的页数
     private var totalCount: Int = 0    //总的数量
     private var mAdapter: HomeChildAdapter? = null
@@ -83,11 +82,9 @@ class HomeChildFragment : BaseFragment() {
         //列表数据回调
         viewModel.clothesListData.observe(requireActivity(), {
             listData.clear()
-            totalPage = it.total_page
-            currentPage = it.current_page
-            totalCount = it.total_count.toInt()
-            if (it.clothes_list.isNotEmpty()) {
-                listData.addAll(it.clothes_list)
+            totalCount = it.total
+            if (it.data.isNotEmpty()) {
+                listData.addAll(it.data)
             }
             setLayoutManager()
             mAdapter?.notifyDataSetChanged()

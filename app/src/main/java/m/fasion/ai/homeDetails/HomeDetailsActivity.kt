@@ -234,8 +234,8 @@ class HomeDetailsActivity : m.fasion.ai.base.BaseActivity() {
             }
         })
         //为你推荐数据回调
-        viewModel.clothesListData.observe(this, {
-            val clothesList = it.clothes_list
+        viewModel.clothesListData.observe(this, { lists ->
+            val clothesList = lists.data
             if (clothesList.isNotEmpty()) {
                 //推荐列表
                 val filter = clothesList.filter { it.id != mId }

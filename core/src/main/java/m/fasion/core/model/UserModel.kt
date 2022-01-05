@@ -48,10 +48,8 @@ data class Head(
  */
 @Parcelize
 data class ClothesList(
-    val clothes_list: List<Clothes>,
-    val current_page: Int,
-    val total_count: String,
-    val total_page: Int
+    val data: List<Clothes>,
+    val total: Int,
 ) : Parcelable
 
 @Parcelize
