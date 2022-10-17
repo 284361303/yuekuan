@@ -8,6 +8,9 @@ import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mmkv.MMKV
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import m.fasion.core.Config
 import m.fasion.core.base.BaseApplication
 import m.fasion.core.base.ConstantsKey
@@ -45,26 +48,28 @@ class MyApp : BaseApplication() {
                 LogUtils.log(TAG, "onSuccess-- " + p0)
             }
         })*/
-        //腾讯bugly   ,最后一个参数语义：建议在测试阶段建议设置成true，发布时设置为false
-        CrashReport.initCrashReport(applicationContext, Config.BUGLY_APP_ID, false)
 
-        //
-        LiveEventBus.config()
-            //配置在没有Observer关联的时候是否自动清除LiveEvent以释放内存（默认值false）
-            .autoClear(true)
-        //mmkv初始化
-        MMKV.initialize(this)
-        //友盟预初始化
-        //设置LOG开关，默认为false
-        UMConfigure.setLogEnabled(true)
-        UMConfigure.preInit(applicationContext, Config.UMENG_APP_KEY, "Umeng")
+        MainScope().launch(Dispatchers.IO) {
+            //腾讯bugly   ,最后一个参数语义：建议在测试阶段建议设置成true，发布时设置为false
+            CrashReport.initCrashReport(applicationContext, Config.BUGLY_APP_ID, false)
+            //
+            LiveEventBus.config()
+                //配置在没有Observer关联的时候是否自动清除LiveEvent以释放内存（默认值false）
+                .autoClear(true)
+            //mmkv初始化
+            MMKV.initialize(instance)
+            //友盟预初始化
+            //设置LOG开关，默认为false
+            UMConfigure.setLogEnabled(true)
+            UMConfigure.preInit(applicationContext, Config.UMENG_APP_KEY, "Umeng")
 
-        val string = SPUtil.getString(ConstantsKey.PRIVACY_FLAG)
-        if (!string.isNullOrEmpty()) {
-            //初始化组件化基础库, 统计SDK/推送SDK/分享SDK都必须调用此初始化接口
-            UMConfigure.init(this, Config.UMENG_APP_KEY, "Umeng", UMConfigure.DEVICE_TYPE_PHONE, null)
-            // 选用AUTO页面采集模式
-            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
+            val string = SPUtil.getString(ConstantsKey.PRIVACY_FLAG)
+            if (!string.isNullOrEmpty()) {
+                //初始化组件化基础库, 统计SDK/推送SDK/分享SDK都必须调用此初始化接口
+                UMConfigure.init(instance, Config.UMENG_APP_KEY, "Umeng", UMConfigure.DEVICE_TYPE_PHONE, null)
+                // 选用AUTO页面采集模式
+                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
+            }
         }
     }
 
